@@ -5,6 +5,8 @@
  */
 package monopoly;
 
+import java.util.List;
+
 /**
  *
  * @author bgood_000
@@ -23,6 +25,12 @@ public class Player {
     private int cash;
     //Ammount of "get out of jail free" cards avaliable to player
     private int jailBondsAvaliable;
+    //Is player in jail?
+    private boolean inJail;
+    //ammont of consequtive doubles rolled in sinlge turn
+    private int speedingCount;
+    //number of turns spent in jail
+    private int jailTimeSpent;
 
     /**
      * Constructor for default player. Cash, starting position and bonds
@@ -104,6 +112,15 @@ public class Player {
     }
 
     /**
+     * Gets the type of cell which the player is currently occupying
+     *
+     * @return [string] Cell type currently occupied by player.
+     */
+    public String getPositionType() {
+        return Cells.get(getPosition()).getCellType();
+    }
+
+    /**
      * Returns the integer value of cash avaliable to the player
      *
      * @return
@@ -121,7 +138,54 @@ public class Player {
         return jailBondsAvaliable;
     }
 
+    /**
+     * Is the player in jail? T/F
+     *
+     * @return True if player is in jail, False otherwise.
+     */
+    public boolean isInJail() {
+        return inJail;
+    }
+
+    /**
+     * How many consecutive turns has the player spent in jail
+     *
+     * @return [int] number of turns spent in current 'in jail' event.
+     */
+    public int getJailTimeSpent() {
+        return jailTimeSpent;
+    }
+
+    /**
+     * How many doubles has the player rolled so far this turn? Resets to 0 at
+     * end of turn.
+     *
+     * @return [int] amount of doubles rolled on this current turn.
+     */
+    public int getSpeedingCount() {
+        return speedingCount;
+    }
+
 //Set players:
+    /**
+     * Sets the player as being in Jail.
+     *
+     * @param jailState True: in Jail, False otherwise.
+     */
+    public void setJailState(boolean jailState) {
+        inJail = jailState;
+    }
+
+    /**
+     * Sets the amount of time (in turns) the player has currently been in jail
+     * for.
+     *
+     * @param time
+     */
+    public void setJailTimeSpent(int time) {
+        jailTimeSpent = time;
+    }
+
     /**
      * Set new position for player on game board
      *
@@ -182,6 +246,27 @@ public class Player {
     }
 
     /**
+     * Sends the player to jail by setting the players inJail state to True and
+     * positions the player to 0.
+     */
+    public void gotoJail() {
+        setJailState(true);
+        setPosition(0);
+    }
+
+    /**
+     * Exits the player from jail; sets inJail state as False, repositions the
+     * player back onto the game board and resets the jail time counter.
+     */
+    public void leaveJail() {
+        setJailState(false);
+        setPosition(11);
+        setJailTimeSpent(0);
+
+    }
+
+    //end set
+    /**
      * Returns board location of next specified cell type
      *
      * @param target [String] Type of cell to search for
@@ -198,6 +283,14 @@ public class Player {
             search = getCellType(i);
         }
         return i;
+    }
+
+    public List drawChanceCard() {
+        return ChanceCards.drawCard();
+    }
+
+    public List drawChestCard() {
+        return ChestCards.drawCard();
     }
 
 }

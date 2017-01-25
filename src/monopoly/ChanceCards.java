@@ -15,10 +15,10 @@ import java.util.List;
  *
  * @author bgood_000
  */
-public class CardDeck {
+public class ChanceCards {
 
-    public List<Card> CARD_LIB = new ArrayList<>();
-    public ArrayDeque<Card> CARD_DECK = new ArrayDeque<>();
+    private static final List<Card> CHANCE_CARD_LIB = new ArrayList<>();
+    private static final ArrayDeque<Card> CHANCE_CARD_DECK = new ArrayDeque<>();
 //Individual card defined as class
 
     class Card {
@@ -72,17 +72,17 @@ public class CardDeck {
             String actionPrimary,
             String actionSecondary
     ) {
-        CARD_LIB.add(new Card(cardID, cardContent, actionType, actionPrimary, actionSecondary));
+        CHANCE_CARD_LIB.add(new Card(cardID, cardContent, actionType, actionPrimary, actionSecondary));
     }
 
     /**
      * Initialises a new deque by shuffling List CARD_LIB and copying to Deque
      * CARD_DECK
      */
-    public void shuffleDeck() {
-        Collections.shuffle(CARD_LIB);
-        for (int i = 0; i < CARD_LIB.size(); i++) {
-            CARD_DECK.add(CARD_LIB.get(i));
+    public static void shuffleDeck() {
+        Collections.shuffle(CHANCE_CARD_LIB);
+        for (int i = 0; i < CHANCE_CARD_LIB.size(); i++) {
+            CHANCE_CARD_DECK.add(CHANCE_CARD_LIB.get(i));
         }
     }
 
@@ -91,8 +91,8 @@ public class CardDeck {
      *
      * @return [Card] Next Card obj. in deque
      */
-    public Card getNextCard() {
-        return CARD_DECK.peekFirst();
+    public static Card getNextCard() {
+        return CHANCE_CARD_DECK.peekFirst();
     }
 
     /**
@@ -110,11 +110,11 @@ public class CardDeck {
      *
      * @return [List] New random (w/o replacement)card from deque.
      */
-    public List drawCard() {
+    public static List drawCard() {
         if (getNextCard() == null) {
             shuffleDeck();
         }
-        return CARD_DECK.pollFirst().getCardContent();
+        return CHANCE_CARD_DECK.pollFirst().getCardContent();
     }
 
 }
