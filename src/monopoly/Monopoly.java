@@ -5,11 +5,8 @@
  */
 package monopoly;
 
-import com.opencsv.CSVReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 /**
  *
@@ -28,43 +25,8 @@ public class Monopoly {
         players.add("Ben", 1, Token.TOPHAT);
         players.add("Test 1", 2, Token.RACECAR);
 
-        //Construct game board
-        Cells cells = new Cells();
-        cells.add(1, "GO", "grey", "creditAbs", "200");
-        cells.add(2, "Old Kent Road", "brown", 'A', 60, 50, 30, 30, 2, 10, 30, 90, 160, 250);
-        cells.add(3, "Community Chest A", "grey", "drawCard", "chest");
-        cells.add(4, "Whitechapel Road", "brown", 'A', 60, 50, 30, 30, 4, 20, 60, 180, 360, 450);
-        cells.add(5, "Income Tax", "grey", "debitAbs", "100");
-        cells.add(6, "Reading Railroad", "grey", 200, 100, 25, 50, 100, 200);
-
-        //Chance Card Import Testing:
-        //Instantiate new CSV reader with specified filepath
-        CSVReader reader = new CSVReader(new FileReader("C:/Users/bgood_000/Documents/chanceCardDeck.CSV"));//TODO - change to relative FP.
-        //Read all entries found in CSV file
-        List<String[]> getCSV = reader.readAll();
-        //get amount of entries
-        int entries = getCSV.size();
-        //Declare Paramaters
-        String index;
-        String text;
-        String type;
-        String typeParamater1;
-        String typeParamater2;
-        //Construct chance card deck
         ChanceCards chanceCardDeck = new ChanceCards();
-        //Loop deck entry constructor over all CSV entries
-        for (int i = 0; i < entries; i++) {
-            //Initilize ith paramaters with imported values:
-            index = getCSV.get(i)[0];
-            text = getCSV.get(i)[1];
-            type = getCSV.get(i)[2];
-            typeParamater1 = getCSV.get(i)[3];
-            typeParamater2 = getCSV.get(i)[4];
-            //Construct new chance card and add to library.
-            chanceCardDeck.add(index, text, type, typeParamater1, typeParamater2);
-        }
-        //Initilize new deck by shuffling copy of library
-        ChanceCards.shuffleDeck();
+        Cells cells = new Cells();
 
         //Construct community chest deck
         ChestCards chestCardDeck = new ChestCards();
@@ -125,6 +87,10 @@ public class Monopoly {
         //    players.get(1).setOwnership(4);
         //     cells.get(2).addImprovement();
         //    System.out.println(cells.get(2).getRent());
+        //Chance Card Import Testing:
+        System.out.println(Cells.LOCATIONS.get(0).getName());
+        System.out.println(Cells.LOCATIONS.get(40).getName());
+
     }
 
 }

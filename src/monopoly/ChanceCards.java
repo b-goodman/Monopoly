@@ -5,6 +5,10 @@
  */
 package monopoly;
 
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +19,7 @@ import java.util.List;
  *
  * @author bgood_000
  */
-public class ChanceCards {
+public final class ChanceCards {
 
     private static final List<Card> CHANCE_CARD_LIB = new ArrayList<>();
     private static final ArrayDeque<Card> CHANCE_CARD_DECK = new ArrayDeque<>();
@@ -53,6 +57,36 @@ public class ChanceCards {
             List<String> cardReturn = Arrays.asList(cardID, cardContent, actionType, actionPrimary, actionSecondary);
             return cardReturn;
         }
+    }
+
+    public ChanceCards() throws FileNotFoundException, IOException {
+        //Chance Card Import Testing:
+        //Instantiate new CSV reader with specified filepath
+        CSVReader reader = new CSVReader(new FileReader("C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/chanceCardDeck.CSV"));//TODO - change to relative FP.
+        //Read all entries found in CSV file
+        List<String[]> getCSV = reader.readAll();
+        //get amount of entries
+        int entries = getCSV.size();
+        //Declare Paramaters
+        String index;
+        String text;
+        String type;
+        String typeParamater1;
+        String typeParamater2;
+
+        //Loop deck entry constructor over all CSV entries
+        for (int i = 0; i < entries; i++) {
+            //Initilize ith paramaters with imported values:
+            index = getCSV.get(i)[0];
+            text = getCSV.get(i)[1];
+            type = getCSV.get(i)[2];
+            typeParamater1 = getCSV.get(i)[3];
+            typeParamater2 = getCSV.get(i)[4];
+            //Construct new chance card and add to library.
+            add(index, text, type, typeParamater1, typeParamater2);
+        }
+        //Initilize new deck by shuffling copy of library
+        shuffleDeck();
     }
 
     /**
