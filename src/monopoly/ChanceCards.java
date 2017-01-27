@@ -59,10 +59,10 @@ public final class ChanceCards {
         }
     }
 
-    public ChanceCards() throws FileNotFoundException, IOException {
+    public ChanceCards(String filePath) throws FileNotFoundException, IOException {
         //Chance Card Import Testing:
         //Instantiate new CSV reader with specified filepath
-        CSVReader reader = new CSVReader(new FileReader("C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/chanceCardDeck.CSV"));//TODO - change to relative FP.
+        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
         //Read all entries found in CSV file
         List<String[]> getCSV = reader.readAll();
         //get amount of entries

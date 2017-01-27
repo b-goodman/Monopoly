@@ -1,0 +1,17 @@
+0,Advance to GO,transitionAbs,1,null
+1,Collect £50,debitAbs,50,null
+2,Pay £50,debitAbs,50,null
+3,Collect £50,creditAbs,50,null
+4,Get Out of Jail Free,jail,out,null
+5,Go to Jail,jail,in,null
+6,Collect £50 From Each Player,creditRel,fromEach,50
+7,Collect £100,creditAbs,100,null
+8,Collect £20,creditAbs,20,null
+9,Collect £10 From Each Player,creditRel,fromEach,10
+10,Collect £100,creditAbs,100,null
+11,Pay £100,debitAbs,100,null
+12,Pay £150,debitAbs,150,null
+13,Collect £25,creditAbs,25,null
+14,Make Repairs,debitRel,repair,null
+15,Collect £10,creditAbs,10,null
+16,Collect £100,creditAbs,100,null

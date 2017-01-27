@@ -25,11 +25,11 @@ public final class Cells {
      */
     public static Map<Integer, Cell> LOCATIONS = new HashMap<>();
 
-    public Cells() throws IOException {
+    public Cells(String filePath) throws IOException {
         //"In Jail" is always at position 0
         add(0, "In Jail", "Gray");
         //Instantiate new CSV reader with specified filepath
-        CSVReader reader = new CSVReader(new FileReader("C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/CellData.CSV"));//TODO - change to relative FP.
+        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
         //Read all entries found in CSV file
         List<String[]> getCSV = reader.readAll();
         //get amount of entries
