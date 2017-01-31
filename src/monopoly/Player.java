@@ -31,6 +31,9 @@ public class Player {
     private int speedingCount;
     //number of turns spent in jail
     private int jailTimeSpent;
+    //players currently drawn card
+    private List currentCard;
+    //Players current dice roll
 
     /**
      * Constructor for default player. Cash, starting position and bonds
@@ -121,6 +124,26 @@ public class Player {
     }
 
     /**
+     * Gets name of current position cell
+     *
+     * @return
+     */
+    public String getPositionName() {
+        return Cells.get(getPosition()).getName();
+    }
+
+    /**
+     * Gets name of specified cell
+     *
+     * @param cellPosition [int] specification for cell. Cells position on
+     * board.
+     * @return [String] Name of cell
+     */
+    public String getPositionName(int cellPosition) {
+        return Cells.get(cellPosition).getName();
+    }
+
+    /**
      * Returns the integer value of cash avaliable to the player
      *
      * @return
@@ -164,6 +187,15 @@ public class Player {
      */
     public int getSpeedingCount() {
         return speedingCount;
+    }
+
+    /**
+     * Returns last card drawn by this player
+     *
+     * @return [List] Card last drawn by player.
+     */
+    public List getCurrentCard() {
+        return currentCard;
     }
 
 //Set players:
@@ -285,28 +317,146 @@ public class Player {
         return i;
     }
 
+    /**
+     * Calling this method begins the player's turn.
+     */
+    public void beginTurn() {
+        Dice.clearRoll();
+        // player rolls dice and reads value
+        Dice.roll();
+        int steps = Dice.getRollSum();
+
+        if (isInJail() && jailTimeSpent < 3) {
+            System.out.println("Player Takes Turn In Jail");
+            jailTimeSpent++;
+            endTurn();
+        } else if (isInJail() && jailTimeSpent > 3) {
+            leaveJail();
+            advanceToken(steps);
+        } else {
+            // check if player rolls doubles; if so, increment speed counter
+            if (Dice.isDouble()) {
+                speedingCount++;
+            }
+            System.out.println("Player: " + name + " rolls " + steps + " " + Dice.getFaceValues());
+            if (Dice.isDouble()) {
+                System.out.println("Player: " + name + " rolls doubles!");
+            }
+            // check if players speed counter has reached 3; if so, send to jail.
+            if (speedingCount == 3) {
+                System.out.println("Player: " + name + " sent to jail for speeding");
+                gotoJail();
+                // otherwise, proceed with turn
+            } else {
+                //advance token
+                advanceToken(steps);
+            }
+        }
+
+    }
+
+    /**
+     * ends players turn - resets speeding counter
+     */
+    public void endTurn() {
+        System.out.println("Player: " + name + " ends turn on " + getPositionName());
+        speedingCount = 0;
+    }
+
+    /**
+     * Move player +- N steps. Rolls over if position exceeds 40.
+     *
+     * @param steps [int] Amount of steps player takes. If negative, player will
+     * move backwards.
+     */
+    public void advanceToken(int steps) {//TODO - enable reverse for negative values
+        //advance token
+        position += steps;
+        // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
+        if (position > 40) {
+            position -= 40;
+        } else if (position < 1) {
+            position += 40;
+        }
+        System.out.println("Player: " + name + " moves " + steps + " steps and lands on " + getPositionName());
+    }
+
     public List drawChanceCard() {
-        return ChanceCards.drawCard();
+        List newCard = ChanceCards.drawCard();
+        currentCard = newCard;
+        return newCard;
     }
 
     public List drawChestCard() {
-        return ChestCards.drawCard();
+        List newCard = ChestCards.drawCard();
+        currentCard = newCard;
+        return newCard;
+    }
+
+    /**
+     * Returns last card drawn by player. Returns null if player has not yet
+     * drawn a card.
+     *
+     * @return [List] Last card drawn by player.
+     */
+    public List readCurrentCard() {
+        return currentCard;
+    }
+
+    public void parseCardAction(List card) {
+        String cardType = (String) card.get(2);
+        String cardAction1 = (String) card.get(3);
+        String cardAction2 = (String) card.get(4);
+
+        // System.out.println("Parsing Card..");
+        switch (cardType) {
+            // cases of players transition to fixed, absolute location
+            case "transitionAbs":
+                System.out.println("Player: " + name + " moves to " + getPositionName(Integer.parseInt(cardAction1)));
+                setPosition(Integer.parseInt(cardAction1));
+                return;
+            // cases of players transition dependent on current location
+            case "transitionRel":
+                switch (cardAction1) {
+                    // player advance to next property type (rail, util)
+                    case "next":
+                        System.out.println("Player: " + name + " moves to next " + cardAction2 + " type location (" + getPositionName(findNextCellType(cardAction2)) + ")");
+                        setPosition(findNextCellType(cardAction2));
+                        return;
+                    // player advance N spaces from current position
+                    case "go":
+                        System.out.println("Player: " + name + " adjusts " + cardAction2 + " spaces");
+                        advanceToken(Integer.parseInt(cardAction2));
+                        return;
+                }
+                return;
+            // player recieves jail card
+            case "jail":
+                switch (cardAction1) {
+                    case "in":
+                        //player sent to jail
+                        System.out.println("Player: " + name + " is sent to jail");
+                        gotoJail();
+                        return;
+
+                    case "out":
+                        //player gets out of jail free
+                        return;
+                }
+                return;
+            // cases of player recieving fixed sum of cash
+            case "creditAbs":
+                return;
+            // cases of player recieving variable ammount of cash dependent on current game params.
+            case "creditRel":
+                return;
+            // cases of player paying fixed ammount of cash
+            case "debitAbs":
+                return;
+            // player paying variable ammount of cash
+            case "debitRel":
+                return;
+        }
     }
 
 }
-
-/*
-* if(action == "drawCard"){
-*   switch (type) {
-*       case "chance" :
-*           /drawChanceCard()
-*           break;
-*       case "chest" :
-*           /drawChestCard()
-*           break;
-*   }
-*
-*
-*
-
- */

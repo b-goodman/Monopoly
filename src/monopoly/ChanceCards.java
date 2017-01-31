@@ -125,7 +125,7 @@ public final class ChanceCards {
      *
      * @return [Card] Next Card obj. in deque
      */
-    public static Card getNextCard() {
+    private static Card getNextCard() {
         return CHANCE_CARD_DECK.peekFirst();
     }
 

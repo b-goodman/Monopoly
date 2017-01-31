@@ -125,7 +125,7 @@ public final class ChestCards {
      *
      * @return [Card] Next Card obj. in deque
      */
-    public static Card getNextCard() {
+    private static Card getNextCard() {
         return CHEST_CARD_DECK.peekFirst();
     }
 

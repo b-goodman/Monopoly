@@ -67,4 +67,8 @@ public class Players {
     public static Player get(Integer playerID) {
         return PLAYERS.get(playerID);
     }
+
+    public static int amount() {
+        return PLAYERS.size();
+    }
 }

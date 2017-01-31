@@ -2,8 +2,8 @@
 1,Advance to Trafalgar Square,transitionAbs,25,null
 2,Advance to Pall Mall,transitionAbs,12,null
 3,Advance to Nearest Utility,transitionRel,next,utility
-4,Advance to Nearset Railroad,transitionRel,next,rail
-5,Advance to Nearset Railroad,transitionRel,next,rail
+4,Advance to Nearset Railroad,transitionRel,next,railroad
+5,Advance to Nearset Railroad,transitionRel,next,railroad
 6,Collect £50,creditAbs,50,null
 7,Get out of Jail Free,jail,out,null
 8,Go Back 3 Spaces,transitionRel,go,-3
