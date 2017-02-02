@@ -5,7 +5,9 @@
  */
 package monopoly;
 
+import monopoly.Enums.CellType;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -119,8 +121,16 @@ public class Player {
      *
      * @return [string] Cell type currently occupied by player.
      */
-    public String getPositionType() {
+    public CellType getPositionType() {
         return Cells.get(getPosition()).getCellType();
+    }
+
+    public String getActionType() {
+        return Cells.get(getPosition()).getActionType();
+    }
+
+    public String getActionParamater() {
+        return Cells.get(getPosition()).getActionParamater();
     }
 
     /**
@@ -237,6 +247,30 @@ public class Player {
         cash = newCashAmmount;
     }
 
+    public void playerCashRecieve(Integer payingPlayerID, int cashAmount) {
+        if (payingPlayerID != 0) {
+            Player payingPlayer = Players.get(payingPlayerID);
+            addCash(cashAmount);
+            payingPlayer.addCash(-cashAmount);
+            System.out.println("\t" + payingPlayer.getName() + " pays you " + cashAmount);
+        } else {
+            addCash(cashAmount);
+            System.out.println("\t" + name + " recieves " + cashAmount);
+        }
+    }
+
+    public void playerCashPay(Integer recievingPlayerID, int cashAmount) {
+        if (recievingPlayerID != 0) {
+            Player recievingPlayer = Players.get(recievingPlayerID);
+            addCash(-cashAmount);
+            recievingPlayer.addCash(cashAmount);
+            System.out.println("\t" + name + " pays " + recievingPlayer.getName() + " " + cashAmount);
+        } else {
+            addCash(-cashAmount);
+            System.out.println("\t" + name + " pays " + cashAmount);
+        }
+    }
+
     /**
      * Add(take) an amount of cash to(from) player via an increment(decrement)
      *
@@ -273,7 +307,7 @@ public class Player {
      * @param cellLocation Location of cell on game board
      * @return [String] type of cell ("property","railroad","utility"...)
      */
-    public String getCellType(int cellLocation) {
+    public CellType getCellType(int cellLocation) {
         return Cells.LOCATIONS.get(cellLocation).getCellType();
     }
 
@@ -304,10 +338,23 @@ public class Player {
      * @param target [String] Type of cell to search for
      * @return [int] Board location of target cell
      */
+    public int findNextCellType(CellType target) {
+        int i = getPosition();
+        CellType search = getCellType(i);
+        while (!search.equals(target)) {
+            i++;
+            while (i > 40) {
+                i -= 40;
+            }
+            search = getCellType(i);
+        }
+        return i;
+    }
+
     public int findNextCellType(String target) {
         int i = getPosition();
-        String search = getCellType(i);
-        while (!search.equals(target)) {
+        CellType search = getCellType(i);
+        while (!search.equals(CellType.valueOf(target))) {
             i++;
             while (i > 40) {
                 i -= 40;
@@ -321,13 +368,15 @@ public class Player {
      * Calling this method begins the player's turn.
      */
     public void beginTurn() {
+        speedingCount = 0;
+        System.out.println("Player " + playerID + " - " + name + ":");
         Dice.clearRoll();
         // player rolls dice and reads value
         Dice.roll();
         int steps = Dice.getRollSum();
 
         if (isInJail() && jailTimeSpent < 3) {
-            System.out.println("Player Takes Turn In Jail");
+            System.out.println("\t" + name + " Takes Turn In Jail");
             jailTimeSpent++;
             endTurn();
         } else if (isInJail() && jailTimeSpent > 3) {
@@ -338,13 +387,13 @@ public class Player {
             if (Dice.isDouble()) {
                 speedingCount++;
             }
-            System.out.println("Player: " + name + " rolls " + steps + " " + Dice.getFaceValues());
+            System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
             if (Dice.isDouble()) {
-                System.out.println("Player: " + name + " rolls doubles!");
+                System.out.println("\t" + name + " rolls doubles!");
             }
             // check if players speed counter has reached 3; if so, send to jail.
             if (speedingCount == 3) {
-                System.out.println("Player: " + name + " sent to jail for speeding");
+                System.out.println("\t" + name + " sent to jail for speeding");
                 gotoJail();
                 // otherwise, proceed with turn
             } else {
@@ -352,14 +401,73 @@ public class Player {
                 advanceToken(steps);
             }
         }
+    }
 
+    public void midTurn() {
+
+        //Player has landed on a SPECIAL cell, parse cell action
+        if (CellType.SPECIAL.equals(getPositionType())) {
+            String type = getActionType();
+            String para = getActionParamater();
+            switch (type) {
+                //Draw a card
+                case "drawCard":
+                    switch (para) {
+                        // Draw Chance card
+                        case "chance":
+                            drawChanceCard();
+                            break;
+                        //Draw chest card
+                        case "chest":
+                            drawChanceCard();
+                            break;
+                    }
+                    // Actions for post card draw.  Print type of card drawn, parse drawn card action.
+                    System.out.println("\t" + name + " draws a " + para + " card: " + readCurrentCard().get(1));
+                    parseCardAction(readCurrentCard());
+                    break;
+                //Transition to new fixed location
+                case "transitionAbs":
+                    // The player is being sent to jail (lands on goto jail cell)
+                    if ("0".equals(para)) {
+                        gotoJail();
+                    } else {
+                        // Player has landed on some other transitional cell
+                        advanceToken(Integer.parseInt(para));
+                    }
+                    break;
+                //Recieve money
+                case "creditAbs":
+                    playerCashRecieve(0, Integer.parseInt(para));
+                    break;
+                //Pay money
+                case "debitAbs":
+                    playerCashPay(0, Integer.parseInt(para));
+                    break;
+            }
+
+            //Player has landed on a PROPERTY cell, either prurchace or pay rent
+        } else if (CellType.PROPERTY.equals(getPositionType()) || CellType.RAILROAD.equals(getPositionType())) {
+            Cell occupiedCell = Cells.get((Integer) getPosition());
+            //is it currently unowned? If so, purchace property
+            if (occupiedCell.getOwnership() == null) {
+                cash -= occupiedCell.getBaseValue();
+                occupiedCell.setOwnership(getPlayerID());
+                System.out.println("\t" + name + " buys " + occupiedCell.getName() + " for " + occupiedCell.getBaseValue());
+                //If it is owned but by the current player, then do nothing
+            } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
+                //It is owned and by another player, then pay rent
+            } else {
+                playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
+            }
+        }
     }
 
     /**
      * ends players turn - resets speeding counter
      */
     public void endTurn() {
-        System.out.println("Player: " + name + " ends turn on " + getPositionName());
+        System.out.println("\t" + name + " ends turn on " + getPositionName());
         speedingCount = 0;
     }
 
@@ -369,7 +477,7 @@ public class Player {
      * @param steps [int] Amount of steps player takes. If negative, player will
      * move backwards.
      */
-    public void advanceToken(int steps) {//TODO - enable reverse for negative values
+    public void advanceToken(int steps) {
         //advance token
         position += steps;
         // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
@@ -378,7 +486,19 @@ public class Player {
         } else if (position < 1) {
             position += 40;
         }
-        System.out.println("Player: " + name + " moves " + steps + " steps and lands on " + getPositionName());
+
+        Integer positionInfoOwnership = Cells.get(position).getOwnership();
+        int positionInfocurrentRent = Cells.get(position).getRent();
+        int positionInfoCost = Cells.get(position).getBaseValue();
+        if (Cells.get(position).getOwnable()) {
+            if (positionInfoOwnership != null) {
+                System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Owned by: " + positionInfoOwnership + ", Rent: " + positionInfocurrentRent);
+            } else {
+                System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Avaliable to purchace for " + positionInfoCost);
+            }
+        } else {
+            System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName());
+        }
     }
 
     public List drawChanceCard() {
@@ -411,50 +531,53 @@ public class Player {
         // System.out.println("Parsing Card..");
         switch (cardType) {
             // cases of players transition to fixed, absolute location
-            case "transitionAbs":
-                System.out.println("Player: " + name + " moves to " + getPositionName(Integer.parseInt(cardAction1)));
+            case "TRANSITION_ABS":
+                System.out.println("\t" + name + " moves to " + getPositionName(Integer.parseInt(cardAction1)));
                 setPosition(Integer.parseInt(cardAction1));
+                midTurn();
                 return;
             // cases of players transition dependent on current location
-            case "transitionRel":
+            case "TRANSITION_REL":
                 switch (cardAction1) {
                     // player advance to next property type (rail, util)
-                    case "next":
-                        System.out.println("Player: " + name + " moves to next " + cardAction2 + " type location (" + getPositionName(findNextCellType(cardAction2)) + ")");
+                    case "NEXT":
+                        System.out.println("\t" + name + " moves to next " + cardAction2 + " type location (" + getPositionName(findNextCellType(cardAction2)) + ")");
                         setPosition(findNextCellType(cardAction2));
+                        midTurn();
                         return;
                     // player advance N spaces from current position
-                    case "go":
-                        System.out.println("Player: " + name + " adjusts " + cardAction2 + " spaces");
+                    case "GO":
+                        System.out.println("\t" + name + " adjusts " + cardAction2 + " spaces");
                         advanceToken(Integer.parseInt(cardAction2));
+                        midTurn();
                         return;
                 }
                 return;
             // player recieves jail card
-            case "jail":
+            case "JAIL":
                 switch (cardAction1) {
-                    case "in":
+                    case "IN":
                         //player sent to jail
-                        System.out.println("Player: " + name + " is sent to jail");
+                        System.out.println("\t" + name + " is sent to jail");
                         gotoJail();
                         return;
 
-                    case "out":
+                    case "OUT":
                         //player gets out of jail free
                         return;
                 }
                 return;
             // cases of player recieving fixed sum of cash
-            case "creditAbs":
+            case "CREDIT_ABS":
                 return;
             // cases of player recieving variable ammount of cash dependent on current game params.
-            case "creditRel":
+            case "CREDIT_REL":
                 return;
             // cases of player paying fixed ammount of cash
-            case "debitAbs":
+            case "DEBIT_ABS":
                 return;
             // player paying variable ammount of cash
-            case "debitRel":
+            case "DEBIT_REL":
                 return;
         }
     }

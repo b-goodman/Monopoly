@@ -4,11 +4,15 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Monopoly.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Players.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Cells.java</file>
-            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/.git/config</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Token.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/ChanceCards.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Cell.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/ChestCards.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Player.java</file>
-            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/CardDeck.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/CellData.CSV</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Dice.java</file>
         </group>
     </open-files>
 </project-private>

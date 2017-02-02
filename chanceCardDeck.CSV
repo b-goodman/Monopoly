@@ -1,17 +1,17 @@
-0,Advance to GO,transitionAbs,1,null
-1,Advance to Trafalgar Square,transitionAbs,25,null
-2,Advance to Pall Mall,transitionAbs,12,null
-3,Advance to Nearest Utility,transitionRel,next,utility
-4,Advance to Nearset Railroad,transitionRel,next,railroad
-5,Advance to Nearset Railroad,transitionRel,next,railroad
-6,Collect £50,creditAbs,50,null
-7,Get out of Jail Free,jail,out,null
-8,Go Back 3 Spaces,transitionRel,go,-3
-9,Go to Jail,jail,in,null
-10,Make Repairs,debitRel,repair,null
-11,Pay £15,debitAbs,15,null
-12,Go to King's Cross Station,transitionAbs,6,null
-13,Advance to Mayfair,transitionAbs,40,null
-14,Pay Each Player £150,debitRel,payEach,150
-15,Collect £150,creditAbs,150,null
-16,Collect £100,creditAbs,150,null
+0,Advance to GO,TRANSITION_ABS,1,null
+1,Advance to Trafalgar Square,TRANSITION_ABS,25,null
+2,Advance to Pall Mall,TRANSITION_ABS,12,null
+3,Advance to Nearest Utility,TRANSITION_REL,NEXT,UTILITY
+4,Advance to Nearset Railroad,TRANSITION_REL,NEXT,RAILROAD
+5,Advance to Nearset Railroad,TRANSITION_REL,NEXT,RAILROAD
+6,Collect £50,CREDIT_ABS,50,null
+7,Get out of Jail Free,JAIL,OUT,null
+8,Go Back 3 Spaces,TRANSITION_REL,GO,-3
+9,Go to Jail,JAIL,IN,null
+10,Make Repairs,DEBIT_REL,REPAIR,null
+11,Pay £15,CREDIT_ABS,15,null
+12,Go to King's Cross Station,TRANSITION_ABS,6,null
+13,Advance to Mayfair,TRANSITION_ABS,40,null
+14,Pay Each Player £150,DEBIT_REL,PAY_EACH,150
+15,Collect £150,CREDIT_ABS,150,null
+16,Collect £100,CREDIT_ABS,150,null

@@ -5,6 +5,7 @@
  */
 package monopoly;
 
+import monopoly.Enums.CellType;
 import java.util.*;
 
 /**
@@ -14,7 +15,7 @@ import java.util.*;
 public class Cell {
 
     public String name;
-    public String cellType;
+    public CellType cellType;
     public String color;
     public boolean isOwnable;
     public char groupID;
@@ -79,7 +80,7 @@ public class Cell {
             int rent4H,
             int rentHotel) {
         this.name = name;
-        this.cellType = "property";
+        this.cellType = CellType.PROPERTY;
         this.color = color;
         this.groupID = groupID;
         this.isOwnable = true;
@@ -129,7 +130,7 @@ public class Cell {
             int rent4R
     ) {
         this.name = name;
-        this.cellType = "railroad";
+        this.cellType = CellType.RAILROAD;
         this.color = color;
         this.isOwnable = true;
         this.baseValue = baseValue;
@@ -170,7 +171,7 @@ public class Cell {
             int twoUtilityMult
     ) {
         this.name = name;
-        this.cellType = "utility";
+        this.cellType = CellType.UTILITY;
         this.color = color;
         this.isOwnable = true;
         this.baseValue = baseValue;
@@ -199,7 +200,7 @@ public class Cell {
             String actionParamater
     ) {
         this.name = name;
-        this.cellType = "special";
+        this.cellType = CellType.SPECIAL;
         this.color = color;
         this.isOwnable = false;
         this.groupID = 's';
@@ -219,7 +220,7 @@ public class Cell {
             String color
     ) {
         this.name = name;
-        this.cellType = "jail";
+        this.cellType = CellType.JAIL;
         this.color = color;
         this.isOwnable = false;
         this.groupID = 'j';
@@ -254,6 +255,10 @@ public class Cell {
         return isOwnable;
     }
 
+    public int getBaseValue() {
+        return baseValue;
+    }
+
     /**
      * Gets type of Cell. Type describes nature and enables different possible
      * method behaviours.
@@ -261,8 +266,17 @@ public class Cell {
      * @return String describing type of cell ("property", "railroad",
      * "utility", "jail", "special")
      */
-    public String getCellType() {
+    public CellType getCellType() {
         return cellType;
+    }
+
+//Special Cells:
+    public String getActionType() {
+        return actionType;
+    }
+
+    public String getActionParamater() {
+        return actionParamater;
     }
 
 //Ownable cells:
@@ -452,7 +466,7 @@ public class Cell {
             System.out.println("Rent cannot be collected on mortgaged properties");
         } else {
             switch (getCellType()) {
-                case "property":
+                case PROPERTY:
                     switch (getImprovmentState()) {
                         case 0:
                             if (isSetComplete()) {
@@ -478,7 +492,7 @@ public class Cell {
                             break;
                     }
                     break;
-                case "railroad":
+                case RAILROAD:
                     switch (getOwningPlayerGroupFrequency()) {
                         case 1:
                             returnCase = rentBase;
@@ -530,7 +544,7 @@ public class Cell {
     public int getRent(String field) {
         int returnCase = 0;
         switch (getCellType()) {
-            case "property":
+            case PROPERTY:
                 switch (field) {
                     case "Base":
                         if (isSetComplete()) {
@@ -562,7 +576,7 @@ public class Cell {
                     //	break;
                 }
                 break;
-            case "railroad":
+            case RAILROAD:
                 switch (field) {
                     case "Base":
                         returnCase = rentBase;
@@ -582,7 +596,7 @@ public class Cell {
                     //break;
                 }
                 break;
-            case "utility":
+            case UTILITY:
                 switch (getOwningPlayerGroupFrequency()) {
                     case 1:
                         returnCase = oneUtilityMult;
@@ -631,7 +645,7 @@ public class Cell {
             //Return message is set uncomplete
             System.out.println("Cannot improve properties belonging to incomplete sets");
             //check if property is of correct type
-        } else if (!"property".equals(getCellType())) {
+        } else if (getCellType() != CellType.PROPERTY) {
             System.out.println("This cell type (" + getCellType() + ") cannot be improved");
             //check if property is mortgaged
         } else if (isMortgaged()) {
