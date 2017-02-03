@@ -28,6 +28,9 @@ public final class Cells {
     public Cells(String filePath) throws IOException {
         //"In Jail" is always at position 0
         add(0, "In Jail", "Gray");
+        //"GO" is always at position 1
+
+        add(1, "GO", "grey", "creditAbs", Integer.toString((Rules.isGoLandBonus()) ? 2 * Rules.getPassGoCredit() : Rules.getPassGoCredit()));
         //Instantiate new CSV reader with specified filepath
         CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
         //Read all entries found in CSV file

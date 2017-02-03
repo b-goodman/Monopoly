@@ -8,6 +8,8 @@ package monopoly;
 import monopoly.Enums.CellType;
 import java.util.List;
 import java.util.Objects;
+import static monopoly.Enums.CellType.SPECIAL;
+import static monopoly.Enums.CellType.UTILITY;
 
 /**
  *
@@ -235,6 +237,10 @@ public class Player {
      * position in LOCATIONS
      */
     public void setPosition(int newPosition) {
+//        if (newPosition < position && newPosition != 0) {
+//            System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
+//            playerCashRecieve(0, Rules.getPassGoCredit());
+//        }
         position = newPosition;
     }
 
@@ -404,9 +410,7 @@ public class Player {
     }
 
     public void midTurn() {
-
-        //Player has landed on a SPECIAL cell, parse cell action
-        if (CellType.SPECIAL.equals(getPositionType())) {
+        if (getPositionType() == SPECIAL) {
             String type = getActionType();
             String para = getActionParamater();
             switch (type) {
@@ -445,20 +449,23 @@ public class Player {
                     playerCashPay(0, Integer.parseInt(para));
                     break;
             }
-
-            //Player has landed on a PROPERTY cell, either prurchace or pay rent
-        } else if (CellType.PROPERTY.equals(getPositionType()) || CellType.RAILROAD.equals(getPositionType())) {
+        } else {
             Cell occupiedCell = Cells.get((Integer) getPosition());
-            //is it currently unowned? If so, purchace property
-            if (occupiedCell.getOwnership() == null) {
-                cash -= occupiedCell.getBaseValue();
-                occupiedCell.setOwnership(getPlayerID());
-                System.out.println("\t" + name + " buys " + occupiedCell.getName() + " for " + occupiedCell.getBaseValue());
-                //If it is owned but by the current player, then do nothing
-            } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
-                //It is owned and by another player, then pay rent
-            } else {
-                playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
+            //can cell be owned? if so..
+            if (occupiedCell.getOwnable()) {
+                //is it currently unowned? If so, purchace property
+                if (occupiedCell.getOwnership() == null) {
+                    cash -= occupiedCell.getBaseValue();
+                    occupiedCell.setOwnership(getPlayerID());
+                    System.out.println("\t" + name + " buys " + occupiedCell.getName() + " for " + occupiedCell.getBaseValue());
+                    //If it is owned but by the current player, then do nothing
+                } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
+                    //It is owned and by another player, then pay rent
+                } else if (getPositionType() == UTILITY) {
+                    playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent(Dice.getRollSum()));
+                } else {
+                    playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
+                }
             }
         }
     }
@@ -483,16 +490,20 @@ public class Player {
         // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
         if (position > 40) {
             position -= 40;
+            if (position != 1) {
+                System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
+                playerCashRecieve(0, Rules.getPassGoCredit());
+            }
         } else if (position < 1) {
             position += 40;
         }
-
-        Integer positionInfoOwnership = Cells.get(position).getOwnership();
-        int positionInfocurrentRent = Cells.get(position).getRent();
         int positionInfoCost = Cells.get(position).getBaseValue();
+        Integer positionInfoOwnership = Cells.get(position).getOwnership();
+        int positionInfocurrentRent = (getPositionType() == UTILITY) ? (Cells.get(position)).getRent(Dice.getRollSum()) : Cells.get(position).getRent();
+
         if (Cells.get(position).getOwnable()) {
             if (positionInfoOwnership != null) {
-                System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Owned by: " + positionInfoOwnership + ", Rent: " + positionInfocurrentRent);
+                System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Owned by: " + Players.get(positionInfoOwnership).getName() + ", Rent: " + positionInfocurrentRent);
             } else {
                 System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Avaliable to purchace for " + positionInfoCost);
             }
@@ -569,16 +580,30 @@ public class Player {
                 return;
             // cases of player recieving fixed sum of cash
             case "CREDIT_ABS":
+                playerCashRecieve(0, Integer.parseInt(cardAction1));
                 return;
             // cases of player recieving variable ammount of cash dependent on current game params.
             case "CREDIT_REL":
                 return;
             // cases of player paying fixed ammount of cash
             case "DEBIT_ABS":
+                playerCashPay(0, Integer.parseInt(cardAction1));
                 return;
             // player paying variable ammount of cash
             case "DEBIT_REL":
-                return;
+                switch (cardAction1) {
+                    case "PAY_EACH":
+                        //pay each player cardAction2
+                        for (Integer i = 1; i <= Players.amount(); i++) {
+                            if (Objects.equals(i, playerID)) {
+                                //do nothing
+                            } else {
+                                playerCashPay(i, Integer.parseInt(cardAction2));
+                            }
+                        }
+                    // return;
+                }
+            //return;
         }
     }
 

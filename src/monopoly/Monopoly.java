@@ -21,20 +21,24 @@ public class Monopoly {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         //Add players
-        Players players = new Players();
-        players.add("Test1", 1, Token.TOPHAT);
-        players.add("Test2", 2, Token.RACECAR);
-        players.add("Test3", 3, Token.BATTLESHIP);
+        //new Players();
+        Players.add("Test1", 1, Token.TOPHAT);
+        Players.add("Test2", 2, Token.RACECAR);
+        Players.add("Test3", 3, Token.BATTLESHIP);
+
+        Rules.setPassGoCredit(200);
+        Rules.setGoLandingBonus(true);
+
         //Add defualt chest & chance card decks and gameboard cells
-        ChanceCards chanceCardDeck = new ChanceCards("chanceCardDeck.CSV");
-        ChestCards chestCardDeck = new ChestCards("chestCardDeck.CSV");
-        Cells cells = new Cells("CellData.CSV");
+        new ChanceCards("chanceCardDeck.CSV");
+        new ChestCards("chestCardDeck.CSV");
+        new Cells("CellData.CSV");
         //Add dice - a pair of six-sided dice
-        Dice dice = new Dice(6, 6);
+        new Dice(6, 6);
 
         //Begin game.  Play for 5 rounds.
         int playerRounds = 1;
-        int PLAYER_ROUNDS_AMOUNT = 10;
+        int PLAYER_ROUNDS_AMOUNT = 100;
         do {
             System.out.println("Round " + playerRounds + ":");
             for (int i = 1; i <= Players.amount(); i++) {
@@ -51,3 +55,7 @@ public class Monopoly {
     }
 
 }
+
+//TODO track jail bonds
+//complete rule class
+//begin jail exit strategies

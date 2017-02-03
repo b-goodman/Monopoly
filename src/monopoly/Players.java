@@ -26,7 +26,7 @@ public class Players {
      * @param index Integer - unique player ID
      * @param token Token - players token
      */
-    public void add(
+    public static void add(
             String name,
             Integer index,
             Token token
@@ -47,7 +47,7 @@ public class Players {
      * @param jailBondsAvaliable int - Initial amount of jail bonds avaliable to
      * player (default: 0)
      */
-    public void add(
+    public static void add(
             String name,
             Integer index,
             Token token,
