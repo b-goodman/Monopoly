@@ -21,20 +21,21 @@ public class Monopoly {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         //Add players
-        //new Players();
         Players.add("Test1", 1, Token.TOPHAT);
         Players.add("Test2", 2, Token.RACECAR);
         Players.add("Test3", 3, Token.BATTLESHIP);
 
+        //Override any default rules
         Rules.setPassGoCredit(200);
-        Rules.setGoLandingBonus(true);
+        Rules.setGoLandingBonus(false);
+        Rules.setGoLandingBonusValue(200);
+        Rules.setFreeParkingBonusEnabled(true);
 
-        //Add defualt chest & chance card decks and gameboard cells
-        new ChanceCards("chanceCardDeck.CSV");
-        new ChestCards("chestCardDeck.CSV");
-        new Cells("CellData.CSV");
-        //Add dice - a pair of six-sided dice
-        new Dice(6, 6);
+        //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
+        ChanceCards.init();
+        ChestCards.init();
+        Cells.init();
+        Dice.init();
 
         //Begin game.  Play for 5 rounds.
         int playerRounds = 1;
@@ -45,6 +46,9 @@ public class Monopoly {
                 do {
                     Players.get(i).beginTurn();
                     Players.get(i).midTurn();
+                    if (Dice.isDouble()) {
+                        System.out.println("\t" + Players.get(i).getName() + " takes another turn");
+                    }
                 } while (Dice.isDouble() && !Players.get(i).isInJail());
                 Players.get(i).endTurn();
             }
@@ -59,3 +63,4 @@ public class Monopoly {
 //TODO track jail bonds
 //complete rule class
 //begin jail exit strategies
+//unify player/bank cash transfers

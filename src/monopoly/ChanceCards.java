@@ -90,6 +90,16 @@ public final class ChanceCards {
     }
 
     /**
+     * initialises a new library and deck of chance cards according to the
+     * default specification.
+     *
+     * @throws IOException
+     */
+    public static void init() throws IOException {
+        ChanceCards chanceCards = new ChanceCards("chanceCardDeck.CSV");
+    }
+
+    /**
      * Create new Card and add to library
      *
      * @param cardID [String] Unique identifier for card

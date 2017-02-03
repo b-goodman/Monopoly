@@ -17,7 +17,7 @@
 18,Community Chest B,Gray,drawCard,chest
 19,Marlborough Street,Orange,D,180,90,100,100,14,70,200,550,750,950
 20,Vine Street,Orange,D,200,100,100,100,16,80,220,600,800,1000
-21,Free Parking,Gray,null,null
+21,Free Parking,Gray,parking,null
 22,Strand,Red,E,220,110,150,150,18,90,250,700,875,1050
 23,Chance B,Gray,drawCard,chance
 24,Fleet Street,Red,E,220,110,150,150,18,90,250,700,875,1050

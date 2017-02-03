@@ -258,10 +258,10 @@ public class Player {
             Player payingPlayer = Players.get(payingPlayerID);
             addCash(cashAmount);
             payingPlayer.addCash(-cashAmount);
-            System.out.println("\t" + payingPlayer.getName() + " pays you " + cashAmount);
+            System.out.println("\t" + payingPlayer.getName() + " pays you " + cashAmount + " (Bal: " + getCash() + ")");
         } else {
             addCash(cashAmount);
-            System.out.println("\t" + name + " recieves " + cashAmount);
+            System.out.println("\t" + name + " recieves " + cashAmount + " (Bal: " + getCash() + ")");
         }
     }
 
@@ -270,10 +270,10 @@ public class Player {
             Player recievingPlayer = Players.get(recievingPlayerID);
             addCash(-cashAmount);
             recievingPlayer.addCash(cashAmount);
-            System.out.println("\t" + name + " pays " + recievingPlayer.getName() + " " + cashAmount);
+            System.out.println("\t" + name + " pays " + recievingPlayer.getName() + " " + cashAmount + " (Bal: " + getCash() + ")");
         } else {
             addCash(-cashAmount);
-            System.out.println("\t" + name + " pays " + cashAmount);
+            System.out.println("\t" + name + " pays " + cashAmount + " (Bal: " + getCash() + ")");
         }
     }
 
@@ -322,8 +322,8 @@ public class Player {
      * positions the player to 0.
      */
     public void gotoJail() {
-        setJailState(true);
-        setPosition(0);
+        inJail = true;
+        position = 0;
     }
 
     /**
@@ -331,9 +331,9 @@ public class Player {
      * player back onto the game board and resets the jail time counter.
      */
     public void leaveJail() {
-        setJailState(false);
-        setPosition(11);
-        setJailTimeSpent(0);
+        inJail = false;
+        position = 11;
+        jailTimeSpent = 0;
 
     }
 
@@ -374,7 +374,7 @@ public class Player {
      * Calling this method begins the player's turn.
      */
     public void beginTurn() {
-        speedingCount = 0;
+        //speedingCount = 0;
         System.out.println("Player " + playerID + " - " + name + ":");
         Dice.clearRoll();
         // player rolls dice and reads value
@@ -382,23 +382,21 @@ public class Player {
         int steps = Dice.getRollSum();
 
         if (isInJail() && jailTimeSpent < 3) {
-            System.out.println("\t" + name + " Takes Turn In Jail");
+            //System.out.println("\t" + name + " Takes Turn In Jail");
             jailTimeSpent++;
             endTurn();
-        } else if (isInJail() && jailTimeSpent > 3) {
+        } else if (isInJail() && jailTimeSpent == 3) {
             leaveJail();
             advanceToken(steps);
         } else {
-            // check if player rolls doubles; if so, increment speed counter
-            if (Dice.isDouble()) {
-                speedingCount++;
-            }
+            // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
             System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
             if (Dice.isDouble()) {
-                System.out.println("\t" + name + " rolls doubles!");
+                speedingCount++;
+                System.out.println("\t" + name + " rolls doubles! (" + speedingCount + ")");
             }
-            // check if players speed counter has reached 3; if so, send to jail.
-            if (speedingCount == 3) {
+            // check if players speed counter has reached limit (default 3); if so, send to jail.
+            if (speedingCount == Rules.getDoublesSpeedingLimit()) {
                 System.out.println("\t" + name + " sent to jail for speeding");
                 gotoJail();
                 // otherwise, proceed with turn
@@ -446,7 +444,25 @@ public class Player {
                     break;
                 //Pay money
                 case "debitAbs":
-                    playerCashPay(0, Integer.parseInt(para));
+                    //If the free parking bonus rule is being enforced
+                    if (Rules.isFreeParkingBonusEnabled()) {
+                        //pay the money into the free parking fund
+                        Rules.incFreeParkingBonusValue(Integer.parseInt(para));
+                    } else {
+                        //else, pay the bank
+                        playerCashPay(0, Integer.parseInt(para));
+                    }
+                    break;
+                //Potentially do nothing.  Check rules.
+                case "parking":
+                    if (Rules.isFreeParkingBonusEnabled()) {
+                        //get current amount of bonus cash
+                        //pay amount to player.
+                        playerCashRecieve(0, Rules.getFreeParkingBonusValue());
+                        //Clear bonus - set to 0
+                        Rules.clearFreeParkingBonus();
+                    }
+                    //else, do nothing.
                     break;
             }
         } else {
@@ -457,7 +473,7 @@ public class Player {
                 if (occupiedCell.getOwnership() == null) {
                     cash -= occupiedCell.getBaseValue();
                     occupiedCell.setOwnership(getPlayerID());
-                    System.out.println("\t" + name + " buys " + occupiedCell.getName() + " for " + occupiedCell.getBaseValue());
+                    System.out.println("\t" + name + " buys " + occupiedCell.getName() + " for " + occupiedCell.getBaseValue() + " (Bal: " + getCash() + ")");
                     //If it is owned but by the current player, then do nothing
                 } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
                     //It is owned and by another player, then pay rent
@@ -468,6 +484,7 @@ public class Player {
                 }
             }
         }
+
     }
 
     /**
@@ -489,8 +506,11 @@ public class Player {
         position += steps;
         // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
         if (position > 40) {
+            //Player has circumvented the board
             position -= 40;
+            //has the player passed or landed on GO
             if (position != 1) {
+                //The player has passed GO
                 System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
                 playerCashRecieve(0, Rules.getPassGoCredit());
             }
@@ -587,7 +607,14 @@ public class Player {
                 return;
             // cases of player paying fixed ammount of cash
             case "DEBIT_ABS":
-                playerCashPay(0, Integer.parseInt(cardAction1));
+                //If the free parking bonus rule is being enforced
+                if (Rules.isFreeParkingBonusEnabled()) {
+                    //pay the money into the free parking fund
+                    Rules.incFreeParkingBonusValue(Integer.parseInt(cardAction1));
+                } else {
+                    //else, pay the bank
+                    playerCashPay(0, Integer.parseInt(cardAction1));
+                }
                 return;
             // player paying variable ammount of cash
             case "DEBIT_REL":

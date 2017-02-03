@@ -30,7 +30,7 @@ public final class Cells {
         add(0, "In Jail", "Gray");
         //"GO" is always at position 1
 
-        add(1, "GO", "grey", "creditAbs", Integer.toString((Rules.isGoLandBonus()) ? 2 * Rules.getPassGoCredit() : Rules.getPassGoCredit()));
+        add(1, "GO", "grey", "creditAbs", Integer.toString((Rules.isGoLandBonusEnabled()) ? Rules.getGoLandingBonusValue() + Rules.getPassGoCredit() : Rules.getPassGoCredit()));
         //Instantiate new CSV reader with specified filepath
         CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
         //Read all entries found in CSV file
@@ -138,6 +138,15 @@ public final class Cells {
                     break;
             }
         }
+    }
+
+    /**
+     * initialises a new collection of cells according to default specification.
+     *
+     * @throws IOException
+     */
+    public static void init() throws IOException {
+        Cells cells = new Cells("CellData.CSV");
     }
 
     /**

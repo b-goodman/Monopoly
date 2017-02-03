@@ -90,6 +90,16 @@ public final class ChestCards {
     }
 
     /**
+     * initialises a new library and deck of chest cards according to the
+     * default specification.
+     *
+     * @throws IOException
+     */
+    public static void init() throws IOException {
+        ChestCards chestCards = new ChestCards("chestCardDeck.CSV");
+    }
+
+    /**
      * Create new Card and add to library
      *
      * @param cardID [String] Unique identifier for card

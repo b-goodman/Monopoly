@@ -57,6 +57,14 @@ public final class Dice {
         }
     }
 
+    public static void init() {
+        Dice dice = new Dice();
+    }
+
+    public static void init(int... sides) {
+        Dice dice = new Dice(sides);
+    }
+
     /**
      * Rolls dice. For each die in DICE_LIST, a random integer [1,sides] is
      * generated and added to ROLL_LIST.
@@ -101,7 +109,7 @@ public final class Dice {
         if (ROLL_LIST.size() == 1) {
             chk = false;
         } else {
-            for (int i = 1; i < ROLL_LIST.size() && chk; i++) {
+            for (int i = 0; i < ROLL_LIST.size() && chk; i++) {
                 if (!Objects.equals(ROLL_LIST.get(i), ROLL_LIST.get(0))) {
                     chk = false;
                     break;
