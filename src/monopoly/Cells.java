@@ -8,6 +8,7 @@ package monopoly;
 import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,30 +40,31 @@ public final class Cells {
 
         for (int i = 0; i < entries; i++) {
             //for each entry:
-            //Each cell begins with index
-            Integer cellIndex = Integer.valueOf(Arrays.asList(getCSV.get(i)).get(0));
+            //Each cell begins with its type -- used to determine correct constructor
+            String entryType = Arrays.asList(getCSV.get(i)).get(0);
+            //Then its index
+            Integer cellIndex = Integer.valueOf(Arrays.asList(getCSV.get(i)).get(1));
             //And continues with its name
-            String cellName = Arrays.asList(getCSV.get(i)).get(1);
+            String cellName = Arrays.asList(getCSV.get(i)).get(2);
             //And lastly color
-            String cellColor = Arrays.asList(getCSV.get(i)).get(2);
-            //get length of each entry
-            int entrySize = Arrays.asList(getCSV.get(i)).size();
+            String cellColor = Arrays.asList(getCSV.get(i)).get(3);
+
             //Use size of each entry as signature to identify cell type it represents and parse accordingly
-            switch (entrySize) {
-                case 14:
+            switch (entryType) {
+                case "PROPERTY":
                     //property signatue - char,int,int,int,int,int,int,int,int,int
                     //if celltype is "property" then parse remaining entries according to signature
-                    char propertyGroupID = Arrays.asList(getCSV.get(i)).get(3).charAt(0);
-                    int propertyBaseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(4));
-                    int propertyMortgageValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(5));
-                    int propertyHouseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(6));
-                    int propertyHotelValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(7));
-                    int propertyRentBase = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(8));
-                    int propertyRent1H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(9));
-                    int propertyRent2H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(10));
-                    int propertyRent3H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(11));
-                    int propertyRent4H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(12));
-                    int propertyRentHotel = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(13));
+                    char propertyGroupID = Arrays.asList(getCSV.get(i)).get(4).charAt(0);
+                    int propertyBaseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(5));
+                    int propertyMortgageValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(6));
+                    int propertyHouseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(7));
+                    int propertyHotelValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(8));
+                    int propertyRentBase = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(9));
+                    int propertyRent1H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(10));
+                    int propertyRent2H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(11));
+                    int propertyRent3H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(12));
+                    int propertyRent4H = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(13));
+                    int propertyRentHotel = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(14));
                     //Add to collection
                     add(
                             cellIndex,
@@ -81,15 +83,26 @@ public final class Cells {
                             propertyRentHotel
                     );
                     break;
-                case 9:
-                    //railroad signature - int,int,int,int,int,int
+                case "RAILROAD":
+                    //railroad signature - int,int,int[]
                     //If celltype is "railroad" then parse remaining entries as primirtive int.
-                    int railroadBaseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(3));
-                    int railroadMortgageValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(4));
-                    int railroadRentBase = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(5));
-                    int railroadRent2R = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(6));
-                    int railroadRent3R = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(7));
-                    int railroadRent4R = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(8));
+                    int railroadBaseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(4));
+                    int railroadMortgageValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(5));
+
+                    //get length of RAILROAD type entry
+                    int entryLegth = Arrays.asList(getCSV.get(i)).size();
+                    //entries i=6+ are part of the rent conditions array.  i.e., i = [6,entryLength]
+                    //get entries, convert to int, add to array
+                    ArrayList<Integer> railroadRentConditions = new ArrayList<>();
+                    for (int j = 6; j < entryLegth; j++) {
+                        railroadRentConditions.add(Integer.valueOf(Arrays.asList(getCSV.get(i)).get(j)));
+                    }
+                    railroadRentConditions.add(0, 0);
+
+//                    int railroadRentBase = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(6));
+//                    int railroadRent2R = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(7));
+//                    int railroadRent3R = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(8));
+//                    int railroadRent4R = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(9));
                     //Add railroad cell to collection
                     add(
                             cellIndex,
@@ -97,19 +110,20 @@ public final class Cells {
                             cellColor,
                             railroadBaseValue,
                             railroadMortgageValue,
-                            railroadRentBase,
-                            railroadRent2R,
-                            railroadRent3R,
-                            railroadRent4R
+                            railroadRentConditions
+                    //                            railroadRentBase,
+                    //                            railroadRent2R,
+                    //                            railroadRent3R,
+                    //                            railroadRent4R
                     );
                     break;
-                case 7:
+                case "UTILITY":
                     //utility signature
                     //int,int,int,int
-                    int utilityBaseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(3));
-                    int utilityMortgageValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(4));
-                    int utilityOneMult = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(5));
-                    int utilityTwoMult = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(6));
+                    int utilityBaseValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(4));
+                    int utilityMortgageValue = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(5));
+                    int utilityOneMult = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(6));
+                    int utilityTwoMult = Integer.parseInt(Arrays.asList(getCSV.get(i)).get(7));
                     //Add utulity cell to collection
                     add(
                             cellIndex,
@@ -121,11 +135,11 @@ public final class Cells {
                             utilityTwoMult
                     );
                     break;
-                case 5:
+                case "SPECIAL":
                     //special signature - String,String
                     //If celltype is "special" then parse remaning entries as Strings
-                    String specialType = Arrays.asList(getCSV.get(i)).get(3);
-                    String specialParamater = Arrays.asList(getCSV.get(i)).get(4);
+                    String specialType = Arrays.asList(getCSV.get(i)).get(4);
+                    String specialParamater = Arrays.asList(getCSV.get(i)).get(5);
                     //Add cell to collection
                     add(
                             cellIndex,
@@ -199,14 +213,12 @@ public final class Cells {
      * railroad from bank
      * @param mortgageValue The cash value returned to player when this railroad
      * is mortgaged
-     * @param rentBase The rent the owning player receives when only this
-     * railroad is owned
-     * @param rent2R The rent the owning player receives when this railroad plus
-     * one other is owned
-     * @param rent3R The rent the owning player receives when this railroad plus
-     * two others are owned
-     * @param rent4R The rent the owning player receives when this player owns
-     * all railroads
+     * @param railroadRentConditions // * @param rentBase The rent the owning
+     * player receives when only this // * railroad is owned // * @param rent2R
+     * The rent the owning player receives when this railroad plus // * one
+     * other is owned // * @param rent3R The rent the owning player receives
+     * when this railroad plus // * two others are owned // * @param rent4R The
+     * rent the owning player receives when this player owns // * all railroads
      */
     public void add(
             Integer boardLocation,
@@ -214,12 +226,13 @@ public final class Cells {
             String color,
             int baseValue,
             int mortgageValue,
-            int rentBase,
-            int rent2R,
-            int rent3R,
-            int rent4R
+            List railroadRentConditions
+    //            int rentBase,
+    //            int rent2R,
+    //            int rent3R,
+    //            int rent4R
     ) {
-        LOCATIONS.put(boardLocation, new Cell(name, color, baseValue, mortgageValue, rentBase, rent2R, rent3R, rent4R));
+        LOCATIONS.put(boardLocation, new Cell(name, color, baseValue, mortgageValue, railroadRentConditions));
     }
 
     /**

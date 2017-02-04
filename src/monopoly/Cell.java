@@ -43,6 +43,7 @@ public class Cell {
     public int twoUtilityMult;
     public String actionType;
     public String actionParamater;
+    public List railroadRentConditions;
 
     /**
      * Constructs a property type cell
@@ -110,24 +111,23 @@ public class Cell {
      * railroad from bank
      * @param mortgageValue The cash value returned to player when this railroad
      * is mortgaged
-     * @param rentBase The rent the owning player receives when only this
-     * railroad is owned
-     * @param rent2R The rent the owning player receives when this railroad plus
-     * one other is owned
-     * @param rent3R The rent the owning player receives when this railroad plus
-     * two others are owned
-     * @param rent4R The rent the owning player receives when this player owns
-     * all railroads
+     * @param railroadRentConditions // * @param rentBase The rent the owning
+     * player receives when only this // * railroad is owned // * @param rent2R
+     * The rent the owning player receives when this railroad plus // * one
+     * other is owned // * @param rent3R The rent the owning player receives
+     * when this railroad plus // * two others are owned // * @param rent4R The
+     * rent the owning player receives when this player owns // * all railroads
      */
     public Cell(
             String name,
             String color,
             int baseValue,
             int mortgageValue,
-            int rentBase,
-            int rent2R,
-            int rent3R,
-            int rent4R
+            List railroadRentConditions
+    //            int rentBase,
+    //            int rent2R,
+    //            int rent3R,
+    //            int rent4R
     ) {
         this.name = name;
         this.cellType = CellType.RAILROAD;
@@ -137,10 +137,11 @@ public class Cell {
         this.mortgageValue = mortgageValue;
         this.mortgageState = false;
         this.improvemntState = 0;
-        this.rentBase = rentBase;
-        this.rent2R = rent2R;
-        this.rent3R = rent3R;
-        this.rent4R = rent4R;
+        this.railroadRentConditions = railroadRentConditions;
+//        this.rentBase = rentBase;
+//        this.rent2R = rent2R;
+//        this.rent3R = rent3R;
+//        this.rent4R = rent4R;
         this.currentOwner = null;
         this.groupID = 'r';
         PROPERTY_ID_BY_NAME.put(name, groupID);
@@ -493,20 +494,22 @@ public class Cell {
                     }
                     break;
                 case RAILROAD:
-                    switch (getOwningPlayerGroupFrequency()) {
-                        case 1:
-                            returnCase = rentBase;
-                            break;
-                        case 2:
-                            returnCase = rent2R;
-                            break;
-                        case 3:
-                            returnCase = rent3R;
-                            break;
-                        case 4:
-                            returnCase = rent4R;
-                            break;
-                    }
+//                    switch (getOwningPlayerGroupFrequency()) {
+//                        case 1:
+//                            returnCase = rentBase;
+//                            break;
+//                        case 2:
+//                            returnCase = rent2R;
+//                            break;
+//                        case 3:
+//                            returnCase = rent3R;
+//                            break;
+//                        case 4:
+//                            returnCase = rent4R;
+//                            break;
+//                    }
+                    returnCase = (int) railroadRentConditions.get(getOwningPlayerGroupFrequency());
+
                     break;
             }
         }

@@ -56,13 +56,15 @@ public class Monopoly {
             System.out.println();
         } while (playerRounds < PLAYER_ROUNDS_AMOUNT);
 
+//        System.out.println(Cell.PLAYER_OWNERSHIP);
     }
 
 }
 
-//TODO track jail bonds
+// TODO:
+//track jail bonds
 //complete rule class
 //begin jail exit strategies
 //unify player/bank cash transfers
 //genaralise board length in token roll-over
-//generalise conditions for RR and U rent - redesign import, include TYPE for refrencing - not param. signature.
+//RAILROAD DONE - generalise conditions for RR and U rent - redesign import, include TYPE for refrencing - not param. signature.
