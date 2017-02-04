@@ -29,7 +29,6 @@ public final class Cells {
         //"In Jail" is always at position 0
         add(0, "In Jail", "Gray");
         //"GO" is always at position 1
-
         add(1, "GO", "grey", "creditAbs", Integer.toString((Rules.isGoLandBonusEnabled()) ? Rules.getGoLandingBonusValue() + Rules.getPassGoCredit() : Rules.getPassGoCredit()));
         //Instantiate new CSV reader with specified filepath
         CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.

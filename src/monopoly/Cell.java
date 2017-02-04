@@ -342,7 +342,7 @@ public class Cell {
                     //Property type is ownable
                     //check if property is already mortgaged; if so then cannot be mortgaged
                     System.out.println("This property is already mortgaged");
-                } else if (getImprovmentState() > 0) {
+                } else if (houseCount > 0 || hotelCount == 1) {
                     //Property is ownable and is not currently mortgaged.
                     //Check if property is improved; if so then cannot be mortgaged
                     System.out.println("Improved properties cannot be mortgaged");
@@ -467,29 +467,29 @@ public class Cell {
         } else {
             switch (getCellType()) {
                 case PROPERTY:
-                    switch (getImprovmentState()) {
-                        case 0:
-                            if (isSetComplete()) {
-                                returnCase = rentBase * 2;
-                            } else {
-                                returnCase = rentBase;
-                            }
-                            break;
-                        case 1:
-                            returnCase = rent1H;
-                            break;
-                        case 2:
-                            returnCase = rent2H;
-                            break;
-                        case 3:
-                            returnCase = rent3H;
-                            break;
-                        case 4:
-                            returnCase = rent4H;
-                            break;
-                        case 5:
-                            returnCase = rentHotel;
-                            break;
+                    if (hotelCount == 1) {
+                        returnCase = rentHotel;
+                    } else if (houseCount == 0) {
+                        if (isSetComplete()) {
+                            returnCase = rentBase * 2;
+                        } else {
+                            returnCase = rentBase;
+                        }
+                    } else {
+                        switch (houseCount) {
+                            case 1:
+                                returnCase = rent1H;
+                                break;
+                            case 2:
+                                returnCase = rent2H;
+                                break;
+                            case 3:
+                                returnCase = rent3H;
+                                break;
+                            case 4:
+                                returnCase = rent4H;
+                                break;
+                        }
                     }
                     break;
                 case RAILROAD:
@@ -613,16 +613,15 @@ public class Cell {
     }
 
 //Property types only:
-    /**
-     * Returns state of property Cells improvement 0 - unimproved 1 - 1 House
-     * .... 5 - Hotel
-     *
-     * @return integer relating current state of property improvement
-     */
-    public int getImprovmentState() {
-        return improvemntState;
-    }
-
+    //    /**
+//     * Returns state of property Cells improvement 0 - unimproved 1 - 1 House
+//     * .... 5 - Hotel
+//     *
+//     * @return integer relating current state of property improvement
+//     */
+//    public int getImprovmentState() {
+//        return improvemntState;
+//    }
     /**
      * Checks if property is part of a complete, sole player owned set Used to
      * determine validity for buying improvements and current rent
@@ -652,8 +651,16 @@ public class Cell {
             // if is mortgaged, throw exception
             System.out.println("Cannot improve mortgaged property");
             //otherwise, proceed to check if property improvment limits are reached
-        } else if (getImprovmentState() == 5) {
-            System.out.println("Cannot improve property beyond 1 Hotel");
+        } else if (hotelCount == 1) {
+            if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0) {
+                System.out.println("Cannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
+            } else {
+                System.out.println("Cannot improve property beyond 1 Hotel");
+            }
+        } else if (Rules.getImprovementAmountHouse() == 0 && hotelCount == 0 && houseCount < Rules.getPropertyHotelReq()) {
+            System.out.println("Property eligible for improvement but there are no houses avaliable to purchace");
+        } else if (Rules.getImprovementAmountHotel() == 0 && hotelCount == 0 && houseCount == Rules.getPropertyHotelReq()) {
+            System.out.println("Property eligible for improvement but there are no hotels avaliable to purchace");
         } else {
             isValid = true;
         }
@@ -666,13 +673,13 @@ public class Cell {
      * level) accordingly
      */
     public void addImprovement() {
-        if (addImprovementsValid() && getImprovmentState() < 4) {
+        if (addImprovementsValid() && houseCount < Rules.getPropertyHotelReq()) {
             houseCount++;
-            improvemntState++;
-        } else if (addImprovementsValid() && getImprovmentState() == 4) {
+            //improvemntState++;
+        } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {
             houseCount = 0;
             hotelCount = 1;
-            improvemntState++;
+            //improvemntState++;
         }
     }
 
@@ -684,7 +691,7 @@ public class Cell {
      */
     public boolean removeImprovementsValid() {
         boolean isValid = false;
-        if (getImprovmentState() == 0) {
+        if ((houseCount == 0 && hotelCount == 0)) {
             System.out.println("Cannot remove improvements from unimproved property");
         } else {
             isValid = true;
@@ -696,15 +703,16 @@ public class Cell {
      * Removes 1 improvement from property if allowed by rules
      */
     public void removeImprovements() {
-        // if action valid and improvement state less than 5 (no hotel) then remove a house
-        if (removeImprovementsValid() && getImprovmentState() < 5) {
-            houseCount--;
-            improvemntState--;
-            //Otherwise, if action valid then remove a hotel.
-        } else if (removeImprovementsValid()) {
-            hotelCount = 0;
-            houseCount = 4;
-            improvemntState--;
+        // if action valid
+        if (removeImprovementsValid()) {
+            //and improvement state less than 5 (no hotel) then remove a house
+            if (hotelCount == 0) {
+                houseCount--;
+                //Otherwise, if remove a hotel.
+            } else {
+                hotelCount = 0;
+                houseCount = 4;
+            }
         }
     }
 

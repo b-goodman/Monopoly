@@ -64,3 +64,5 @@ public class Monopoly {
 //complete rule class
 //begin jail exit strategies
 //unify player/bank cash transfers
+//genaralise board length in token roll-over
+//generalise conditions for RR and U rent - redesign import, include TYPE for refrencing - not param. signature.

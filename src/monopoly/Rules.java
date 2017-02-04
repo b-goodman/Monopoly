@@ -34,14 +34,101 @@ public final class Rules {
 
     //House/hotel building
     /**
+     * Normally, the amount of improvement resources (houses & hotels) is
+     * finite. There are 32 houses and 12 hotels avaliable in a standard game.
+     * When true, all improvement resources will remain finite.
+     */
+    private static boolean IMPROVEMENT_RESOURCES_FINITE = true;
+
+    /**
+     * Amount of avaliable houses. Initalized to default value (32).
+     */
+    private static int improvementAmountHouse = 32;
+    /**
+     * Amount of avaliable hotels. Initalized to default value (12).
+     */
+    private static int improvementAmountHotel = 12;
+    /**
      * Requires player to build improvements evenly across a property group
      */
     private static boolean PROPERTY_EVEN_BUILD_ENABLED = true;
-
     /**
      * Amount of houses needed on a property before a hotel may be built.
      */
     private static int PROPERTY_HOTEL_REQ = 4;
+
+    //Methods
+    //Property improvement
+    /**
+     * Normally players are required to build improvements evenly across a
+     * property group. Setting to false will disable this requirement (default:
+     * true).
+     *
+     * @return
+     */
+    public static boolean isPropertyEvenBuildEnabled() {
+        return PROPERTY_EVEN_BUILD_ENABLED;
+    }
+
+    public static boolean isImprovementResourcesFinite() {
+        return IMPROVEMENT_RESOURCES_FINITE;
+    }
+
+    public static int getImprovementAmountHouse() {
+        return improvementAmountHouse;
+    }
+
+    public static int getImprovementAmountHotel() {
+        return improvementAmountHotel;
+    }
+
+    public static void setImprovementAmountHotel(int newAmount) {
+        improvementAmountHotel = newAmount;
+    }
+
+    public static void setImprovementAmountHouse(int newAmount) {
+        improvementAmountHouse = newAmount;
+    }
+
+    /**
+     * Normally players are required to build improvements evenly across a
+     * property group. Setting to false will disable this requirement (default:
+     * true).
+     *
+     * @param enabled [boolean] true (default) - The even build rule should be
+     * enforced. false - the even build rule is not enforced.
+     */
+    public static void setPropertyEvenBuildEnabled(boolean enabled) {
+        PROPERTY_EVEN_BUILD_ENABLED = enabled;
+    }
+
+    /**
+     * Normally, a player will need to have build 4 houses on a property before
+     * building a hotel. User may override the canonical value to a lower one,
+     * potentially shortening the length of a game.
+     *
+     * @param hotelReq [int (0,4] ] Amount of houses required to be built on a
+     * property before a hotel may be built. If argument is out of bounds,
+     * PROPERTY_HOTEL_REQ is reset to default value (4).
+     */
+    public static void setPropertyHotelReq(int hotelReq) {
+        if (hotelReq > 0 && hotelReq <= 4) {
+            PROPERTY_HOTEL_REQ = hotelReq;
+        } else {
+            PROPERTY_HOTEL_REQ = 4;
+        }
+    }
+
+    /**
+     * Normally, a player will need to have build 4 houses on a property before
+     * building a hotel.
+     *
+     * @return Amount of houses which must be presently built on a property
+     * before a hotel may be built
+     */
+    public static int getPropertyHotelReq() {
+        return PROPERTY_HOTEL_REQ;
+    }
 
     //Free parking bonus
     /**
