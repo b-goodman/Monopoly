@@ -7,6 +7,11 @@ package monopoly;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -37,26 +42,45 @@ public class Monopoly {
         Cells.init();
         Dice.init();
 
-        //Begin game.  Play for 5 rounds.
-        int playerRounds = 1;
-        int PLAYER_ROUNDS_AMOUNT = 100;
-        do {
-            System.out.println("Round " + playerRounds + ":");
-            for (int i = 1; i <= Players.amount(); i++) {
-                do {
-                    Players.get(i).beginTurn();
-                    Players.get(i).midTurn();
-                    if (Dice.isDouble()) {
-                        System.out.println("\t" + Players.get(i).getName() + " takes another turn");
-                    }
-                } while (Dice.isDouble() && !Players.get(i).isInJail());
-                Players.get(i).endTurn();
-            }
-            playerRounds++;
-            System.out.println();
-        } while (playerRounds < PLAYER_ROUNDS_AMOUNT);
+        Players.get(1).setOwnership(2);
+        Players.get(1).setOwnership(4);
+        Players.get(2).setOwnership(6);
+        Players.get(1).setOwnership(10);
+        Players.get(1).setOwnership(40);
+        Players.get(1).setOwnership(38);
 
-//        System.out.println(Cell.PLAYER_OWNERSHIP);
+        Players.get(1).addPropertyImprovementByGroup('A');
+        //Players.get(1).addPropertyImprovementByGroup('B');
+        Players.get(1).addPropertyImprovementByGroup('H');
+//        Players.get(1).addPropertyImprovementByGroup('A');
+//
+//        System.out.println(Cells.get(2).getRent());
+//        System.out.println(Cells.get(4).getRent());
+//
+        System.out.println(Players.get(1).getCompleteSetID());
+
+        System.out.println(Players.get(1).getPropertyGroupMembers('H'));
+
+        //improve property -- IMPROPVE PROPERTY GROUP
+        //return cells which are members of specified group
+        //Begin game.  Play for 5 rounds.
+//        int playerRounds = 1;
+//        int PLAYER_ROUNDS_AMOUNT = 100;
+//        do {
+//            System.out.println("Round " + playerRounds + ":");
+//            for (int i = 1; i <= Players.amount(); i++) {
+//                do {
+//                    Players.get(i).beginTurn();
+//                    Players.get(i).midTurn();
+//                    if (Dice.isDouble()) {
+//                        System.out.println("\t" + Players.get(i).getName() + " takes another turn");
+//                    }
+//                } while (Dice.isDouble() && !Players.get(i).isInJail());
+//                Players.get(i).endTurn();
+//            }
+//            playerRounds++;
+//            System.out.println();
+//        } while (playerRounds < PLAYER_ROUNDS_AMOUNT);
     }
 
 }
@@ -68,3 +92,4 @@ public class Monopoly {
 //unify player/bank cash transfers
 //genaralise board length in token roll-over
 //RAILROAD DONE - generalise conditions for RR and U rent - redesign import, include TYPE for refrencing - not param. signature.
+

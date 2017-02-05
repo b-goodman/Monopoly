@@ -5,9 +5,13 @@
  */
 package monopoly;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import monopoly.Enums.CellType;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import static monopoly.Enums.CellType.SPECIAL;
 import static monopoly.Enums.CellType.UTILITY;
 
@@ -307,6 +311,52 @@ public class Player {
         (Cells.get(propertyBoardLocation)).setOwnership(getPlayerID());
     }
 
+    public List getOwnership() {
+        List<Cell> playerOwnershipList = new ArrayList<>();
+        Cells.getPlayerOwnership().keySet().stream().filter((propertyName) -> ((int) Cells.getPlayerOwnership().get(propertyName) == 1)).forEach((propertyName) -> {
+            playerOwnershipList.add((Cell) propertyName);
+        });
+        return playerOwnershipList;
+    }
+
+    public List getCompleteSets() {
+        List<Cell> completeProperties = new ArrayList<>();
+        Iterator<Cell> test = getOwnership().iterator();
+        while (test.hasNext()) {
+            Cell cand = test.next();
+            if (cand.isSetComplete()) {
+                completeProperties.add(cand);
+            }
+        }
+        return completeProperties;
+    }
+
+    public List getPropertyGroupMembers(char groupID) {
+        List<Cell> groupMembers = new ArrayList<>();
+        for (int i = 1; i <= Cells.locationsAmount(); i++) {
+            if (Cells.get(i).getPropertyGroupID() == groupID) {
+                groupMembers.add(Cells.get(i));
+            }
+        }
+        return groupMembers;
+    }
+
+    public Set getCompleteSetID() {
+        List<Character> propertyIDs = new ArrayList<>();
+        for (Object q : getCompleteSets()) {
+            Cell temp = (Cell) q;
+            propertyIDs.add(temp.getPropertyGroupID());
+        }
+        return new HashSet<>(propertyIDs);
+    }
+
+    public void addPropertyImprovementByGroup(char groupID) {
+        List q = getPropertyGroupMembers(groupID);
+        for (int i = 0; i < q.size(); i++) {
+            ((Cell) q.get(i)).addImprovement();
+        }
+    }
+
     /**
      * Returns cells type for specified location
      *
@@ -505,9 +555,9 @@ public class Player {
         //advance token
         position += steps;
         // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
-        if (position > 40) {
+        if (position > Cells.locationsAmount()) {
             //Player has circumvented the board
-            position -= 40;
+            position -= Cells.locationsAmount();
             //has the player passed or landed on GO
             if (position != 1) {
                 //The player has passed GO
@@ -515,7 +565,7 @@ public class Player {
                 playerCashRecieve(0, Rules.getPassGoCredit());
             }
         } else if (position < 1) {
-            position += 40;
+            position += Cells.locationsAmount();
         }
         int positionInfoCost = Cells.get(position).getBaseValue();
         Integer positionInfoOwnership = Cells.get(position).getOwnership();

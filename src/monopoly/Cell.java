@@ -281,6 +281,9 @@ public class Cell {
     }
 
 //Ownable cells:
+//    public static Map getTotalOwnership() {
+//        return PLAYER_OWNERSHIP;
+//    }
     /**
      * Defines the ownership of this Cell. Sets the Cells ownership field to its
      * new value and adds/overwrites static PLAYER_OWNERSHIP field with Cells
@@ -291,6 +294,7 @@ public class Cell {
     public void setOwnership(Integer newOwnerID) {
         currentOwner = newOwnerID;
         PLAYER_OWNERSHIP.put(name, newOwnerID);
+        Cells.PLAYER_OWNERSHIP.put(this, newOwnerID);
     }
 
     /**
@@ -660,9 +664,9 @@ public class Cell {
             } else {
                 System.out.println("Cannot improve property beyond 1 Hotel");
             }
-        } else if (Rules.getImprovementAmountHouse() == 0 && hotelCount == 0 && houseCount < Rules.getPropertyHotelReq()) {
+        } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHouse() == 0 && hotelCount == 0 && houseCount < Rules.getPropertyHotelReq()) {
             System.out.println("Property eligible for improvement but there are no houses avaliable to purchace");
-        } else if (Rules.getImprovementAmountHotel() == 0 && hotelCount == 0 && houseCount == Rules.getPropertyHotelReq()) {
+        } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0 && hotelCount == 0 && houseCount == Rules.getPropertyHotelReq()) {
             System.out.println("Property eligible for improvement but there are no hotels avaliable to purchace");
         } else {
             isValid = true;
@@ -678,10 +682,18 @@ public class Cell {
     public void addImprovement() {
         if (addImprovementsValid() && houseCount < Rules.getPropertyHotelReq()) {
             houseCount++;
+            Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - 1);
+            Players.get(currentOwner).playerCashPay(0, houseValue);
+            System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent());
             //improvemntState++;
         } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {
             houseCount = 0;
+            Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() + Rules.getPropertyHotelReq());
             hotelCount = 1;
+            Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() - 1);
+            Players.get(currentOwner).playerCashPay(0, hotelValue);
+            System.out.println("\t" + Players.get(currentOwner).getName() + " builds a hotel on " + name + " - New Rent: " + getRent());
+
             //improvemntState++;
         }
     }

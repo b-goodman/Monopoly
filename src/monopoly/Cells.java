@@ -25,6 +25,7 @@ public final class Cells {
      * defining Cell object (V).
      */
     public static Map<Integer, Cell> LOCATIONS = new HashMap<>();
+    public static Map<Cell, Integer> PLAYER_OWNERSHIP = new HashMap<>();
 
     public Cells(String filePath) throws IOException {
         //"In Jail" is always at position 0
@@ -309,5 +310,13 @@ public final class Cells {
      */
     public static Cell get(Integer boardLocation) {
         return LOCATIONS.get(boardLocation);
+    }
+
+    public static int locationsAmount() {
+        return LOCATIONS.size() - 1;
+    }
+
+    public static Map getPlayerOwnership() {
+        return PLAYER_OWNERSHIP;
     }
 }

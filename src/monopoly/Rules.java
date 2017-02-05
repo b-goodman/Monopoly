@@ -74,6 +74,10 @@ public final class Rules {
         return IMPROVEMENT_RESOURCES_FINITE;
     }
 
+    public static void setImprovementResourcesFinite(boolean enabled) {
+        PROPERTY_EVEN_BUILD_ENABLED = enabled;
+    }
+
     public static int getImprovementAmountHouse() {
         return improvementAmountHouse;
     }
