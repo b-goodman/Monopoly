@@ -23,6 +23,7 @@ public final class ChestCards {
 
     private static final List<Card> CHEST_CARD_LIB = new ArrayList<>();
     private static final ArrayDeque<Card> CHEST_CARD_DECK = new ArrayDeque<>();
+    private static final ArrayDeque<Card> JAIL_BONDS = new ArrayDeque<>();
 //Individual card defined as class
 
     class Card {
@@ -158,7 +159,22 @@ public final class ChestCards {
         if (getNextCard() == null) {
             shuffleDeck();
         }
-        return CHEST_CARD_DECK.pollFirst().getCardContent();
+        //Removal of "Get out of jail free cards" from deck
+        //on drawing card
+        Card drawnCard = CHEST_CARD_DECK.pollFirst();
+        List drawnCardContent = drawnCard.getCardContent();
+        //check if type JAIL with action OUT
+        if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
+            //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
+            JAIL_BONDS.add(drawnCard);
+            CHEST_CARD_LIB.remove(drawnCard);
+        }
+        return drawnCardContent;
+    }
+
+    public static void reinsertJailBond() {
+        //Polls form bail holding deque, appends result to current deck.
+        CHEST_CARD_DECK.add(JAIL_BONDS.pollFirst());
     }
 
 }

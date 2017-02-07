@@ -57,7 +57,55 @@ public final class Rules {
      */
     private static int PROPERTY_HOTEL_REQ = 4;
 
+    private static int IMPROVEMENT_RESALE_PENALTY = 2;
+
+    private static int GROUP_COMPLETION_RENT_BONUS_VALUE = 2;
+
+    //Property mortgage
+    private static boolean PROPERTY_MORTGAGE_INTERSET_RATE_ENABLED = true;
+
+    private static int PROPERTY_MORTGAGE_INTEREST_RATE_VALUE = 10;
+
+    //Jail
+    private static int MAX_JAIL_TERM_VALUE = 3;
+
+    private static int LEAVE_JAIL_FEE_VALUE = 50;
+
     //Methods
+    //Jail
+    public static int getJailLeaveFee() {
+        return LEAVE_JAIL_FEE_VALUE;
+    }
+
+    public static void setJailLeaveFee(int newFee) {
+        LEAVE_JAIL_FEE_VALUE = newFee;
+    }
+
+    public static int getMaxJailTerm() {
+        return MAX_JAIL_TERM_VALUE;
+    }
+
+    public static void setMaxJailTerm(int newTerm) {
+        MAX_JAIL_TERM_VALUE = newTerm;
+    }
+
+    //Property Mortgage
+    public static void enableMortgageInterest(boolean enable) {
+        PROPERTY_MORTGAGE_INTERSET_RATE_ENABLED = enable;
+    }
+
+    public static boolean isMortgageInterestEnabled() {
+        return PROPERTY_MORTGAGE_INTERSET_RATE_ENABLED;
+    }
+
+    public static void setMortgageInterestRate(int newRate) {
+        PROPERTY_MORTGAGE_INTEREST_RATE_VALUE = newRate;
+    }
+
+    public static int getMortgageInterestRate() {
+        return PROPERTY_MORTGAGE_INTEREST_RATE_VALUE;
+    }
+
     //Property improvement
     /**
      * Normally players are required to build improvements evenly across a
@@ -75,7 +123,7 @@ public final class Rules {
     }
 
     public static void setImprovementResourcesFinite(boolean enabled) {
-        PROPERTY_EVEN_BUILD_ENABLED = enabled;
+        IMPROVEMENT_RESOURCES_FINITE = enabled;
     }
 
     public static int getImprovementAmountHouse() {
@@ -92,6 +140,22 @@ public final class Rules {
 
     public static void setImprovementAmountHouse(int newAmount) {
         improvementAmountHouse = newAmount;
+    }
+
+    public static int getPropertyResalePenaltyValue() {
+        return IMPROVEMENT_RESALE_PENALTY;
+    }
+
+    public static void setPropertyResalePenaltyValue(int penaltyValue) {
+        IMPROVEMENT_RESALE_PENALTY = penaltyValue;
+    }
+
+    public static int getGroupCompletRentBonus() {
+        return GROUP_COMPLETION_RENT_BONUS_VALUE;
+    }
+
+    public static void setGroupCompleteRentBonus(int completionBonus) {
+        GROUP_COMPLETION_RENT_BONUS_VALUE = completionBonus;
     }
 
     /**

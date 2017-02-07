@@ -342,15 +342,15 @@ public class Cell {
             case "mortgage":
                 //check if cell is ownable; if not then cannot be mortgaged
                 if (!getOwnable()) {
-                    System.out.println("This type of cell (" + getCellType() + ") is not ownable and so cannot be mortgaged");
+                    System.out.println("\tThis type of cell (" + getCellType() + ") is not ownable and so cannot be mortgaged");
                 } else if (isMortgaged()) {
                     //Property type is ownable
                     //check if property is already mortgaged; if so then cannot be mortgaged
-                    System.out.println("This property is already mortgaged");
+                    System.out.println("\tThis property is already mortgaged");
                 } else if (houseCount > 0 || hotelCount == 1) {
                     //Property is ownable and is not currently mortgaged.
                     //Check if property is improved; if so then cannot be mortgaged
-                    System.out.println("Improved properties cannot be mortgaged");
+                    System.out.println("\tImproved properties cannot be mortgaged");
                 } else {
                     //Property is ownable, unmortgaged and unimproved and thus may be mortgaged
                     returnStatement = true;
@@ -360,7 +360,9 @@ public class Cell {
                 //Check if cell is already un-mortgaged
                 if (!isMortgaged()) {
                     //If property is not mortgaged then it cannot be unmortgaged.
-                    System.out.println("This property is not mortgaged");
+                    System.out.println("\tThis property is not mortgaged");
+                } else if ((Rules.isMortgageInterestEnabled() && Players.get(currentOwner).getCash() < mortgageValue + (mortgageValue / Rules.getMortgageInterestRate())) || (!Rules.isMortgageInterestEnabled() && Players.get(currentOwner).getCash() < mortgageValue)) {
+                    System.out.println("\tInsufficient funds avaliable to unmortgage this property");
                 }
                 break;
         }
@@ -373,6 +375,9 @@ public class Cell {
     public void mortgageProperty() {
         if (isMortgageActionValid("mortgage")) {
             setMortgageState(true);
+            System.out.println("\t" + Players.get(currentOwner).getName() + " mortgages " + name + " for " + mortgageValue);
+            Players.get(currentOwner).playerCashRecieve(0, mortgageValue);
+
         }
     }
 
@@ -381,7 +386,10 @@ public class Cell {
      */
     public void unmortgageProperty() {
         if (isMortgageActionValid("unmortgage")) {
+            int unmortgageValue = (Rules.isMortgageInterestEnabled()) ? mortgageValue + (mortgageValue / Rules.getMortgageInterestRate()) : mortgageValue;
             setMortgageState(false);
+            System.out.println("\t" + Players.get(currentOwner).getName() + " unmortgages " + name + " for " + unmortgageValue);
+            Players.get(currentOwner).playerCashPay(0, unmortgageValue);
         }
     }
 
@@ -432,7 +440,7 @@ public class Cell {
         ArrayList<Character> returnList;
         returnList = new ArrayList<>();
         for (int i = 0; i < getOwningPlayerOwnership().size(); i++) {
-            returnList.add(getPropertyIDbyName().get(getOwningPlayerOwnership().get(i)));
+            returnList.add(getPropertyIDbyName().get((String) getOwningPlayerOwnership().get(i)));
         }
         return returnList;
     }
@@ -460,6 +468,26 @@ public class Cell {
         return Collections.frequency(getPropertyIDbyName().values(), getPropertyGroupID());
     }
 
+    public List getPropertyGroupMembers() {
+        List<Cell> groupMembers = new ArrayList<>();
+        for (int i = 1; i <= Cells.locationsAmount(); i++) {
+            if (Cells.get(i).getPropertyGroupID() == groupID) {
+                groupMembers.add(Cells.get(i));
+            }
+        }
+        return groupMembers;
+    }
+
+    public int memberGroupMortgageCount() {
+        int returnValue = 0;
+        for (Object check : getPropertyGroupMembers()) {
+            if (((Cell) check).isMortgaged()) {
+                returnValue++;
+            }
+        }
+        return returnValue;
+    }
+
     /**
      * Returns current rent for this Cell (property or railroad)
      *
@@ -468,15 +496,16 @@ public class Cell {
     public int getRent() {
         int returnCase = 0;
         if (isMortgaged()) {
-            System.out.println("Rent cannot be collected on mortgaged properties");
+            System.out.println("\tRent cannot be collected on mortgaged properties");
         } else {
             switch (getCellType()) {
                 case PROPERTY:
                     if (hotelCount == 1) {
                         returnCase = rentHotel;
                     } else if (houseCount == 0) {
-                        if (isSetComplete()) {
-                            returnCase = rentBase * 2;
+                        //if property is member of a complete set and all set members are unmortgaged and are unimproved,
+                        if (isSetComplete() && memberGroupMortgageCount() > 0) {
+                            returnCase = rentBase * Rules.getGroupCompletRentBonus();
                         } else {
                             returnCase = rentBase;
                         }
@@ -512,7 +541,7 @@ public class Cell {
 //                            returnCase = rent4R;
 //                            break;
 //                    }
-                    returnCase = (int) railroadRentConditions.get(getOwningPlayerGroupFrequency());
+                    returnCase = (int) railroadRentConditions.get(getOwningPlayerGroupFrequency() - memberGroupMortgageCount());
 
                     break;
             }
@@ -646,32 +675,49 @@ public class Cell {
      */
     public boolean addImprovementsValid() {
         boolean isValid = false;
+        //Can the player afford improvemens?
+        //cost of improvement is a house if houseCount < propertyHotelReq(), else its a hotel.
+        int improvementUnitCost = (houseCount < Rules.getPropertyHotelReq()) ? houseValue : hotelValue;
+        //is even build enabled
+        //if so, get size of property memebr group, then multiply by cost of improvement
+        int improvementNetCost = (Rules.isPropertyEvenBuildEnabled()) ? improvementUnitCost * getOwningPlayerGroupFrequency() : improvementUnitCost;
         //Check if player owns complete set
         if (!isSetComplete()) {
             //Return message is set uncomplete
-            System.out.println("Cannot improve properties belonging to incomplete sets");
+            System.out.println("\tCannot improve properties belonging to incomplete sets");
             //check if property is of correct type
         } else if (getCellType() != CellType.PROPERTY) {
-            System.out.println("This cell type (" + getCellType() + ") cannot be improved");
+            System.out.println("\tThis cell type (" + getCellType() + ") cannot be improved");
             //check if property is mortgaged
         } else if (isMortgaged()) {
             // if is mortgaged, throw exception
-            System.out.println("Cannot improve mortgaged property");
+            System.out.println("\tCannot improve mortgaged property");
             //otherwise, proceed to check if property improvment limits are reached
         } else if (hotelCount == 1) {
             if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0) {
-                System.out.println("Cannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
+                System.out.println("\tCannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
             } else {
-                System.out.println("Cannot improve property beyond 1 Hotel");
+                System.out.println("\tCannot improve property beyond 1 Hotel");
             }
         } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHouse() == 0 && hotelCount == 0 && houseCount < Rules.getPropertyHotelReq()) {
-            System.out.println("Property eligible for improvement but there are no houses avaliable to purchace");
+            System.out.println("\tP  roperty eligible for improvement but there are no houses avaliable to purchace");
         } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0 && hotelCount == 0 && houseCount == Rules.getPropertyHotelReq()) {
-            System.out.println("Property eligible for improvement but there are no hotels avaliable to purchace");
+            System.out.println("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
+            //check player has enough cash
+        } else if (Players.get(getOwnership()).getCash() < improvementNetCost) {
+            System.out.println("\t" + Players.get(getOwnership()).getName() + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
         } else {
             isValid = true;
         }
         return isValid;
+    }
+
+    public int getHouseCount() {
+        return houseCount;
+    }
+
+    public int getHotelCount() {
+        return hotelCount;
     }
 
     /**
@@ -682,9 +728,11 @@ public class Cell {
     public void addImprovement() {
         if (addImprovementsValid() && houseCount < Rules.getPropertyHotelReq()) {
             houseCount++;
-            Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - 1);
+            if (Rules.isImprovementResourcesFinite()) {
+                Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - 1);
+            }
             Players.get(currentOwner).playerCashPay(0, houseValue);
-            System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent());
+            System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent() + " - Houses left: " + Rules.getImprovementAmountHouse());
             //improvemntState++;
         } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {
             houseCount = 0;
@@ -705,9 +753,23 @@ public class Cell {
      * @return True if property improvement can be downgraded, False otherwise
      */
     public boolean removeImprovementsValid() {
+        //default return value
         boolean isValid = false;
+        //is property unimproved
         if ((houseCount == 0 && hotelCount == 0)) {
-            System.out.println("Cannot remove improvements from unimproved property");
+            //return message
+            System.out.println("\tCannot remove improvements from unimproved property");
+            //else, property has some level of improvement
+        } else if (Rules.isImprovementResourcesFinite()) {
+            //check rules for finite resources - else if resources are infinite then removal will be valid
+            //if resources are finte, and the player is selleing a hotel then check that the bank has enough houses to downgrade
+            if (hotelCount == 1) {
+                //determine how many houses are needed.  Is even build enabled?
+                if ((Rules.isPropertyEvenBuildEnabled() && (getOwningPlayerGroupFrequency() * Rules.getPropertyHotelReq() > Rules.getImprovementAmountHouse())) || (!Rules.isPropertyEvenBuildEnabled() && Rules.getPropertyHotelReq() > Rules.getImprovementAmountHouse())) {
+                    //removal must be even across all property group members - get the size of membership and multiply by hotelReq
+                    System.out.println("\tInsufficient amount of houses avaliable to downgrade from hotel");
+                }
+            }
         } else {
             isValid = true;
         }
@@ -722,11 +784,24 @@ public class Cell {
         if (removeImprovementsValid()) {
             //and improvement state less than 5 (no hotel) then remove a house
             if (hotelCount == 0) {
+                //remove house form cell
                 houseCount--;
-                //Otherwise, if remove a hotel.
+                //add house to bank
+                Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() + 1);
+                //credit owning players acount with resale value (initial sale value divided by penalty amount (default: 2) )
+                Players.get(getOwnership()).playerCashRecieve(0, (int) (houseValue / Rules.getPropertyResalePenaltyValue()));
+                //Otherwise, remove a hotel.
             } else {
+                //deduct from cells hotel count
                 hotelCount = 0;
-                houseCount = 4;
+                //revert cells house count to upper bonud (default: 4)
+                houseCount = Rules.getPropertyHotelReq();
+                //subtract above quantity of houses from game
+                Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - Rules.getPropertyHotelReq());
+                //add 1 hotel back into game
+                Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() + 1);
+                //credit players account with resale value
+                Players.get(getOwnership()).playerCashRecieve(0, (int) (hotelValue / Rules.getPropertyResalePenaltyValue()));
             }
         }
     }

@@ -32,7 +32,8 @@ public class Player {
     //Player's avaliable cash
     private int cash;
     //Ammount of "get out of jail free" cards avaliable to player
-    private int jailBondsAvaliable;
+    private int jailBondsAvaliableChance, jailBondsAvaliableChest;
+    private boolean exitingJail = false;
     //Is player in jail?
     private boolean inJail;
     //ammont of consequtive doubles rolled in sinlge turn
@@ -58,7 +59,8 @@ public class Player {
         this.token = token;
         this.position = 1;
         this.cash = 1500;
-        this.jailBondsAvaliable = 0;
+        this.jailBondsAvaliableChance = 0;
+        this.jailBondsAvaliableChest = 0;
     }
 
     /**
@@ -81,7 +83,8 @@ public class Player {
         this.token = token;
         this.position = position;
         this.cash = cash;
-        this.jailBondsAvaliable = jailBondsAvaliable;
+        //this.jailBondsAvaliableChance = jailBondsAvaliableChance;
+        //this.jailBondsAvaliableChest = jailBondsAvaliableChest;
     }
 
 //Get player's -
@@ -174,7 +177,7 @@ public class Player {
      * @return
      */
     public int getBonds() {
-        return jailBondsAvaliable;
+        return jailBondsAvaliableChance + jailBondsAvaliableChest;
     }
 
     /**
@@ -291,16 +294,15 @@ public class Player {
         cash += addAmmount;
     }
 
-    /**
-     * Add(take) a "Get out of jail free card" to(from) the player
-     *
-     * @param addAmmount Positive(negative) integer value will give to(remove
-     * from) player
-     */
-    public void addJailBond(int addAmmount) {
-        jailBondsAvaliable += addAmmount;
-    }
-
+//    /**
+//     * Add(take) a "Get out of jail free card" to(from) the player
+//     *
+//     * @param addAmmount Positive(negative) integer value will give to(remove
+//     * from) player
+//     */
+//    public void addJailBond(int addAmmount) {
+//        jailBondsAvaliable += addAmmount;
+//    }
     /**
      * Sets player as owner of specified Cell at location on game board
      *
@@ -357,6 +359,14 @@ public class Player {
         }
     }
 
+    public void mortgageProperty(Integer propertyID) {
+        Cells.get(propertyID).mortgageProperty();
+    }
+
+    public void unMortgageProperty(Integer propertyID) {
+        Cells.get(propertyID).unmortgageProperty();
+    }
+
     /**
      * Returns cells type for specified location
      *
@@ -384,7 +394,12 @@ public class Player {
         inJail = false;
         position = 11;
         jailTimeSpent = 0;
+        exitingJail = true;
 
+    }
+
+    public boolean isPlayerExitingJail() {
+        return exitingJail;
     }
 
     //end set
@@ -425,19 +440,51 @@ public class Player {
      */
     public void beginTurn() {
         //speedingCount = 0;
-        System.out.println("Player " + playerID + " - " + name + ":");
+        System.out.println("Player " + playerID + " - " + name + " begins turn on " + getPositionName() + ":");
         Dice.clearRoll();
         // player rolls dice and reads value
         Dice.roll();
         int steps = Dice.getRollSum();
 
-        if (isInJail() && jailTimeSpent < 3) {
-            //System.out.println("\t" + name + " Takes Turn In Jail");
-            jailTimeSpent++;
-            endTurn();
-        } else if (isInJail() && jailTimeSpent == 3) {
-            leaveJail();
-            advanceToken(steps);
+        if (isInJail() && jailTimeSpent < Rules.getMaxJailTerm()) {
+            //Leave jail early:
+            //1: use card if avaliable
+            //            if (jailBondsAvaliableChance > 0) {
+            //                ChanceCards.reinsertJailBond();
+            //                jailBondsAvaliableChance--;
+            //            } else if (jailBondsAvaliableChest > 0) {
+            //                ChestCards.reinsertJailBond();
+            //                jailBondsAvaliableChest--;
+            //            }
+            //2: pay fee (default: 50)
+            //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
+            if (Dice.isDouble()) {
+                System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                leaveJail();
+                advanceToken(steps);
+            } else {
+                //else, take another turn in jail
+                jailTimeSpent++;
+                System.out.println("\t" + name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
+                //endTurn();
+            }
+            //Player still in jail for maximum duration
+        } else if (isInJail() && jailTimeSpent == Rules.getMaxJailTerm()) {
+            //Player gets last chance to roll dice
+            if (Dice.isDouble()) {
+                System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                leaveJail();
+                advanceToken(steps);
+                //if unsucessful, player must pay fine and leave.
+            } else {
+                System.out.println("\t" + name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
+
+                System.out.println("\t" + name + " pays the fine");
+                playerCashPay(0, Rules.getJailLeaveFee());
+                leaveJail();
+                advanceToken(steps);
+            }
+            //Player is not in jail:
         } else {
             // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
             System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
@@ -543,6 +590,7 @@ public class Player {
     public void endTurn() {
         System.out.println("\t" + name + " ends turn on " + getPositionName());
         speedingCount = 0;
+        exitingJail = false;
     }
 
     /**

@@ -23,6 +23,7 @@ public final class ChanceCards {
 
     private static final List<Card> CHANCE_CARD_LIB = new ArrayList<>();
     private static final ArrayDeque<Card> CHANCE_CARD_DECK = new ArrayDeque<>();
+    private static final ArrayDeque<Card> JAIL_BONDS = new ArrayDeque<>();
 //Individual card defined as class
 
     class Card {
@@ -130,6 +131,7 @@ public final class ChanceCards {
         }
     }
 
+    //
     /**
      * Read the next card without removing it
      *
@@ -158,7 +160,22 @@ public final class ChanceCards {
         if (getNextCard() == null) {
             shuffleDeck();
         }
-        return CHANCE_CARD_DECK.pollFirst().getCardContent();
+        //Removal of "Get out of jail free cards" from deck
+        //on drawing card
+        Card drawnCard = CHANCE_CARD_DECK.pollFirst();
+        List drawnCardContent = drawnCard.getCardContent();
+        //check if type JAIL with action OUT
+        if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
+            //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
+            JAIL_BONDS.add(drawnCard);
+            CHANCE_CARD_LIB.remove(drawnCard);
+        }
+        return drawnCardContent;
+    }
+
+    public static void reinsertJailBond() {
+        //Polls form bail holding deque, appends result to current deck.
+        CHANCE_CARD_DECK.add(JAIL_BONDS.pollFirst());
     }
 
 }
