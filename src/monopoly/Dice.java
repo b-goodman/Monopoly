@@ -5,6 +5,8 @@
  */
 package monopoly;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +20,8 @@ public final class Dice {
 
     private static final List<Die> DICE_LIST = new ArrayList<>();
     private static final List<Integer> ROLL_LIST = new ArrayList<>();
+    //public static final List<Integer> SIDE_AMOUNT = new ArrayList<>();
+    public static final List<Integer> EXPECTED_ROLL = new ArrayList<>();
 
     class Die {
 
@@ -40,8 +44,19 @@ public final class Dice {
      * Default Dice constructor. Initilalizes DICE_LIST with two six-sided dice.
      */
     public Dice() {
+        List<Integer> SIDE_AMOUNT = new ArrayList<>();
         DICE_LIST.add(new Die(6));
         DICE_LIST.add(new Die(6));
+        SIDE_AMOUNT.add(6);
+        SIDE_AMOUNT.add(6);
+
+        double sum = 0;
+        for (int j = 0; j < SIDE_AMOUNT.size(); j++) {
+            for (double i = 1; i <= SIDE_AMOUNT.get(j); i++) {
+                sum += (i / SIDE_AMOUNT.get(j));
+            }
+        }
+        EXPECTED_ROLL.add((int) sum);
     }
 
     /**
@@ -52,8 +67,22 @@ public final class Dice {
      * two 12-sided dice and one six-sided die.
      */
     public Dice(int... sides) {
+        List<Integer> SIDE_AMOUNT = new ArrayList<>();
         for (int i = 0; i < sides.length; i++) {
             DICE_LIST.add(new Die(sides[i]));
+            SIDE_AMOUNT.add(sides[i]);
+        }
+        double sum = 0;
+        for (int j = 0; j < SIDE_AMOUNT.size(); j++) {
+            for (double i = 1; i <= SIDE_AMOUNT.get(j); i++) {
+                sum += (i / SIDE_AMOUNT.get(j));
+            }
+        }
+        if ((sum % 1) != 0) {
+            EXPECTED_ROLL.add((int) floor(sum));
+            EXPECTED_ROLL.add((int) ceil(sum));
+        } else {
+            EXPECTED_ROLL.add((int) sum);
         }
     }
 
@@ -117,6 +146,10 @@ public final class Dice {
             }
         }
         return chk;
+    }
+
+    public static List getExpectedRoll() {
+        return EXPECTED_ROLL;
     }
 
 }

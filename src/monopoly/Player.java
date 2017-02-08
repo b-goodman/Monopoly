@@ -447,6 +447,9 @@ public class Player {
         int steps = Dice.getRollSum();
 
         if (isInJail() && jailTimeSpent < Rules.getMaxJailTerm()) {
+            //Decide if best to leave jail early or take default method (roll dice)
+            //Take dice roll expectation - Dice.getExpectationRoll() -
+
             //Leave jail early:
             //1: use card if avaliable
             //            if (jailBondsAvaliableChance > 0) {
@@ -478,11 +481,13 @@ public class Player {
                 //if unsucessful, player must pay fine and leave.
             } else {
                 System.out.println("\t" + name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
-
+                //check if player can afford fine -
+                //if(cash>=Rules.getJailLeaveFee()) -- do below
                 System.out.println("\t" + name + " pays the fine");
                 playerCashPay(0, Rules.getJailLeaveFee());
                 leaveJail();
                 advanceToken(steps);
+                //else - raise funds >= Rules.getJailLeaveFee()
             }
             //Player is not in jail:
         } else {
