@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import monopoly.Enums.TurnEvaluationMethod;
 
 /**
  *
@@ -24,6 +25,8 @@ public final class ChestCards {
     private static final List<Card> CHEST_CARD_LIB = new ArrayList<>();
     private static final ArrayDeque<Card> CHEST_CARD_DECK = new ArrayDeque<>();
     private static final ArrayDeque<Card> JAIL_BONDS = new ArrayDeque<>();
+    private static List<Card> CHEST_CARD_LIB_TEMP = new ArrayList<>();
+    private static ArrayDeque<Card> CHEST_CARD_DECK_TEMP = new ArrayDeque<>();
 //Individual card defined as class
 
     class Card {
@@ -88,6 +91,12 @@ public final class ChestCards {
         }
         //Initilize new deck by shuffling copy of library
         shuffleDeck();
+
+        //create temp lib from copy
+        CHEST_CARD_LIB_TEMP = CHEST_CARD_LIB;
+
+        //create temp deck from shuffled deck
+        CHEST_CARD_DECK_TEMP = CHEST_CARD_DECK;
     }
 
     /**
@@ -131,6 +140,13 @@ public final class ChestCards {
         }
     }
 
+    public static void shuffleTempDeck() {
+        Collections.shuffle(CHEST_CARD_LIB_TEMP);
+        for (int i = 0; i < CHEST_CARD_LIB_TEMP.size(); i++) {
+            CHEST_CARD_DECK_TEMP.add(CHEST_CARD_LIB_TEMP.get(i));
+        }
+    }
+
     /**
      * Read the next card without removing it
      *
@@ -153,23 +169,50 @@ public final class ChestCards {
      * Returns next card parsed as List in deque with removal. Init. new deque
      * and returns first card if last card was drawn prev.
      *
+     * @param method
      * @return [List] New random (w/o replacement)card from deque.
      */
-    public static List drawCard() {
-        if (getNextCard() == null) {
-            shuffleDeck();
+    public static List drawCard(TurnEvaluationMethod method) {
+        List returnCase = null;
+        switch (method) {
+            case FULL:
+                if (getNextCard() == null) {
+                    shuffleDeck();
+                    //reset parallel deck
+                    CHEST_CARD_DECK_TEMP = CHEST_CARD_DECK;
+                }
+                //Removal of "Get out of jail free cards" from deck
+                //on drawing card
+                Card drawnCard = CHEST_CARD_DECK.pollFirst();
+                //and update parallel deck
+                CHEST_CARD_DECK_TEMP.pollFirst();
+                List drawnCardContent = drawnCard.getCardContent();
+                //check if type JAIL with action OUT
+                if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
+                    //if so, remove from CHEST_CARD_LIB, add to JAIL_BONDS
+                    JAIL_BONDS.add(drawnCard);
+                    CHEST_CARD_LIB.remove(drawnCard);
+                }
+                returnCase = drawnCardContent;
+                break;
+
+            case FORECAST:
+                if (getNextCard() == null) {
+                    //shufle parallel deck only
+                    shuffleTempDeck();
+                }
+                //Removal of "Get out of jail free cards" from deck
+                //on drawing card
+                drawnCard = CHEST_CARD_DECK_TEMP.pollFirst();
+                //and update parallel deck
+                CHEST_CARD_DECK_TEMP.pollFirst();
+                drawnCardContent = drawnCard.getCardContent();
+                //check if type JAIL with action OUT
+
+                returnCase = drawnCardContent;
+                break;
         }
-        //Removal of "Get out of jail free cards" from deck
-        //on drawing card
-        Card drawnCard = CHEST_CARD_DECK.pollFirst();
-        List drawnCardContent = drawnCard.getCardContent();
-        //check if type JAIL with action OUT
-        if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
-            //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
-            JAIL_BONDS.add(drawnCard);
-            CHEST_CARD_LIB.remove(drawnCard);
-        }
-        return drawnCardContent;
+        return returnCase;
     }
 
     public static void reinsertJailBond() {

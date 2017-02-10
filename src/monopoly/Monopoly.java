@@ -7,17 +7,19 @@ package monopoly;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
+//import static java.lang.Math.ceil;
+//import static java.lang.Math.floor;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.stream.IntStream;
 //import java.util.ArrayList;
 //import java.util.HashSet;
 //import java.util.Iterator;
 //import java.util.List;
 //import java.util.Set;
+import static monopoly.Enums.TurnEvaluationMethod.FORECAST;
+import static monopoly.Enums.TurnEvaluationMethod.FULL;
 
 /**
  *
@@ -49,16 +51,15 @@ public class Monopoly {
         Cells.init();
         Dice.init(6, 6);
 
-        System.out.println(Dice.getExpectedRoll());
-
+        //Players.get(1).forecastTurn();
         do {
-            Players.get(1).beginTurn();
-            Players.get(1).midTurn();
+            Players.get(1).beginTurn(FULL);
+            Players.get(1).midTurn(FULL);
             if (Dice.isDouble() && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail()) {
                 System.out.println("\t" + Players.get(1).getName() + " takes another turn");
             }
         } while (Dice.isDouble() && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
-        Players.get(1).endTurn();
+        Players.get(1).endTurn(FULL);
 
 //        Players.get(1).playerCashRecieve(0, 5000);
 //

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import monopoly.Enums.TurnEvaluationMethod;
 
 /**
  *
@@ -24,6 +25,8 @@ public final class ChanceCards {
     private static final List<Card> CHANCE_CARD_LIB = new ArrayList<>();
     private static final ArrayDeque<Card> CHANCE_CARD_DECK = new ArrayDeque<>();
     private static final ArrayDeque<Card> JAIL_BONDS = new ArrayDeque<>();
+    private static List<Card> CHANCE_CARD_LIB_TEMP = new ArrayList<>();
+    private static ArrayDeque<Card> CHANCE_CARD_DECK_TEMP = new ArrayDeque<>();
 //Individual card defined as class
 
     class Card {
@@ -86,8 +89,14 @@ public final class ChanceCards {
             //Construct new chance card and add to library.
             add(index, text, type, typeParamater1, typeParamater2);
         }
+        //create temp lib from copy
+        CHANCE_CARD_LIB_TEMP = CHANCE_CARD_LIB;
+
         //Initilize new deck by shuffling copy of library
         shuffleDeck();
+
+        //create temp deck from shuffled deck
+        CHANCE_CARD_DECK_TEMP = CHANCE_CARD_DECK;
     }
 
     /**
@@ -118,6 +127,7 @@ public final class ChanceCards {
             String actionSecondary
     ) {
         CHANCE_CARD_LIB.add(new Card(cardID, cardContent, actionType, actionPrimary, actionSecondary));
+
     }
 
     /**
@@ -128,6 +138,13 @@ public final class ChanceCards {
         Collections.shuffle(CHANCE_CARD_LIB);
         for (int i = 0; i < CHANCE_CARD_LIB.size(); i++) {
             CHANCE_CARD_DECK.add(CHANCE_CARD_LIB.get(i));
+        }
+    }
+
+    public static void shuffleTempDeck() {
+        Collections.shuffle(CHANCE_CARD_LIB_TEMP);
+        for (int i = 0; i < CHANCE_CARD_LIB_TEMP.size(); i++) {
+            CHANCE_CARD_DECK_TEMP.add(CHANCE_CARD_LIB_TEMP.get(i));
         }
     }
 
@@ -154,23 +171,51 @@ public final class ChanceCards {
      * Returns next card parsed as List in deque with removal. Init. new deque
      * and returns first card if last card was drawn prev.
      *
+     *
+     * @param method
      * @return [List] New random (w/o replacement)card from deque.
      */
-    public static List drawCard() {
-        if (getNextCard() == null) {
-            shuffleDeck();
+    public static List drawCard(TurnEvaluationMethod method) {
+        List returnCase = null;
+        switch (method) {
+            case FULL:
+                if (getNextCard() == null) {
+                    shuffleDeck();
+                    //reset parallel deck
+                    CHANCE_CARD_DECK_TEMP = CHANCE_CARD_DECK;
+                }
+                //Removal of "Get out of jail free cards" from deck
+                //on drawing card
+                Card drawnCard = CHANCE_CARD_DECK.pollFirst();
+                //and update parallel deck
+                CHANCE_CARD_DECK_TEMP.pollFirst();
+                List drawnCardContent = drawnCard.getCardContent();
+                //check if type JAIL with action OUT
+                if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
+                    //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
+                    JAIL_BONDS.add(drawnCard);
+                    CHANCE_CARD_LIB.remove(drawnCard);
+                }
+                returnCase = drawnCardContent;
+                break;
+
+            case FORECAST:
+                if (getNextCard() == null) {
+                    //shufle parallel deck only
+                    shuffleTempDeck();
+                }
+                //Removal of "Get out of jail free cards" from deck
+                //on drawing card
+                drawnCard = CHANCE_CARD_DECK_TEMP.pollFirst();
+                //and update parallel deck
+                CHANCE_CARD_DECK_TEMP.pollFirst();
+                drawnCardContent = drawnCard.getCardContent();
+                //check if type JAIL with action OUT
+
+                returnCase = drawnCardContent;
+                break;
         }
-        //Removal of "Get out of jail free cards" from deck
-        //on drawing card
-        Card drawnCard = CHANCE_CARD_DECK.pollFirst();
-        List drawnCardContent = drawnCard.getCardContent();
-        //check if type JAIL with action OUT
-        if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
-            //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
-            JAIL_BONDS.add(drawnCard);
-            CHANCE_CARD_LIB.remove(drawnCard);
-        }
-        return drawnCardContent;
+        return returnCase;
     }
 
     public static void reinsertJailBond() {
