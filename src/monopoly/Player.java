@@ -461,7 +461,7 @@ public class Player {
             //            }
             //2: pay fee (default: 50)
             //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
-            if (Dice.isDouble()) {
+            if (Dice.isDouble(Dice.getFaceValues())) {
                 System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
                 leaveJail();
                 advanceToken(steps);
@@ -474,7 +474,7 @@ public class Player {
             //Player still in jail for maximum duration
         } else if (isInJail() && jailTimeSpent == Rules.getMaxJailTerm()) {
             //Player gets last chance to roll dice
-            if (Dice.isDouble()) {
+            if (Dice.isDouble(Dice.getFaceValues())) {
                 System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
                 leaveJail();
                 advanceToken(steps);
@@ -493,7 +493,7 @@ public class Player {
         } else {
             // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
             System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
-            if (Dice.isDouble()) {
+            if (Dice.isDouble(Dice.getFaceValues())) {
                 speedingCount++;
                 System.out.println("\t" + name + " rolls doubles! (" + speedingCount + ")");
             }

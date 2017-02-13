@@ -43,8 +43,8 @@ public class LogEntry {
         public Event(Integer playerID, EventType keyword, int... actionParameters) {
 
             //record game state
-            LOCATIONS = new HashMap<>(Cells.getLocations());
-            PLAYERS = new HashMap<>(Players.getAllPlayers());
+            LOCATIONS = new HashMap<>(Cells.getCells());
+            PLAYERS = new HashMap<>(Players.getPlayers());
             DICE_VALUES = Dice.getFaceValues();
 
             this.PLAYER_ID = playerID;
@@ -57,8 +57,8 @@ public class LogEntry {
         public Event(Integer playerID, EventType keyword) {
 
             //record game state
-            LOCATIONS = new HashMap<>(Cells.getLocations());
-            PLAYERS = new HashMap<>(Players.getAllPlayers());
+            LOCATIONS = new HashMap<>(Cells.getCells());
+            PLAYERS = new HashMap<>(Players.getPlayers());
             DICE_VALUES = Dice.getFaceValues();
             this.PLAYER_ID = playerID;
             this.KEYWORD = keyword;
@@ -68,8 +68,8 @@ public class LogEntry {
 
         public Event(Integer playerID, EventType keyword, String description) {
             //record game state
-            LOCATIONS = new HashMap<>(Cells.getLocations());
-            PLAYERS = new HashMap<>(Players.getAllPlayers());
+            LOCATIONS = new HashMap<>(Cells.getCells());
+            PLAYERS = new HashMap<>(Players.getPlayers());
             DICE_VALUES = Dice.getFaceValues();
             this.PLAYER_ID = playerID;
             this.KEYWORD = keyword;

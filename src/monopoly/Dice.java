@@ -133,13 +133,13 @@ public final class Dice {
      *
      * @return True if all dice roll the same value.
      */
-    public static boolean isDouble() {
+    public static boolean isDouble(List<Integer> rollValues) {
         boolean chk = true;
-        if (ROLL_LIST.size() == 1) {
+        if (rollValues.size() == 1) {
             chk = false;
         } else {
-            for (int i = 0; i < ROLL_LIST.size() && chk; i++) {
-                if (!Objects.equals(ROLL_LIST.get(i), ROLL_LIST.get(0))) {
+            for (int i = 0; i < rollValues.size() && chk; i++) {
+                if (!Objects.equals(rollValues.get(i), rollValues.get(0))) {
                     chk = false;
                     break;
                 }

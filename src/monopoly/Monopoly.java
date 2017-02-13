@@ -49,17 +49,16 @@ public class Monopoly {
         Cells.init();
         Dice.init(6, 6);
 
-        System.out.println(Dice.getExpectedRoll());
-
-        do {
-            Players.get(1).beginTurn();
-            Players.get(1).midTurn();
-            if (Dice.isDouble() && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail()) {
-                System.out.println("\t" + Players.get(1).getName() + " takes another turn");
-            }
-        } while (Dice.isDouble() && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
-        Players.get(1).endTurn();
-
+//        System.out.println(Dice.getExpectedRoll());
+//
+//        do {
+//            Players.get(1).beginTurn();
+//            Players.get(1).midTurn();
+//            if (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail()) {
+//                System.out.println("\t" + Players.get(1).getName() + " takes another turn");
+//            }
+//        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
+//        Players.get(1).endTurn();
 //        Players.get(1).playerCashRecieve(0, 5000);
 //
 //        Players.get(1).setOwnership(6);
@@ -74,23 +73,23 @@ public class Monopoly {
 //        System.out.println(Cells.get(6).getRent());
 //        System.out.println(Cells.get(16).getRent());
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
-//        int playerRounds = 1;
-//        int PLAYER_ROUNDS_AMOUNT = 100;
-//        do {
-//            System.out.println("Round " + playerRounds + ":");
-//            for (int i = 1; i <= Players.amount(); i++) {
-//                do {
-//                    Players.get(i).beginTurn();
-//                    Players.get(i).midTurn();
-//                    if (Dice.isDouble() && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail()) {
-//                        System.out.println("\t" + Players.get(i).getName() + " takes another turn");
-//                    }
-//                } while (Dice.isDouble() && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
-//                Players.get(i).endTurn();
-//            }
-//            playerRounds++;
-//            System.out.println();
-//        } while (playerRounds <= PLAYER_ROUNDS_AMOUNT);
+        int playerRounds = 1;
+        int PLAYER_ROUNDS_AMOUNT = 100;
+        do {
+            System.out.println("Round " + playerRounds + ":");
+            for (int i = 1; i <= Players.amount(); i++) {
+                do {
+                    Players.get(i).beginTurn();
+                    Players.get(i).midTurn();
+                    if (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail()) {
+                        System.out.println("\t" + Players.get(i).getName() + " takes another turn");
+                    }
+                } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
+                Players.get(i).endTurn();
+            }
+            playerRounds++;
+            System.out.println();
+        } while (playerRounds <= PLAYER_ROUNDS_AMOUNT);
     }
 
 }

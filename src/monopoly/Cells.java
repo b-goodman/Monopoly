@@ -319,4 +319,8 @@ public final class Cells {
     public static Map getPlayerOwnership() {
         return PLAYER_OWNERSHIP;
     }
+
+    public static Map<Integer, Cell> getCells() {
+        return LOCATIONS;
+    }
 }

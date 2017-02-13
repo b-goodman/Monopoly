@@ -71,4 +71,8 @@ public class Players {
     public static int amount() {
         return PLAYERS.size();
     }
+
+    public static Map<Integer, Player> getPlayers() {
+        return PLAYERS;
+    }
 }
