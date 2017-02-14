@@ -12,8 +12,8 @@ import monopoly.Enums.CellType;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import static monopoly.Enums.CellType.SPECIAL;
-import static monopoly.Enums.CellType.UTILITY;
+import static monopoly.Enums.CellType.*;
+import static monopoly.Enums.EventType.*;
 
 /**
  *
@@ -42,7 +42,9 @@ public class Player {
     private int jailTimeSpent;
     //players currently drawn card
     private List currentCard;
-    //Players current dice roll
+
+    //log of players current turn
+    private LogEntry logEntry;
 
     /**
      * Constructor for default player. Cash, starting position and bonds
@@ -382,6 +384,7 @@ public class Player {
      * positions the player to 0.
      */
     public void gotoJail() {
+
         inJail = true;
         position = 0;
     }
@@ -395,6 +398,7 @@ public class Player {
         position = 11;
         jailTimeSpent = 0;
         exitingJail = true;
+        logEntry.logEvent(NOTIFICATION, "player exits jail");
 
     }
 
@@ -435,12 +439,18 @@ public class Player {
         return i;
     }
 
+    public void initializeTurn() {
+
+        this.logEntry = new LogEntry(playerID);
+        logEntry.logEvent(START);
+    }
+
     /**
      * Calling this method begins the player's turn.
      */
     public void beginTurn() {
-        //speedingCount = 0;
-        System.out.println("Player " + playerID + " - " + name + " begins turn on " + getPositionName() + ":");
+        logEntry.logEvent(PLAYER);
+        //System.out.println("Player " + playerID + " - " + name + " begins turn on " + getPositionName() + ":");
         Dice.clearRoll();
         // player rolls dice and reads value
         Dice.roll();
@@ -462,28 +472,33 @@ public class Player {
             //2: pay fee (default: 50)
             //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
             if (Dice.isDouble(Dice.getFaceValues())) {
-                System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                //System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
                 leaveJail();
                 advanceToken(steps);
             } else {
                 //else, take another turn in jail
                 jailTimeSpent++;
-                System.out.println("\t" + name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
+                logEntry.logEvent(NOTIFICATION, name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
+                //System.out.println("\t" + name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
                 //endTurn();
             }
             //Player still in jail for maximum duration
         } else if (isInJail() && jailTimeSpent == Rules.getMaxJailTerm()) {
             //Player gets last chance to roll dice
             if (Dice.isDouble(Dice.getFaceValues())) {
-                System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                //System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
                 leaveJail();
                 advanceToken(steps);
                 //if unsucessful, player must pay fine and leave.
             } else {
-                System.out.println("\t" + name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
+                logEntry.logEvent(NOTIFICATION, name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
+                //System.out.println("\t" + name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
                 //check if player can afford fine -
                 //if(cash>=Rules.getJailLeaveFee()) -- do below
-                System.out.println("\t" + name + " pays the fine");
+                logEntry.logEvent(NOTIFICATION, name + " pays the fine");
+                //System.out.println("\t" + name + " pays the fine");
                 playerCashPay(0, Rules.getJailLeaveFee());
                 leaveJail();
                 advanceToken(steps);
@@ -492,14 +507,17 @@ public class Player {
             //Player is not in jail:
         } else {
             // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
-            System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
+            logEntry.logEvent(ROLL_DICE);
+            //System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
             if (Dice.isDouble(Dice.getFaceValues())) {
                 speedingCount++;
-                System.out.println("\t" + name + " rolls doubles! (" + speedingCount + ")");
+                //System.out.println("\t" + name + " rolls doubles! (" + speedingCount + ")");
+
             }
             // check if players speed counter has reached limit (default 3); if so, send to jail.
             if (speedingCount == Rules.getDoublesSpeedingLimit()) {
-                System.out.println("\t" + name + " sent to jail for speeding");
+                logEntry.logEvent(NOTIFICATION, name + " sent to jail for speeding");
+                //System.out.println("\t" + name + " sent to jail for speeding");
                 gotoJail();
                 // otherwise, proceed with turn
             } else {
@@ -586,6 +604,9 @@ public class Player {
                 }
             }
         }
+        if (Dice.isDouble(Dice.getFaceValues()) && !isInJail() && !isPlayerExitingJail()) {
+            logEntry.logEvent(NOTIFICATION, name + " takes another turn");
+        }
 
     }
 
@@ -593,9 +614,13 @@ public class Player {
      * ends players turn - resets speeding counter
      */
     public void endTurn() {
-        System.out.println("\t" + name + " ends turn on " + getPositionName());
+        logEntry.logEvent(END);
+        //System.out.println("\t" + name + " ends turn on " + getPositionName());
         speedingCount = 0;
         exitingJail = false;
+        //logEntry.submitTurnLog();
+        GameLog.logPlayerTurn(logEntry);
+
     }
 
     /**
@@ -633,6 +658,8 @@ public class Player {
         } else {
             System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName());
         }
+
+        logEntry.logEvent(ADVANCE, steps, position);
     }
 
     public List drawChanceCard() {

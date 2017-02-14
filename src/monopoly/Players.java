@@ -73,6 +73,7 @@ public class Players {
     }
 
     public static Map<Integer, Player> getPlayers() {
-        return PLAYERS;
+        Map<Integer, Player> returnMap = new HashMap<>(PLAYERS);
+        return returnMap;
     }
 }

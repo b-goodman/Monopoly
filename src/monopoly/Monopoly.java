@@ -73,11 +73,14 @@ public class Monopoly {
 //        System.out.println(Cells.get(6).getRent());
 //        System.out.println(Cells.get(16).getRent());
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
-        int playerRounds = 1;
         int PLAYER_ROUNDS_AMOUNT = 100;
-        do {
-            System.out.println("Round " + playerRounds + ":");
+
+        for (int playerRounds = 1; playerRounds <= PLAYER_ROUNDS_AMOUNT; playerRounds++) {
+            //System.out.println("Round " + playerRounds + ":");
             for (int i = 1; i <= Players.amount(); i++) {
+                LogEntry newLog = new LogEntry(i);
+                Players.get(i).initializeTurn();
+                //instatiate logEntry here (NOT within Player)  - something somehow link to active player during RT
                 do {
                     Players.get(i).beginTurn();
                     Players.get(i).midTurn();
@@ -87,9 +90,13 @@ public class Monopoly {
                 } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
                 Players.get(i).endTurn();
             }
-            playerRounds++;
             System.out.println();
-        } while (playerRounds <= PLAYER_ROUNDS_AMOUNT);
+        }
+
+        for (LogEntry entry : GameLog.getGameLog()) {
+            System.out.println(entry.parseLogEntry());
+            System.out.println();
+        }
     }
 
 }
@@ -106,4 +113,4 @@ public class Monopoly {
 //unify player/bank cash transfers
 // DONE genaralise board length in token roll-over
 //RAILROAD DONE - generalise conditions for RR and U rent - redesign import, include TYPE for refrencing - not param. signature.
-//loaded dice?
+

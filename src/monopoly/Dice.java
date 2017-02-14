@@ -109,7 +109,8 @@ public final class Dice {
      * @return
      */
     public static List getFaceValues() {
-        return ROLL_LIST;
+        List<Integer> returnList = new ArrayList<>(ROLL_LIST);
+        return returnList;
     }
 
     /**
@@ -131,6 +132,7 @@ public final class Dice {
 
     /**
      *
+     * @param rollValues
      * @return True if all dice roll the same value.
      */
     public static boolean isDouble(List<Integer> rollValues) {

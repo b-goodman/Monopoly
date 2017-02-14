@@ -321,6 +321,7 @@ public final class Cells {
     }
 
     public static Map<Integer, Cell> getCells() {
-        return LOCATIONS;
+        Map<Integer, Cell> returnMap = new HashMap<>(LOCATIONS);
+        return returnMap;
     }
 }

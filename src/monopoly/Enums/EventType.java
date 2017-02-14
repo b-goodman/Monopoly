@@ -11,6 +11,7 @@ package monopoly.Enums;
  */
 public enum EventType {
     START,
+    END,
     PLAYER,
     ADVANCE,
     INITIAL_LOCATION,

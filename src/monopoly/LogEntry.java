@@ -6,10 +6,11 @@
 package monopoly;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import monopoly.Enums.EventType;
+import static monopoly.Enums.EventType.START;
 
 /**
  *
@@ -31,50 +32,63 @@ public class LogEntry {
         //record game state
         private final Map<Integer, Cell> LOCATIONS;
         private final Map<Integer, Player> PLAYERS;
-        //fields
+        private final List<Integer> DICE_VALUES;
+        private final int position;
         private final Integer PLAYER_ID;
         private final EventType KEYWORD;
         private int[] actionParameters;
-        private final List<Integer> DICE_VALUES;
         private final String PLAYER_NAME;
         private String description = null;
+        private final int logCount;
 
         //constructor
         public Event(Integer playerID, EventType keyword, int... actionParameters) {
-
             //record game state
-            LOCATIONS = new HashMap<>(Cells.getCells());
-            PLAYERS = new HashMap<>(Players.getPlayers());
-            DICE_VALUES = Dice.getFaceValues();
-
+            this.LOCATIONS = Cells.getCells();
+            this.PLAYERS = Players.getPlayers();
+            this.DICE_VALUES = Dice.getFaceValues();
             this.PLAYER_ID = playerID;
             this.KEYWORD = keyword;
             this.actionParameters = actionParameters;
             this.PLAYER_NAME = PLAYERS.get(playerID).getName();
+            this.position = PLAYERS.get(playerID).getPosition();
+            if (keyword == START) {
+                GameLog.incLogCounter();
+            }
+            this.logCount = GameLog.getLogCounter();
 
         }
 
         public Event(Integer playerID, EventType keyword) {
-
             //record game state
-            LOCATIONS = new HashMap<>(Cells.getCells());
-            PLAYERS = new HashMap<>(Players.getPlayers());
-            DICE_VALUES = Dice.getFaceValues();
+            this.LOCATIONS = Cells.getCells();
+            this.PLAYERS = Players.getPlayers();
+            this.DICE_VALUES = Dice.getFaceValues();
             this.PLAYER_ID = playerID;
             this.KEYWORD = keyword;
             this.PLAYER_NAME = PLAYERS.get(playerID).getName();
+            this.position = PLAYERS.get(playerID).getPosition();
+            if (keyword == START) {
+                GameLog.incLogCounter();
+            }
+            this.logCount = GameLog.getLogCounter();
 
         }
 
         public Event(Integer playerID, EventType keyword, String description) {
-            //record game state
-            LOCATIONS = new HashMap<>(Cells.getCells());
-            PLAYERS = new HashMap<>(Players.getPlayers());
-            DICE_VALUES = Dice.getFaceValues();
+            //record game state - not working
+            this.LOCATIONS = Cells.getCells();
+            this.PLAYERS = Players.getPlayers();
+            this.DICE_VALUES = Dice.getFaceValues();
             this.PLAYER_ID = playerID;
             this.KEYWORD = keyword;
             this.PLAYER_NAME = PLAYERS.get(playerID).getName();
+            this.position = PLAYERS.get(playerID).getPosition();
             this.description = description;
+            if (keyword == START) {
+                GameLog.incLogCounter();
+            }
+            this.logCount = GameLog.getLogCounter();
         }
 
         //methods
@@ -84,10 +98,13 @@ public class LogEntry {
             switch (KEYWORD) {
                 //
                 case START:
+                    returnCase = Integer.toString(logCount);
                     break;
-                //
+                case END:
+                    returnCase = "ends turn on " + LOCATIONS.get(position).getName();
+                    break;
                 case PLAYER:
-                    returnCase = PLAYER_NAME + " begins turn on " + LOCATIONS.get(PLAYERS.get(playerID).getPosition()).getName();
+                    returnCase = PLAYER_NAME + " begins turn on " + LOCATIONS.get(position).getName();
                     break;
                 case INITIAL_LOCATION:
                     //return name of initial location cell
@@ -107,7 +124,7 @@ public class LogEntry {
                     }
                     break;
                 case ADVANCE:
-                    returnCase = "moves " + actionParameters[0] + " spaces and lands on " + actionParameters[1];
+                    returnCase = "moves " + actionParameters[0] + " spaces and lands on " + LOCATIONS.get(actionParameters[1]).getName();
                     break;
                 case PURCHACE:
                     //propertyID, amount
