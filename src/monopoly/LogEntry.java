@@ -40,6 +40,7 @@ public class LogEntry {
         private final String PLAYER_NAME;
         private String description = null;
         private final int logCount;
+        private final List card;
 
         //constructor
         public Event(Integer playerID, EventType keyword, int... actionParameters) {
@@ -56,6 +57,7 @@ public class LogEntry {
                 GameLog.incLogCounter();
             }
             this.logCount = GameLog.getLogCounter();
+            this.card = (PLAYERS.get(playerID).readCurrentCard());
 
         }
 
@@ -72,6 +74,7 @@ public class LogEntry {
                 GameLog.incLogCounter();
             }
             this.logCount = GameLog.getLogCounter();
+            this.card = (PLAYERS.get(playerID).readCurrentCard());
 
         }
 
@@ -89,6 +92,7 @@ public class LogEntry {
                 GameLog.incLogCounter();
             }
             this.logCount = GameLog.getLogCounter();
+            this.card = (PLAYERS.get(playerID).readCurrentCard());
         }
 
         //methods
@@ -101,7 +105,7 @@ public class LogEntry {
                     returnCase = Integer.toString(logCount);
                     break;
                 case END:
-                    returnCase = "ends turn on " + LOCATIONS.get(position).getName();
+                    returnCase = "ends turn on " + LOCATIONS.get(position).getName() + " cash: " + PLAYERS.get(playerID).getCash();
                     break;
                 case PLAYER:
                     returnCase = PLAYER_NAME + " begins turn on " + LOCATIONS.get(position).getName();
@@ -126,23 +130,57 @@ public class LogEntry {
                 case ADVANCE:
                     returnCase = "moves " + actionParameters[0] + " spaces and lands on " + LOCATIONS.get(actionParameters[1]).getName();
                     break;
+                case JUMP:
+                    returnCase = "moves to " + LOCATIONS.get(actionParameters[0]).getName();
+                    break;
+                case JUMP_NEXT:
+                    returnCase = "moves to next " + LOCATIONS.get(actionParameters[0]).getCellType() + " (" + LOCATIONS.get(actionParameters[0]).getName() + ")";
+                    break;
                 case PURCHACE:
                     //propertyID, amount
                     returnCase = "purchaces " + LOCATIONS.get(actionParameters[0]).getName() + " for " + actionParameters[1];
                     break;
                 case PAY:
                     //value, creditor
-                    returnCase = "pays " + actionParameters[0] + " to " + actionParameters[1] + " - Bal: " + PLAYERS.get(PLAYER_ID).getCash();
+                    String creditor;
+                    String returnCreditor;
+                    switch (actionParameters[1]) {
+                        case 0:
+                            returnCreditor = "BANK";
+                            break;
+                        case -1:
+                            returnCreditor = "FREE PARKING";
+                            break;
+                        default:
+                            returnCreditor = PLAYERS.get(actionParameters[1]).getName();
+                            break;
+                    }
+                    creditor = returnCreditor;
+                    returnCase = "pays " + actionParameters[0] + " to " + creditor + " - Bal: " + PLAYERS.get(PLAYER_ID).getCash();
                     break;
                 case RECEIVE:
                     //value, debitor
-                    returnCase = "is paid " + actionParameters[0] + " by " + actionParameters[1] + " - Bal: " + PLAYERS.get(PLAYER_ID).getCash();
+                    String debitor;
+                    String returnDebitor;
+                    switch (actionParameters[1]) {
+                        case 0:
+                            returnDebitor = "BANK";
+                            break;
+                        case -1:
+                            returnDebitor = "FREE PARKING";
+                            break;
+                        default:
+                            returnDebitor = PLAYERS.get(actionParameters[1]).getName();
+                            break;
+                    }
+                    debitor = returnDebitor;
+                    returnCase = "is paid " + actionParameters[0] + " by " + debitor + " - Bal: " + PLAYERS.get(PLAYER_ID).getCash();
                     break;
                 case DRAW_CHEST:
-                    returnCase = "draws a COMMUNITY CHEST card: " + PLAYERS.get(PLAYER_ID).getCurrentCard().get(1);
+                    returnCase = "draws a COMMUNITY CHEST card: " + card.get(1);
                     break;
                 case DRAW_CHANCE:
-                    returnCase = "draws a CHANCE card: " + PLAYERS.get(PLAYER_ID).getCurrentCard().get(1);
+                    returnCase = "draws a CHANCE card: " + card.get(1);
                     break;
                 case NOTIFICATION:
                     returnCase = description;

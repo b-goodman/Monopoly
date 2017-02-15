@@ -163,6 +163,10 @@ public final class Cells {
         Cells cells = new Cells("CellData.CSV");
     }
 
+    public static void init(String configPath) throws IOException {
+        Cells cells = new Cells(configPath);
+    }
+
     /**
      * Creates a new Property Cell and adds it to LOCATIONS.
      *

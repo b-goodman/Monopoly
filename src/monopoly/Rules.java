@@ -5,6 +5,8 @@
  */
 package monopoly;
 
+import static monopoly.Enums.EventType.NOTIFICATION;
+
 /**
  *
  * @author bgood_000
@@ -229,7 +231,8 @@ public final class Rules {
         FREE_PARKING_BONUS_LIMIT_ENABLED = enabled;
     }
 
-    public static void incFreeParkingBonusValue(int incByAmount) {
+    public static String incFreeParkingBonusValue(int incByAmount) {
+        String returnString;
         //Add funds to the free parking bonus
         freeParkingBonusValue += incByAmount;
         //if a limit on the free parking bonus is being enforced and the bonus is equal/greater than than the limit
@@ -237,11 +240,13 @@ public final class Rules {
             //reset the bonus to the value of the limit.
             freeParkingBonusValue = FREE_PARKING_BONUS_LIMIT;
             //Print message - bonus has been reached.
-            System.out.println("\t" + "Free Parking bonus limit has been reached!  (Bal: " + freeParkingBonusValue + ")");
+            //System.out.println("\t" + "Free Parking bonus limit has been reached!  (Bal: " + freeParkingBonusValue + ")");
+            returnString = "Free Parking bonus limit has been reached!  (Bal: " + freeParkingBonusValue + ")";
         } else {
             //Print general message.
-            System.out.println("\t" + incByAmount + " is paid into Free Parking (Bal: " + freeParkingBonusValue + ")");
+            returnString = incByAmount + " is paid into Free Parking (Bal: " + freeParkingBonusValue + ")";
         }
+        return returnString;
     }
 
     public static int getFreeParkingBonusValue() {

@@ -263,26 +263,30 @@ public class Player {
     }
 
     public void playerCashRecieve(Integer payingPlayerID, int cashAmount) {
-        if (payingPlayerID != 0) {
+        if (payingPlayerID > 0) {
             Player payingPlayer = Players.get(payingPlayerID);
             addCash(cashAmount);
             payingPlayer.addCash(-cashAmount);
-            System.out.println("\t" + payingPlayer.getName() + " pays you " + cashAmount + " (Bal: " + getCash() + ")");
+            //System.out.println("\t" + payingPlayer.getName() + " pays you " + cashAmount + " (Bal: " + getCash() + ")");
+            logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
         } else {
             addCash(cashAmount);
-            System.out.println("\t" + name + " recieves " + cashAmount + " (Bal: " + getCash() + ")");
+            //System.out.println("\t" + name + " recieves " + cashAmount + " (Bal: " + getCash() + ")");
+            logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
         }
     }
 
     public void playerCashPay(Integer recievingPlayerID, int cashAmount) {
-        if (recievingPlayerID != 0) {
+        if (recievingPlayerID > 0) {
             Player recievingPlayer = Players.get(recievingPlayerID);
             addCash(-cashAmount);
             recievingPlayer.addCash(cashAmount);
-            System.out.println("\t" + name + " pays " + recievingPlayer.getName() + " " + cashAmount + " (Bal: " + getCash() + ")");
+            //System.out.println("\t" + name + " pays " + recievingPlayer.getName() + " " + cashAmount + " (Bal: " + getCash() + ")");
+            logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
         } else {
             addCash(-cashAmount);
-            System.out.println("\t" + name + " pays " + cashAmount + " (Bal: " + getCash() + ")");
+            logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
+            //System.out.println("\t" + name + " pays " + cashAmount + " (Bal: " + getCash() + ")");
         }
     }
 
@@ -384,7 +388,7 @@ public class Player {
      * positions the player to 0.
      */
     public void gotoJail() {
-
+        logEntry.logEvent(JUMP, 0);
         inJail = true;
         position = 0;
     }
@@ -545,7 +549,7 @@ public class Player {
                             break;
                     }
                     // Actions for post card draw.  Print type of card drawn, parse drawn card action.
-                    System.out.println("\t" + name + " draws a " + para + " card: " + readCurrentCard().get(1));
+                    //System.out.println("\t" + name + " draws a " + para + " card: " + readCurrentCard().get(1));
                     parseCardAction(readCurrentCard());
                     break;
                 //Transition to new fixed location
@@ -578,7 +582,7 @@ public class Player {
                     if (Rules.isFreeParkingBonusEnabled()) {
                         //get current amount of bonus cash
                         //pay amount to player.
-                        playerCashRecieve(0, Rules.getFreeParkingBonusValue());
+                        playerCashRecieve(-1, Rules.getFreeParkingBonusValue());
                         //Clear bonus - set to 0
                         Rules.clearFreeParkingBonus();
                     }
@@ -639,7 +643,8 @@ public class Player {
             //has the player passed or landed on GO
             if (position != 1) {
                 //The player has passed GO
-                System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
+                logEntry.logEvent(NOTIFICATION, " passes GO");
+                //System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
                 playerCashRecieve(0, Rules.getPassGoCredit());
             }
         } else if (position < 1) {
@@ -665,12 +670,14 @@ public class Player {
     public List drawChanceCard() {
         List newCard = ChanceCards.drawCard();
         currentCard = newCard;
+        logEntry.logEvent(DRAW_CHANCE);
         return newCard;
     }
 
     public List drawChestCard() {
         List newCard = ChestCards.drawCard();
         currentCard = newCard;
+        logEntry.logEvent(DRAW_CHEST);
         return newCard;
     }
 
@@ -693,8 +700,9 @@ public class Player {
         switch (cardType) {
             // cases of players transition to fixed, absolute location
             case "TRANSITION_ABS":
-                System.out.println("\t" + name + " moves to " + getPositionName(Integer.parseInt(cardAction1)));
+                //System.out.println("\t" + name + " moves to " + getPositionName(Integer.parseInt(cardAction1)));
                 setPosition(Integer.parseInt(cardAction1));
+                logEntry.logEvent(JUMP, Integer.parseInt(cardAction1));
                 midTurn();
                 return;
             // cases of players transition dependent on current location
@@ -702,13 +710,14 @@ public class Player {
                 switch (cardAction1) {
                     // player advance to next property type (rail, util)
                     case "NEXT":
-                        System.out.println("\t" + name + " moves to next " + cardAction2 + " type location (" + getPositionName(findNextCellType(cardAction2)) + ")");
+                        //System.out.println("\t" + name + " moves to next " + cardAction2 + " type location (" + getPositionName(findNextCellType(cardAction2)) + ")");
                         setPosition(findNextCellType(cardAction2));
+                        logEntry.logEvent(JUMP_NEXT, findNextCellType(cardAction2));
                         midTurn();
                         return;
                     // player advance N spaces from current position
                     case "GO":
-                        System.out.println("\t" + name + " adjusts " + cardAction2 + " spaces");
+                        //System.out.println("\t" + name + " adjusts " + cardAction2 + " spaces");
                         advanceToken(Integer.parseInt(cardAction2));
                         midTurn();
                         return;
@@ -719,7 +728,7 @@ public class Player {
                 switch (cardAction1) {
                     case "IN":
                         //player sent to jail
-                        System.out.println("\t" + name + " is sent to jail");
+                        //System.out.println("\t" + name + " is sent to jail");
                         gotoJail();
                         return;
 
@@ -740,7 +749,8 @@ public class Player {
                 //If the free parking bonus rule is being enforced
                 if (Rules.isFreeParkingBonusEnabled()) {
                     //pay the money into the free parking fund
-                    Rules.incFreeParkingBonusValue(Integer.parseInt(cardAction1));
+                    logEntry.logEvent(NOTIFICATION, Rules.incFreeParkingBonusValue(Integer.parseInt(cardAction1)));
+                    playerCashPay(-1, Integer.parseInt(cardAction1));
                 } else {
                     //else, pay the bank
                     playerCashPay(0, Integer.parseInt(cardAction1));

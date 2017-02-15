@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import monopoly.Dice.DiceStats;
 //import java.util.ArrayList;
 //import java.util.HashSet;
 //import java.util.Iterator;
@@ -37,17 +38,13 @@ public class Monopoly {
         Players.add("Test3", 3, Token.BATTLESHIP);
 
         //Override any default rules
-        Rules.setPassGoCredit(200);
-        Rules.setGoLandingBonus(false);
-        Rules.setGoLandingBonusValue(200);
         Rules.setFreeParkingBonusEnabled(true);
-        Rules.setImprovementAmountHouse(16);
 
         //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
         ChanceCards.init();
         ChestCards.init();
         Cells.init();
-        Dice.init(6, 6);
+        Dice.init();
 
 //        System.out.println(Dice.getExpectedRoll());
 //
@@ -90,13 +87,15 @@ public class Monopoly {
                 } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
                 Players.get(i).endTurn();
             }
-            System.out.println();
+            //System.out.println();
         }
 
         for (LogEntry entry : GameLog.getGameLog()) {
             System.out.println(entry.parseLogEntry());
             System.out.println();
         }
+
+        //System.out.println(Dice.getRollProbabilities());
     }
 
 }

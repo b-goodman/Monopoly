@@ -100,6 +100,10 @@ public final class ChestCards {
         ChestCards chestCards = new ChestCards("chestCardDeck.CSV");
     }
 
+    public static void init(String configPath) throws IOException {
+        ChestCards chestCards = new ChestCards(configPath);
+    }
+
     /**
      * Create new Card and add to library
      *

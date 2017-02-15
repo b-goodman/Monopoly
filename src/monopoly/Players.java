@@ -72,8 +72,12 @@ public class Players {
         return PLAYERS.size();
     }
 
-    public static Map<Integer, Player> getPlayers() {
-        Map<Integer, Player> returnMap = new HashMap<>(PLAYERS);
+    public final static Map<Integer, Player> getPlayers() {
+        //problem - saves Player objects - continually update
+        //Map<Integer, Player> returnMap = new HashMap<>(PLAYERS);
+        //Map<Integer, Player> returnMap;
+
+        Map<Integer, Player> returnMap = Collections.unmodifiableMap(PLAYERS);
         return returnMap;
     }
 }

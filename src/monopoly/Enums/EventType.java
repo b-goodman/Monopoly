@@ -14,6 +14,8 @@ public enum EventType {
     END,
     PLAYER,
     ADVANCE,
+    JUMP,
+    JUMP_NEXT,
     INITIAL_LOCATION,
     INTERMEDIATE_LOCATION,
     FINAL_LOCATION,

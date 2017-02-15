@@ -100,6 +100,10 @@ public final class ChanceCards {
         ChanceCards chanceCards = new ChanceCards("chanceCardDeck.CSV");
     }
 
+    public static void init(String configPath) throws IOException {
+        ChanceCards chanceCards = new ChanceCards(configPath);
+    }
+
     /**
      * Create new Card and add to library
      *
