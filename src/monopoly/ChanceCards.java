@@ -169,7 +169,7 @@ public final class ChanceCards {
         Card drawnCard = CHANCE_CARD_DECK.pollFirst();
         List drawnCardContent = drawnCard.getCardContent();
         //check if type JAIL with action OUT
-        if (drawnCardContent.get(2) == "JAIL" && drawnCardContent.get(3) == "OUT") {
+        if ("JAIL".equals(drawnCardContent.get(2)) && "OUT".equals(drawnCardContent.get(3))) {
             //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
             JAIL_BONDS.add(drawnCard);
             CHANCE_CARD_LIB.remove(drawnCard);

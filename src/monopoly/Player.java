@@ -220,25 +220,23 @@ public class Player {
     }
 
 //Set players:
-    /**
-     * Sets the player as being in Jail.
-     *
-     * @param jailState True: in Jail, False otherwise.
-     */
-    public void setJailState(boolean jailState) {
-        inJail = jailState;
-    }
-
-    /**
-     * Sets the amount of time (in turns) the player has currently been in jail
-     * for.
-     *
-     * @param time
-     */
-    public void setJailTimeSpent(int time) {
-        jailTimeSpent = time;
-    }
-
+//    /**
+//     * Sets the player as being in Jail.
+//     *
+//     * @param jailState True: in Jail, False otherwise.
+//     */
+//    public void setJailState(boolean jailState) {
+//        inJail = jailState;
+//    }
+//    /**
+//     * Sets the amount of time (in turns) the player has currently been in jail
+//     * for.
+//     *
+//     * @param time
+//     */
+//    public void setJailTimeSpent(int time) {
+//        jailTimeSpent = time;
+//    }
     /**
      * Set new position for player on game board
      *
@@ -267,11 +265,9 @@ public class Player {
             Player payingPlayer = Players.get(payingPlayerID);
             addCash(cashAmount);
             payingPlayer.addCash(-cashAmount);
-            //System.out.println("\t" + payingPlayer.getName() + " pays you " + cashAmount + " (Bal: " + getCash() + ")");
             logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
         } else {
             addCash(cashAmount);
-            //System.out.println("\t" + name + " recieves " + cashAmount + " (Bal: " + getCash() + ")");
             logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
         }
     }
@@ -281,12 +277,10 @@ public class Player {
             Player recievingPlayer = Players.get(recievingPlayerID);
             addCash(-cashAmount);
             recievingPlayer.addCash(cashAmount);
-            //System.out.println("\t" + name + " pays " + recievingPlayer.getName() + " " + cashAmount + " (Bal: " + getCash() + ")");
             logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
         } else {
             addCash(-cashAmount);
             logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
-            //System.out.println("\t" + name + " pays " + cashAmount + " (Bal: " + getCash() + ")");
         }
     }
 
@@ -319,7 +313,7 @@ public class Player {
         (Cells.get(propertyBoardLocation)).setOwnership(getPlayerID());
     }
 
-    public List getOwnership() {
+    public List<Cell> getOwnership() {
         List<Cell> playerOwnershipList = new ArrayList<>();
         Cells.getPlayerOwnership().keySet().stream().filter((propertyName) -> ((int) Cells.getPlayerOwnership().get(propertyName) == 1)).forEach((propertyName) -> {
             playerOwnershipList.add((Cell) propertyName);
@@ -349,7 +343,7 @@ public class Player {
         return groupMembers;
     }
 
-    public Set getCompleteSetID() {
+    public Set<Character> getCompleteSetID() {
         List<Character> propertyIDs = new ArrayList<>();
         for (Object q : getCompleteSets()) {
             Cell temp = (Cell) q;
@@ -454,7 +448,6 @@ public class Player {
      */
     public void beginTurn() {
         logEntry.logEvent(PLAYER);
-        //System.out.println("Player " + playerID + " - " + name + " begins turn on " + getPositionName() + ":");
         Dice.clearRoll();
         // player rolls dice and reads value
         Dice.roll();
@@ -477,14 +470,12 @@ public class Player {
             //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
             if (Dice.isDouble(Dice.getFaceValues())) {
                 logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
-                //System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
                 leaveJail();
                 advanceToken(steps);
             } else {
                 //else, take another turn in jail
                 jailTimeSpent++;
                 logEntry.logEvent(NOTIFICATION, name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
-                //System.out.println("\t" + name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
                 //endTurn();
             }
             //Player still in jail for maximum duration
@@ -492,17 +483,14 @@ public class Player {
             //Player gets last chance to roll dice
             if (Dice.isDouble(Dice.getFaceValues())) {
                 logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
-                //System.out.println("\t" + name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
                 leaveJail();
                 advanceToken(steps);
                 //if unsucessful, player must pay fine and leave.
             } else {
                 logEntry.logEvent(NOTIFICATION, name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
-                //System.out.println("\t" + name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
                 //check if player can afford fine -
                 //if(cash>=Rules.getJailLeaveFee()) -- do below
                 logEntry.logEvent(NOTIFICATION, name + " pays the fine");
-                //System.out.println("\t" + name + " pays the fine");
                 playerCashPay(0, Rules.getJailLeaveFee());
                 leaveJail();
                 advanceToken(steps);
@@ -512,16 +500,12 @@ public class Player {
         } else {
             // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
             logEntry.logEvent(ROLL_DICE);
-            //System.out.println("\t" + name + " rolls " + steps + " " + Dice.getFaceValues());
             if (Dice.isDouble(Dice.getFaceValues())) {
                 speedingCount++;
-                //System.out.println("\t" + name + " rolls doubles! (" + speedingCount + ")");
-
             }
             // check if players speed counter has reached limit (default 3); if so, send to jail.
             if (speedingCount == Rules.getDoublesSpeedingLimit()) {
                 logEntry.logEvent(NOTIFICATION, name + " sent to jail for speeding");
-                //System.out.println("\t" + name + " sent to jail for speeding");
                 gotoJail();
                 // otherwise, proceed with turn
             } else {
@@ -545,11 +529,10 @@ public class Player {
                             break;
                         //Draw chest card
                         case "chest":
-                            drawChanceCard();
+                            drawChestCard();
                             break;
                     }
                     // Actions for post card draw.  Print type of card drawn, parse drawn card action.
-                    //System.out.println("\t" + name + " draws a " + para + " card: " + readCurrentCard().get(1));
                     parseCardAction(readCurrentCard());
                     break;
                 //Transition to new fixed location
@@ -597,7 +580,7 @@ public class Player {
                 if (occupiedCell.getOwnership() == null) {
                     cash -= occupiedCell.getBaseValue();
                     occupiedCell.setOwnership(getPlayerID());
-                    System.out.println("\t" + name + " buys " + occupiedCell.getName() + " for " + occupiedCell.getBaseValue() + " (Bal: " + getCash() + ")");
+                    logEntry.logEvent(PURCHACE, position, occupiedCell.getBaseValue());
                     //If it is owned but by the current player, then do nothing
                 } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
                     //It is owned and by another player, then pay rent
@@ -619,12 +602,9 @@ public class Player {
      */
     public void endTurn() {
         logEntry.logEvent(END);
-        //System.out.println("\t" + name + " ends turn on " + getPositionName());
         speedingCount = 0;
         exitingJail = false;
-        //logEntry.submitTurnLog();
         GameLog.logPlayerTurn(logEntry);
-
     }
 
     /**
@@ -644,7 +624,6 @@ public class Player {
             if (position != 1) {
                 //The player has passed GO
                 logEntry.logEvent(NOTIFICATION, " passes GO");
-                //System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
                 playerCashRecieve(0, Rules.getPassGoCredit());
             }
         } else if (position < 1) {
@@ -656,15 +635,14 @@ public class Player {
 
         if (Cells.get(position).getOwnable()) {
             if (positionInfoOwnership != null) {
-                System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Owned by: " + Players.get(positionInfoOwnership).getName() + ", Rent: " + positionInfocurrentRent);
+                logEntry.logEvent(ADVANCE, steps, position, Players.get(positionInfoOwnership).getPlayerID(), positionInfocurrentRent);
             } else {
-                System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName() + " - Avaliable to purchace for " + positionInfoCost);
+                logEntry.logEvent(ADVANCE, steps, position, positionInfoCost);
             }
         } else {
-            System.out.println("\t" + name + " moves " + steps + " steps and lands on " + getPositionName());
+            logEntry.logEvent(ADVANCE, steps, position);
         }
 
-        logEntry.logEvent(ADVANCE, steps, position);
     }
 
     public List drawChanceCard() {
@@ -700,8 +678,7 @@ public class Player {
         switch (cardType) {
             // cases of players transition to fixed, absolute location
             case "TRANSITION_ABS":
-                //System.out.println("\t" + name + " moves to " + getPositionName(Integer.parseInt(cardAction1)));
-                setPosition(Integer.parseInt(cardAction1));
+                position = Integer.parseInt(cardAction1);
                 logEntry.logEvent(JUMP, Integer.parseInt(cardAction1));
                 midTurn();
                 return;
@@ -710,14 +687,12 @@ public class Player {
                 switch (cardAction1) {
                     // player advance to next property type (rail, util)
                     case "NEXT":
-                        //System.out.println("\t" + name + " moves to next " + cardAction2 + " type location (" + getPositionName(findNextCellType(cardAction2)) + ")");
-                        setPosition(findNextCellType(cardAction2));
+                        position = findNextCellType(cardAction2);
                         logEntry.logEvent(JUMP_NEXT, findNextCellType(cardAction2));
                         midTurn();
                         return;
                     // player advance N spaces from current position
                     case "GO":
-                        //System.out.println("\t" + name + " adjusts " + cardAction2 + " spaces");
                         advanceToken(Integer.parseInt(cardAction2));
                         midTurn();
                         return;
@@ -728,7 +703,6 @@ public class Player {
                 switch (cardAction1) {
                     case "IN":
                         //player sent to jail
-                        //System.out.println("\t" + name + " is sent to jail");
                         gotoJail();
                         return;
 

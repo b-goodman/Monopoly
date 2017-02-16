@@ -5,8 +5,6 @@
  */
 package monopoly;
 
-import static monopoly.Enums.EventType.NOTIFICATION;
-
 /**
  *
  * @author bgood_000

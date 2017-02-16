@@ -5,6 +5,7 @@
  */
 package monopoly;
 
+import GUI.Log;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import static java.lang.Math.ceil;
@@ -45,7 +46,7 @@ public class Monopoly {
         ChestCards.init();
         Cells.init();
         Dice.init();
-
+//
 //        System.out.println(Dice.getExpectedRoll());
 //
 //        do {
@@ -70,39 +71,52 @@ public class Monopoly {
 //        System.out.println(Cells.get(6).getRent());
 //        System.out.println(Cells.get(16).getRent());
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
-        int PLAYER_ROUNDS_AMOUNT = 100;
+//
+        int PLAYER_ROUNDS_AMOUNT = 20;
 
         for (int playerRounds = 1; playerRounds <= PLAYER_ROUNDS_AMOUNT; playerRounds++) {
-            //System.out.println("Round " + playerRounds + ":");
             for (int i = 1; i <= Players.amount(); i++) {
-                LogEntry newLog = new LogEntry(i);
                 Players.get(i).initializeTurn();
-                //instatiate logEntry here (NOT within Player)  - something somehow link to active player during RT
                 do {
                     Players.get(i).beginTurn();
                     Players.get(i).midTurn();
-                    if (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail()) {
-                        System.out.println("\t" + Players.get(i).getName() + " takes another turn");
-                    }
                 } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
                 Players.get(i).endTurn();
             }
-            //System.out.println();
         }
 
-        for (LogEntry entry : GameLog.getGameLog()) {
-            System.out.println(entry.parseLogEntry());
-            System.out.println();
+        //step turn
+        Players.get(1).initializeTurn();
+        do {
+            Players.get(1).beginTurn();
+            Players.get(1).midTurn();
+        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
+        Players.get(1).endTurn();
+
+        //step round
+        for (int i = 1; i <= Players.amount(); i++) {
+            Players.get(i).initializeTurn();
+            do {
+                Players.get(i).beginTurn();
+                Players.get(i).midTurn();
+            } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
+            Players.get(i).endTurn();
         }
 
-        //System.out.println(Dice.getRollProbabilities());
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new Log().setVisible(true);
+        });
     }
 
 }
 
 // TODO:
 // Predict net outcome of next N turns, ML.
-//track jail bonds
+//---track jail bonds
+//--COMPLETE draw with removal
+//--TODO player reinsertion
 //complete rule class
 //begin jail exit strategies
 // - spend card

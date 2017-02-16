@@ -41,6 +41,7 @@ public class LogEntry {
         private String description = null;
         private final int logCount;
         private final List card;
+        private int cash;
 
         //constructor
         public Event(Integer playerID, EventType keyword, int... actionParameters) {
@@ -58,6 +59,7 @@ public class LogEntry {
             }
             this.logCount = GameLog.getLogCounter();
             this.card = (PLAYERS.get(playerID).readCurrentCard());
+            this.cash = (PLAYERS.get(playerID).getCash());
 
         }
 
@@ -75,6 +77,7 @@ public class LogEntry {
             }
             this.logCount = GameLog.getLogCounter();
             this.card = (PLAYERS.get(playerID).readCurrentCard());
+            this.cash = (PLAYERS.get(playerID).getCash());
 
         }
 
@@ -93,6 +96,7 @@ public class LogEntry {
             }
             this.logCount = GameLog.getLogCounter();
             this.card = (PLAYERS.get(playerID).readCurrentCard());
+            this.cash = (PLAYERS.get(playerID).getCash());
         }
 
         //methods
@@ -105,7 +109,7 @@ public class LogEntry {
                     returnCase = Integer.toString(logCount);
                     break;
                 case END:
-                    returnCase = "ends turn on " + LOCATIONS.get(position).getName() + " cash: " + PLAYERS.get(playerID).getCash();
+                    returnCase = "ends turn on " + LOCATIONS.get(position).getName();
                     break;
                 case PLAYER:
                     returnCase = PLAYER_NAME + " begins turn on " + LOCATIONS.get(position).getName();
@@ -128,7 +132,19 @@ public class LogEntry {
                     }
                     break;
                 case ADVANCE:
-                    returnCase = "moves " + actionParameters[0] + " spaces and lands on " + LOCATIONS.get(actionParameters[1]).getName();
+                    String returnAdvance;
+                    switch (actionParameters.length) {
+                        case 4:
+                            returnAdvance = "moves " + actionParameters[0] + " steps and lands on " + LOCATIONS.get(actionParameters[1]).getName() + " - Owned by: " + PLAYERS.get(actionParameters[2]).getName() + ", Rent: " + actionParameters[3];
+                            break;
+                        case 3:
+                            returnAdvance = "moves " + actionParameters[0] + " steps and lands on " + LOCATIONS.get(actionParameters[1]).getName() + " - Avaliable to purchace for " + actionParameters[2];
+                            break;
+                        default:
+                            returnAdvance = "moves " + actionParameters[0] + " spaces and lands on " + LOCATIONS.get(actionParameters[1]).getName();
+                            break;
+                    }
+                    returnCase = returnAdvance;
                     break;
                 case JUMP:
                     returnCase = "moves to " + LOCATIONS.get(actionParameters[0]).getName();
@@ -156,7 +172,7 @@ public class LogEntry {
                             break;
                     }
                     creditor = returnCreditor;
-                    returnCase = "pays " + actionParameters[0] + " to " + creditor + " - Bal: " + PLAYERS.get(PLAYER_ID).getCash();
+                    returnCase = "pays " + actionParameters[0] + " to " + creditor + " - Bal: " + cash;
                     break;
                 case RECEIVE:
                     //value, debitor
@@ -174,7 +190,7 @@ public class LogEntry {
                             break;
                     }
                     debitor = returnDebitor;
-                    returnCase = "is paid " + actionParameters[0] + " by " + debitor + " - Bal: " + PLAYERS.get(PLAYER_ID).getCash();
+                    returnCase = "is paid " + actionParameters[0] + " by " + debitor + " - Bal: " + cash;
                     break;
                 case DRAW_CHEST:
                     returnCase = "draws a COMMUNITY CHEST card: " + card.get(1);
@@ -229,7 +245,7 @@ public class LogEntry {
         return LOG_EVENTS;
     }
 
-    public List parseLogEntry() {
+    public List<String> parseLogEntry() {
         List<String> returnList = new ArrayList<>();
         for (Object logElement : LOG_EVENTS) {
             returnList.add(((Event) logElement).parse());

@@ -77,7 +77,7 @@ public class Players {
         //Map<Integer, Player> returnMap = new HashMap<>(PLAYERS);
         //Map<Integer, Player> returnMap;
 
-        Map<Integer, Player> returnMap = Collections.unmodifiableMap(PLAYERS);
-        return returnMap;
+        //Map<Integer, Player> returnMap = Collections.unmodifiableMap(PLAYERS);
+        return PLAYERS;
     }
 }
