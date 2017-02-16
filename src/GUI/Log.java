@@ -22,18 +22,6 @@ public final class Log extends javax.swing.JFrame {
      */
     public Log() {
         initComponents();
-        //post game log print
-//        for (LogEntry entry : GameLog.getGameLog()) {
-//            //System.out.println(entry.parseLogEntry());
-//            for (String ln : entry.parseLogEntry()) {
-//                //System.out.println(ln);
-//                jTextArea1.append(ln);
-//                jTextArea1.append("\n");
-//            }
-//            //System.out.println();
-//            jTextArea1.append("\n");
-//            jTextArea1.append("\n");
-//        }
         printLog();
 
     }

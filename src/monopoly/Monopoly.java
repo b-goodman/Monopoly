@@ -27,6 +27,42 @@ import java.io.IOException;
  */
 public class Monopoly {
 
+    //batch rounds
+    public static void batchRound(int limit) {
+        for (int playerRounds = 1; playerRounds <= limit; playerRounds++) {
+            for (int i = 1; i <= Players.amount(); i++) {
+                Players.get(i).initializeTurn();
+                do {
+                    Players.get(i).beginTurn();
+                    Players.get(i).midTurn();
+                } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
+                Players.get(i).endTurn();
+            }
+        }
+    }
+
+    //step turn
+    public static void stepTurn(Integer playerID) {
+        Players.get(playerID).initializeTurn();
+        do {
+            Players.get(playerID).beginTurn();
+            Players.get(playerID).midTurn();
+        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
+        Players.get(playerID).endTurn();
+    }
+
+    //step round
+    public static void stepRound() {
+        for (int i = 1; i <= Players.amount(); i++) {
+            Players.get(i).initializeTurn();
+            do {
+                Players.get(i).beginTurn();
+                Players.get(i).midTurn();
+            } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
+            Players.get(i).endTurn();
+        }
+    }
+
     /**
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
@@ -81,42 +117,6 @@ public class Monopoly {
             new Log().setVisible(true);
         });
 
-    }
-
-    //batch rounds
-    public static void batchRound(int limit) {
-        for (int playerRounds = 1; playerRounds <= limit; playerRounds++) {
-            for (int i = 1; i <= Players.amount(); i++) {
-                Players.get(i).initializeTurn();
-                do {
-                    Players.get(i).beginTurn();
-                    Players.get(i).midTurn();
-                } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
-                Players.get(i).endTurn();
-            }
-        }
-    }
-
-    //step turn
-    public static void stepTurn(Integer playerID) {
-        Players.get(playerID).initializeTurn();
-        do {
-            Players.get(playerID).beginTurn();
-            Players.get(playerID).midTurn();
-        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
-        Players.get(playerID).endTurn();
-    }
-
-    //step round
-    public static void stepRound() {
-        for (int i = 1; i <= Players.amount(); i++) {
-            Players.get(i).initializeTurn();
-            do {
-                Players.get(i).beginTurn();
-                Players.get(i).midTurn();
-            } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
-            Players.get(i).endTurn();
-        }
     }
 
 }
