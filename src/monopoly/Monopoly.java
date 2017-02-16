@@ -8,13 +8,13 @@ package monopoly;
 import GUI.Log;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
-import monopoly.Dice.DiceStats;
+//import static java.lang.Math.ceil;
+//import static java.lang.Math.floor;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.stream.IntStream;
+//import monopoly.Dice.DiceStats;
 //import java.util.ArrayList;
 //import java.util.HashSet;
 //import java.util.Iterator;
@@ -46,7 +46,11 @@ public class Monopoly {
         ChestCards.init();
         Cells.init();
         Dice.init();
-//
+
+        Monopoly.batchRound(100);
+        Monopoly.stepRound();
+        Monopoly.stepTurn(1);
+////
 //        System.out.println(Dice.getExpectedRoll());
 //
 //        do {
@@ -72,9 +76,16 @@ public class Monopoly {
 //        System.out.println(Cells.get(16).getRent());
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
 //
-        int PLAYER_ROUNDS_AMOUNT = 20;
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new Log().setVisible(true);
+        });
 
-        for (int playerRounds = 1; playerRounds <= PLAYER_ROUNDS_AMOUNT; playerRounds++) {
+    }
+
+    //batch rounds
+    public static void batchRound(int limit) {
+        for (int playerRounds = 1; playerRounds <= limit; playerRounds++) {
             for (int i = 1; i <= Players.amount(); i++) {
                 Players.get(i).initializeTurn();
                 do {
@@ -84,16 +95,20 @@ public class Monopoly {
                 Players.get(i).endTurn();
             }
         }
+    }
 
-        //step turn
-        Players.get(1).initializeTurn();
+    //step turn
+    public static void stepTurn(Integer playerID) {
+        Players.get(playerID).initializeTurn();
         do {
-            Players.get(1).beginTurn();
-            Players.get(1).midTurn();
+            Players.get(playerID).beginTurn();
+            Players.get(playerID).midTurn();
         } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
-        Players.get(1).endTurn();
+        Players.get(playerID).endTurn();
+    }
 
-        //step round
+    //step round
+    public static void stepRound() {
         for (int i = 1; i <= Players.amount(); i++) {
             Players.get(i).initializeTurn();
             do {
@@ -102,12 +117,6 @@ public class Monopoly {
             } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(i).isInJail() && !Players.get(i).isPlayerExitingJail());
             Players.get(i).endTurn();
         }
-
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new Log().setVisible(true);
-        });
     }
 
 }
