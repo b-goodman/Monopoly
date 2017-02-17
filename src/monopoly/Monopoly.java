@@ -5,6 +5,7 @@
  */
 package monopoly;
 
+import GUI.ImportRules;
 import GUI.Log;
 import GUI.Setup;
 import java.io.FileNotFoundException;
@@ -89,6 +90,12 @@ public class Monopoly {
         Cells.init();
         Dice.init();
 
+        System.out.println(ImportRules.isIntegral("7"));
+        System.out.println(ImportRules.isIntegral("true"));
+        System.out.println(ImportRules.isBoolean("7"));
+        System.out.println(ImportRules.isBoolean("true"));
+        System.out.println(ImportRules.isBoolean("false"));
+
 //        Monopoly.batchRound(100);
 //        Monopoly.stepRound();
 //        Monopoly.stepTurn(1);
@@ -118,16 +125,17 @@ public class Monopoly {
 //        System.out.println(Cells.get(16).getRent());
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
 //
+//game GUI
 //        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(() -> {
 //            new Log().setVisible(true);
 //        });
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Setup().setVisible(true);
-            }
-        });
-
+//config GUI
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Setup().setVisible(true);
+//            }
+//        });
     }
 
 }

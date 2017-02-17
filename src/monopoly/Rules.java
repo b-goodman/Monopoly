@@ -5,6 +5,15 @@
  */
 package monopoly;
 
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import monopoly.Enums.RuleName;
+
 /**
  *
  * @author bgood_000
@@ -70,6 +79,70 @@ public final class Rules {
     private static int MAX_JAIL_TERM_VALUE = 3;
 
     private static int LEAVE_JAIL_FEE_VALUE = 50;
+
+    private Map<RuleName, String> importedRules;
+
+    public Rules(String filePath) throws FileNotFoundException, IOException {
+
+        importedRules = new HashMap<>();
+
+        //Chance Card Import Testing:
+        //Instantiate new CSV reader with specified filepath
+        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
+        //Read all entries found in CSV file
+        List<String[]> getCSV = reader.readAll();
+        //get amount of entries
+        int entries = getCSV.size();
+        //Declare Paramaters
+        String name;
+        String value;
+
+        //Loop deck entry constructor over all CSV entries
+        for (int i = 0; i < entries; i++) {
+            //Initilize ith paramaters with imported values:
+            name = getCSV.get(i)[0];
+            value = getCSV.get(i)[1];
+
+            //Construct new chance card and add to library.
+            importedRules.put(RuleName.valueOf(name), value);
+        }
+
+    }
+
+    public static boolean isIntegral(String str) {
+        try {
+            int i = Integer.parseInt(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isBoolean(String str) {
+        return ("true".equals(str) || "false".equals(str));
+    }
+
+    public static boolean parseBoolean(String str) {
+        return ("true".equals(str));
+    }
+
+    public void setRule(RuleName rule) {
+        switch (rule) {
+            case PASS_GO_BONUS_FIELD:
+                setPassGoCredit(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case ENABLE_GO_LANDING_BONUS:
+                setGoLandingBonus(parseBoolean(importedRules.get(rule)));
+                break;
+            case ENABLE_FREE_PARKING_BONUS:
+                setFreeParkingBonusEnabled(parseBoolean(importedRules.get(rule)));
+                break;
+            case ENABLE_BONUS_CAP:
+                setFreeParkingBonusLimitEnabled(parseBoolean(importedRules.get(rule)));
+                break;
+
+        }
+    }
 
     //Methods
     //Jail
