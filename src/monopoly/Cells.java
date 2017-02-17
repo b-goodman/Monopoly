@@ -160,7 +160,7 @@ public final class Cells {
      * @throws IOException
      */
     public static void init() throws IOException {
-        Cells cells = new Cells("CellData.CSV");
+        Cells cells = new Cells("src/config/CellData.CSV");
     }
 
     public static void init(String configPath) throws IOException {

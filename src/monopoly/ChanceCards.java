@@ -97,7 +97,7 @@ public final class ChanceCards {
      * @throws IOException
      */
     public static void init() throws IOException {
-        ChanceCards chanceCards = new ChanceCards("chanceCardDeck.CSV");
+        ChanceCards chanceCards = new ChanceCards("src/config/chanceCardDeck.CSV");
     }
 
     public static void init(String configPath) throws IOException {

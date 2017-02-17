@@ -80,4 +80,17 @@ public class Players {
         //Map<Integer, Player> returnMap = Collections.unmodifiableMap(PLAYERS);
         return PLAYERS;
     }
+
+    public static Set<Token> getAvaliableTokens() {
+        //get remaining tokens
+        Set<Token> unavaliableTokens = new HashSet<>();
+        for (Player player : Players.getPlayers().values()) {
+            unavaliableTokens.add(player.getToken());
+        }
+        Set<Token> allTokens = new HashSet<>(Arrays.asList(Token.values()));
+
+        allTokens.removeAll(unavaliableTokens);
+
+        return allTokens;
+    }
 }

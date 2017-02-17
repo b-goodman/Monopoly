@@ -97,7 +97,7 @@ public final class ChestCards {
      * @throws IOException
      */
     public static void init() throws IOException {
-        ChestCards chestCards = new ChestCards("chestCardDeck.CSV");
+        ChestCards chestCards = new ChestCards("src/config/chestCardDeck.CSV");
     }
 
     public static void init(String configPath) throws IOException {

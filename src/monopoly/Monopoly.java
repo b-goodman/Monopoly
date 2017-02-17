@@ -6,8 +6,14 @@
 package monopoly;
 
 import GUI.Log;
+import GUI.Setup;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 //import static java.lang.Math.ceil;
 //import static java.lang.Math.floor;
 //import java.util.ArrayList;
@@ -83,9 +89,9 @@ public class Monopoly {
         Cells.init();
         Dice.init();
 
-        Monopoly.batchRound(100);
-        Monopoly.stepRound();
-        Monopoly.stepTurn(1);
+//        Monopoly.batchRound(100);
+//        Monopoly.stepRound();
+//        Monopoly.stepTurn(1);
 ////
 //        System.out.println(Dice.getExpectedRoll());
 //
@@ -112,9 +118,14 @@ public class Monopoly {
 //        System.out.println(Cells.get(16).getRent());
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
 //
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new Log().setVisible(true);
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> {
+//            new Log().setVisible(true);
+//        });
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Setup().setVisible(true);
+            }
         });
 
     }
