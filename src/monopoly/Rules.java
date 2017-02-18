@@ -19,6 +19,7 @@ import monopoly.Enums.RuleName;
  * @author bgood_000
  */
 public final class Rules {
+    //fields set to default - constructor overrides
 
     //Passing/landing on GO
     private static int PASS_GO_CREDIT = 200;
@@ -140,8 +141,54 @@ public final class Rules {
             case ENABLE_BONUS_CAP:
                 setFreeParkingBonusLimitEnabled(parseBoolean(importedRules.get(rule)));
                 break;
-
+            case ENABLE_FINITE_RESOURCES:
+                setImprovementResourcesFinite(parseBoolean(importedRules.get(rule)));
+                break;
+            case HOUSE_AMOUNT_FIELD:
+                setImprovementAmountHouse(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case HOTEL_AMOUNT_FIELD:
+                setImprovementAmountHotel(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case ENABLE_EVEN_BUILD:
+                setPropertyEvenBuildEnabled(parseBoolean(importedRules.get(rule)));
+                break;
+            case HOTEL_PREREQUISITE_FIELD:
+                setPropertyHotelReq(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case IMPROVEMENT_DEPRECIATION_FIELD:
+                setPropertyResalePenaltyValue(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case SET_COMPLETION_BONUS_FIELD:
+                setGroupCompleteRentBonus(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case ENABLE_MORTGAGE_INTEREST:
+                enableMortgageInterest(parseBoolean(importedRules.get(rule)));
+                break;
+            case MORTGAGE_INTEREST_RATE_FIELD:
+                setMortgageInterestRate(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case ENABLE_SPEEDING:
+                setSpeedingEnabled(parseBoolean(importedRules.get(rule)));
+                break;
+            case SPEED_LIMIT_FILED:
+                setSpeedingLimit(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case MAX_JAIL_TERM_FIELD:
+                setMaxJailTerm(Integer.parseInt(importedRules.get(rule)));
+                break;
+            case BAIL_FEE_FIELD:
+                setJailLeaveFee(Integer.parseInt(importedRules.get(rule)));
+                break;
         }
+    }
+
+    public static void init() throws IOException {
+        Rules rules = new Rules("src/config/defaultRules.csv");
+    }
+
+    public static void init(String filePath) throws IOException {
+        Rules rules = new Rules(filePath);
     }
 
     //Methods
@@ -300,6 +347,10 @@ public final class Rules {
 
     public static void setFreeParkingBonusLimitEnabled(boolean enabled) {
         FREE_PARKING_BONUS_LIMIT_ENABLED = enabled;
+    }
+
+    public static boolean isFreeParkingBonusLimitEnabled() {
+        return FREE_PARKING_BONUS_LIMIT_ENABLED;
     }
 
     public static String incFreeParkingBonusValue(int incByAmount) {

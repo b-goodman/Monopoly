@@ -30,7 +30,7 @@ public final class Dice {
     public static final List<Integer> EXPECTED_ROLL = new ArrayList<>();
     public static Map<Integer, Double> ROLL_PROBABILITIES;
 
-    public class DiceStats {
+    public final class DiceStats {
 
         private final Integer[] input;
         private Integer rolloverCounter = 0;
@@ -183,9 +183,9 @@ public final class Dice {
      */
     public Dice(Integer... sides) {
         List<Integer> SIDE_AMOUNT = new ArrayList<>();
-        for (int i = 0; i < sides.length; i++) {
-            DICE_LIST.add(new Die(sides[i]));
-            SIDE_AMOUNT.add(sides[i]);
+        for (Integer side : sides) {
+            DICE_LIST.add(new Die(side));
+            SIDE_AMOUNT.add(side);
         }
         double sum = 0;
         for (int j = 0; j < SIDE_AMOUNT.size(); j++) {

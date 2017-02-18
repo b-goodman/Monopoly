@@ -5,7 +5,6 @@
  */
 package monopoly;
 
-import GUI.ImportRules;
 import GUI.Log;
 import GUI.Setup;
 import java.io.FileNotFoundException;
@@ -15,6 +14,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import static java.lang.Math.ceil;
 //import static java.lang.Math.floor;
 //import java.util.ArrayList;
@@ -81,20 +82,14 @@ public class Monopoly {
         Players.add("Test2", 2, Token.RACECAR);
         Players.add("Test3", 3, Token.BATTLESHIP);
 
-        //Override any default rules
-        Rules.setFreeParkingBonusEnabled(true);
+        Rules.init();
+        //System.out.println(String.valueOf(Rules.getPassGoCredit()));
 
         //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
         ChanceCards.init();
         ChestCards.init();
         Cells.init();
         Dice.init();
-
-        System.out.println(ImportRules.isIntegral("7"));
-        System.out.println(ImportRules.isIntegral("true"));
-        System.out.println(ImportRules.isBoolean("7"));
-        System.out.println(ImportRules.isBoolean("true"));
-        System.out.println(ImportRules.isBoolean("false"));
 
 //        Monopoly.batchRound(100);
 //        Monopoly.stepRound();
@@ -131,11 +126,16 @@ public class Monopoly {
 //            new Log().setVisible(true);
 //        });
 //config GUI
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Setup().setVisible(true);
-//            }
-//        });
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new Setup().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Monopoly.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
 }

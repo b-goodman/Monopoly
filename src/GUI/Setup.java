@@ -5,7 +5,8 @@
  */
 package GUI;
 
-import java.awt.event.ItemEvent;
+import java.io.IOException;
+import monopoly.Rules;
 
 /**
  *
@@ -15,9 +16,37 @@ public class Setup extends javax.swing.JFrame {
 
     /**
      * Creates new form Setup
+     *
+     * @throws java.io.IOException
      */
-    public Setup() {
+    public Setup() throws IOException {
+
         initComponents();
+        setupDefaultRules();
+
+    }
+
+    private void setupDefaultRules() throws IOException {
+        //load default rules
+        Rules.init();
+        //assign variables
+        passGoBonus.setText(String.valueOf(Rules.getPassGoCredit()));
+        enableGoLandingBonus.setSelected(Rules.isGoLandBonusEnabled());
+        enableFreeParkingBonus.setSelected(Rules.isFreeParkingBonusEnabled());
+        enableBonusCap.setSelected(Rules.isFreeParkingBonusLimitEnabled());
+        enableFiniteResources.setSelected(Rules.isImprovementResourcesFinite());
+        houseAmount.setText(String.valueOf(Rules.getImprovementAmountHouse()));
+        hotelAmount.setText(String.valueOf(Rules.getImprovementAmountHotel()));
+        enableEvenBuild.setSelected(Rules.isPropertyEvenBuildEnabled());
+        hotelPrerequisiteField.setText(String.valueOf(Rules.getPropertyHotelReq()));
+        improvementDepreciationField.setText(String.valueOf(Rules.getPropertyResalePenaltyValue()));
+        setCompletionBonusField.setText(String.valueOf(Rules.getGroupCompletRentBonus()));
+        enableMortgageInterest.setSelected(Rules.isMortgageInterestEnabled());
+        mortgageInterestRateField.setText(String.valueOf(Rules.getMortgageInterestRate()));
+        enableSpeeding.setSelected(Rules.isSpeedingEnabled());
+        speedLimitField.setText(String.valueOf(Rules.getDoublesSpeedingLimit()));
+        maxJailTermField.setText(String.valueOf(Rules.getMaxJailTerm()));
+        bailFeeField.setText(String.valueOf(Rules.getJailLeaveFee()));
 
     }
 
