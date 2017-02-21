@@ -86,7 +86,9 @@ public class Monopoly {
         //System.out.println(String.valueOf(Rules.getPassGoCredit()));
 
         //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
-        ChanceCards.init();
+        //ChanceCards.init();
+        //shuffle decks in GUI
+        //dont delete all the cards
         ChestCards.init();
         Cells.init();
         Dice.init();

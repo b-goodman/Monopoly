@@ -6,6 +6,13 @@
 package GUI;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
+import monopoly.Card;
+import monopoly.ChanceCards;
+import monopoly.ChestCards;
 import monopoly.Rules;
 
 /**
@@ -14,6 +21,8 @@ import monopoly.Rules;
  */
 public class Setup extends javax.swing.JFrame {
 
+    private DefaultListModel<String> chanceDeckListModel;
+
     /**
      * Creates new form Setup
      *
@@ -21,9 +30,24 @@ public class Setup extends javax.swing.JFrame {
      */
     public Setup() throws IOException {
 
+        ChestCards.init();
+
         initComponents();
+        setupDefaultChanceDeck();
+
         setupDefaultRules();
 
+    }
+
+    private void setupDefaultChanceDeck() throws IOException {
+        chanceDeckListModel = new DefaultListModel();
+        ChanceCards.CHANCE_CARD_LIB.clear();
+        chanceDeckListModel.clear();
+        ChanceCards.init();
+        chanceDeckList.setModel(chanceDeckListModel);
+        for (ChanceCards.Card card : ChanceCards.CHANCE_CARD_LIB) {
+            chanceDeckListModel.addElement((String) card.getCardContent().get(1));
+        }
     }
 
     private void setupDefaultRules() throws IOException {
@@ -63,9 +87,20 @@ public class Setup extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         setupTabPane = new javax.swing.JTabbedPane();
         gameBoardTabPanel = new javax.swing.JPanel();
         cardDecksTabPanel = new javax.swing.JPanel();
+        cardDeckSelection = new javax.swing.JTabbedPane();
+        chanceDeckViewPane = new javax.swing.JPanel();
+        chanceRemoveButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        chanceDeckList = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        chestDeckViewPane = new javax.swing.JPanel();
         playersTabPanel = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -117,6 +152,13 @@ public class Setup extends javax.swing.JFrame {
 
         jCheckBox2.setText("jCheckBox2");
 
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         javax.swing.GroupLayout gameBoardTabPanelLayout = new javax.swing.GroupLayout(gameBoardTabPanel);
@@ -132,16 +174,87 @@ public class Setup extends javax.swing.JFrame {
 
         setupTabPane.addTab("Game Board", gameBoardTabPanel);
 
+        chanceRemoveButton.setText("Remove Card");
+        chanceRemoveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chanceRemoveButtonActionPerformed(evt);
+            }
+        });
+
+        chanceDeckList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(chanceDeckList);
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane4.setViewportView(jTextArea2);
+
+        javax.swing.GroupLayout chanceDeckViewPaneLayout = new javax.swing.GroupLayout(chanceDeckViewPane);
+        chanceDeckViewPane.setLayout(chanceDeckViewPaneLayout);
+        chanceDeckViewPaneLayout.setHorizontalGroup(
+            chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(chanceRemoveButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+        chanceDeckViewPaneLayout.setVerticalGroup(
+            chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                        .addComponent(chanceRemoveButton))
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
+        );
+
+        cardDeckSelection.addTab("Chance", chanceDeckViewPane);
+
+        javax.swing.GroupLayout chestDeckViewPaneLayout = new javax.swing.GroupLayout(chestDeckViewPane);
+        chestDeckViewPane.setLayout(chestDeckViewPaneLayout);
+        chestDeckViewPaneLayout.setHorizontalGroup(
+            chestDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 670, Short.MAX_VALUE)
+        );
+        chestDeckViewPaneLayout.setVerticalGroup(
+            chestDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 292, Short.MAX_VALUE)
+        );
+
+        cardDeckSelection.addTab("Communnity Chest", chestDeckViewPane);
+
         javax.swing.GroupLayout cardDecksTabPanelLayout = new javax.swing.GroupLayout(cardDecksTabPanel);
         cardDecksTabPanel.setLayout(cardDecksTabPanelLayout);
         cardDecksTabPanelLayout.setHorizontalGroup(
             cardDecksTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
+            .addGroup(cardDecksTabPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cardDeckSelection)
+                .addContainerGap())
         );
         cardDecksTabPanelLayout.setVerticalGroup(
             cardDecksTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 342, Short.MAX_VALUE)
+            .addGroup(cardDecksTabPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cardDeckSelection)
+                .addContainerGap())
         );
+
+        cardDeckSelection.getAccessibleContext().setAccessibleName("Chance");
 
         setupTabPane.addTab("Card Decks", cardDecksTabPanel);
 
@@ -529,7 +642,7 @@ public class Setup extends javax.swing.JFrame {
 
         setupTabPane.addTab("Rules", rulesTabPanel);
 
-        jButton1.setText("Reset to Default");
+        jButton1.setText("Reset");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -572,24 +685,43 @@ public class Setup extends javax.swing.JFrame {
     }//GEN-LAST:event_passGoBonusActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //default rules
-        passGoBonus.setText("200");
-        enableGoLandingBonus.setSelected(false);
-        enableFreeParkingBonus.setSelected(false);
-        enableBonusCap.setSelected(false);
-        enableFiniteResources.setSelected(true);
-        houseAmount.setText("32");
-        hotelAmount.setText("12");
-        enableEvenBuild.setSelected(true);
-        hotelPrerequisiteField.setText("4");
-        improvementDepreciationField.setText("2");
-        setCompletionBonusField.setText("2");
-        enableMortgageInterest.setSelected(true);
-        mortgageInterestRateField.setText("10");
-        enableSpeeding.setSelected(true);
-        speedLimitField.setText("3");
-        maxJailTermField.setText("3");
-        bailFeeField.setText("50");
+        try {
+            int selectedTab = setupTabPane.getSelectedIndex();
+
+            switch (selectedTab) {
+                case 1:
+                    int subSelectedTabDecks = cardDeckSelection.getSelectedIndex();
+                    switch (subSelectedTabDecks) {
+                        case 0:
+                            setupDefaultChanceDeck();
+                            break;
+                    }
+                    break;
+
+                //default rules
+                case 3:
+                    passGoBonus.setText("200");
+                    enableGoLandingBonus.setSelected(false);
+                    enableFreeParkingBonus.setSelected(false);
+                    enableBonusCap.setSelected(false);
+                    enableFiniteResources.setSelected(true);
+                    houseAmount.setText("32");
+                    hotelAmount.setText("12");
+                    enableEvenBuild.setSelected(true);
+                    hotelPrerequisiteField.setText("4");
+                    improvementDepreciationField.setText("2");
+                    setCompletionBonusField.setText("2");
+                    enableMortgageInterest.setSelected(true);
+                    mortgageInterestRateField.setText("10");
+                    enableSpeeding.setSelected(true);
+                    speedLimitField.setText("3");
+                    maxJailTermField.setText("3");
+                    bailFeeField.setText("50");
+                    break;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Setup.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -615,6 +747,26 @@ public class Setup extends javax.swing.JFrame {
     private void setCompletionBonusFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCompletionBonusFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_setCompletionBonusFieldActionPerformed
+
+    private void chanceRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chanceRemoveButtonActionPerformed
+        int index = chanceDeckList.getSelectedIndex();
+        chanceDeckListModel.remove(index);
+
+        int size = chanceDeckListModel.getSize();
+
+        if (size == 0) { //Nobody's left, disable firing.
+            setEnabled(false);
+
+        } else { //Select an index.
+            if (index == chanceDeckListModel.getSize()) {
+                //removed item in last position
+                index--;
+            }
+
+            chanceDeckList.setSelectedIndex(index);
+            chanceDeckList.ensureIndexIsVisible(index);
+        }
+    }//GEN-LAST:event_chanceRemoveButtonActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -656,8 +808,13 @@ public class Setup extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField bailFeeField;
     private javax.swing.JFormattedTextField bonusCapAmountField;
+    private javax.swing.JTabbedPane cardDeckSelection;
     private javax.swing.JPanel cardDecksTabPanel;
     private javax.swing.JPanel cashRulesPanel;
+    private javax.swing.JList<String> chanceDeckList;
+    private javax.swing.JPanel chanceDeckViewPane;
+    private javax.swing.JButton chanceRemoveButton;
+    private javax.swing.JPanel chestDeckViewPane;
     private javax.swing.JComboBox<String> configItems;
     private javax.swing.JCheckBox enableBonusCap;
     private javax.swing.JCheckBox enableEvenBuild;
@@ -675,6 +832,7 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -692,6 +850,11 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel jailRulesPanel;

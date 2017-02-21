@@ -9,9 +9,9 @@
 8,Collect £20,CREDIT_ABS,20,null
 9,Collect £10 From Each Player,CREDIT_REL,FROM_EACH,10
 10,Collect £100,CREDIT_ABS,100,null
-11,Pay £100,debitAbs,100,null
-12,Pay £150,debitAbs,150,null
+11,Pay £100,DEBIT_ABS,100,null
+12,Pay £150,DEBIT_ABS,150,null
 13,Collect £25,CREDIT_ABS,25,null
-14,Make Repairs,debitRel,repair,null
+14,Make Repairs,DEBIT_REL,repair,null
 15,Collect £10,CREDIT_ABS,10,null
 16,Collect £100,CREDIT_ABS,100,null

@@ -1,0 +1,874 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     34892,        866]
+NotebookOptionsPosition[     33665,        819]
+NotebookOutlinePosition[     34014,        834]
+CellTagsIndexPosition[     33971,        831]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"chanceCardDeckImport", " ", "=", " ", 
+   RowBox[{"Import", "[", 
+    RowBox[{
+    "\"\<C:\\\\Users\\\\bgood_000\\\\Documents\\\\NetBeansProjects\\\\\
+Monopoly\\\\src\\\\config\\\\chanceCardDeck.CSV\>\"", ",", "\"\<CSV\>\""}], 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6965290153926024`*^9, 3.696529027599389*^9}, {
+  3.6965290702267356`*^9, 3.6965290767624507`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["chanceCardDeckImport"], "Input",
+ CellChangeTimes->{{3.696529079121689*^9, 3.696529080121716*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "0", ",", "\<\"Advance to GO\"\>", ",", "\<\"TRANSITION_ABS\"\>", ",", 
+     "1", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "\<\"Advance to Trafalgar Square\"\>", 
+     ",", "\<\"TRANSITION_ABS\"\>", ",", "25", ",", "\<\"null\"\>"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "2", ",", "\<\"Advance to Pall Mall\"\>", ",", "\<\"TRANSITION_ABS\"\>", 
+     ",", "12", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "3", ",", "\<\"Advance to Nearest Utility\"\>", 
+     ",", "\<\"TRANSITION_REL\"\>", ",", "\<\"NEXT\"\>", 
+     ",", "\<\"UTILITY\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "4", ",", "\<\"Advance to Nearset Railroad\"\>", 
+     ",", "\<\"TRANSITION_REL\"\>", ",", "\<\"NEXT\"\>", 
+     ",", "\<\"RAILROAD\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "5", ",", "\<\"Advance to Nearset Railroad\"\>", 
+     ",", "\<\"TRANSITION_REL\"\>", ",", "\<\"NEXT\"\>", 
+     ",", "\<\"RAILROAD\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "6", ",", "\<\"Collect \[CapitalAHat]\[Sterling]50\"\>", 
+     ",", "\<\"CREDIT_ABS\"\>", ",", "50", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "7", ",", "\<\"Get out of Jail Free\"\>", ",", "\<\"JAIL\"\>", 
+     ",", "\<\"OUT\"\>", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "8", ",", "\<\"Go Back 3 Spaces\"\>", ",", "\<\"TRANSITION_REL\"\>", 
+     ",", "\<\"GO\"\>", ",", 
+     RowBox[{"-", "3"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "9", ",", "\<\"Go to Jail\"\>", ",", "\<\"JAIL\"\>", ",", "\<\"IN\"\>", 
+     ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "10", ",", "\<\"Make Repairs\"\>", ",", "\<\"DEBIT_REL\"\>", 
+     ",", "\<\"REPAIR\"\>", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "11", ",", "\<\"Pay \[CapitalAHat]\[Sterling]15\"\>", 
+     ",", "\<\"DEBIT_ABS\"\>", ",", "15", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "12", ",", "\<\"Go to King's Cross Station\"\>", 
+     ",", "\<\"TRANSITION_ABS\"\>", ",", "36", ",", "\<\"null\"\>"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "13", ",", "\<\"Advance to Mayfair\"\>", ",", "\<\"TRANSITION_ABS\"\>", 
+     ",", "40", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "14", ",", "\<\"Pay Each Player \[CapitalAHat]\[Sterling]50\"\>", 
+     ",", "\<\"DEBIT_REL\"\>", ",", "\<\"PAY_EACH\"\>", ",", "50"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "15", ",", "\<\"Collect \[CapitalAHat]\[Sterling]150\"\>", 
+     ",", "\<\"CREDIT_ABS\"\>", ",", "150", ",", "\<\"null\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "16", ",", "\<\"Collect \[CapitalAHat]\[Sterling]100\"\>", 
+     ",", "\<\"CREDIT_ABS\"\>", ",", "150", ",", "\<\"null\"\>"}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.6965290811617393`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"readCard", ";"}]], "Input",
+ CellChangeTimes->{{3.6966032371470366`*^9, 3.6966032500865006`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"cardTypes", " ", "=", " ", 
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+     "\"\<Change Location\>\"", ",", "\[IndentingNewLine]", 
+      "\"\<Pay Money\>\"", ",", "\[IndentingNewLine]", 
+      "\"\<Recieve Money\>\"", ",", "\[IndentingNewLine]", "\"\<Jail\>\""}], 
+     "\[IndentingNewLine]", "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"readCard", ":=", 
+    RowBox[{"Which", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"getType", "\[Equal]", "\"\<TRANSITION_ABS\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", "=", "\"\<Change Location\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"methodAction", "=", "\"\<To Location\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"transitionAbsLocation", " ", "=", " ", "getParamater"}]}], 
+      ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"getType", "\[Equal]", "\"\<TRANSITION_REL\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", "=", "\"\<Change Location\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Which", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"getMethod", "\[Equal]", "\"\<NEXT\>\""}], ",", 
+         RowBox[{
+          RowBox[{"methodAction", "=", "\"\<To Nearest\>\""}], ";", 
+          RowBox[{"transitionRelType", " ", "=", " ", "getParamater"}]}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{"getMethod", "\[Equal]", "\"\<GO\>\""}], ",", 
+         RowBox[{
+          RowBox[{"methodAction", "=", "\"\<Move Spaces\>\""}], ";", 
+          RowBox[{"transitionRelSpaces", " ", "=", " ", "getParamater"}]}]}], 
+        "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"getType", "\[Equal]", "\"\<DEBIT_ABS\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", " ", "=", " ", "\"\<Pay Money\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"methodAction", "=", "\"\<To Bank\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"debitAbsBank", " ", "=", " ", "getParamater"}]}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"getType", "\[Equal]", "\"\<DEBIT_REL\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", " ", "=", " ", "\"\<Pay Money\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Which", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"getMethod", "\[Equal]", "\"\<PAY_EACH\>\""}], ",", 
+         RowBox[{
+          RowBox[{"methodAction", "=", "\"\<To Players\>\""}], ";", 
+          RowBox[{"debitAbsPlayers", " ", "=", " ", "getParamater"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"getMethod", "\[Equal]", "\"\<REPAIR\>\""}], ",", 
+         RowBox[{
+          RowBox[{"methodAction", "=", "\"\<Make Repairs\>\""}], ";", 
+          RowBox[{"debitRelRepairs", " ", "=", " ", "getParamater"}]}]}], 
+        "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"getType", "\[Equal]", "\"\<CREDIT_ABS\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", "=", "\"\<Recieve Money\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"methodAction", "=", "\"\<From Bank\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"creditAbsPlayers", "=", "getParamater"}]}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"getType", "\[Equal]", "\"\<CREDIT_REL\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", "=", "\"\<Recieve Money\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"methodAction", "=", "\"\<From Players\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"creditRelPlayers", " ", "=", " ", "getParamater"}]}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"getType", "\[Equal]", "\"\<JAIL\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"methodSelection", "=", "\"\<Jail\>\""}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Which", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"getMethod", "\[Equal]", "\"\<IN\>\""}], ",", 
+         RowBox[{"methodAction", "=", "\"\<Go to\>\""}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"getMethod", "\[Equal]", "\"\<OUT\>\""}], ",", 
+         RowBox[{"methodAction", "=", "\"\<Get out\>\""}]}], 
+        "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"textContent", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"transitionAbsLocation", " ", "=", " ", "1"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"transitionRelSpaces", " ", "=", " ", 
+   RowBox[{"-", "3"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"transitionRelType", " ", "=", " ", "\"\<RAILROAD\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"cellTypes", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<PROPERTY\>\"", ",", "\"\<RAILROAD\>\"", ",", "\"\<UTILITY\>\"", ",", 
+     "\"\<SPECIAL\>\"", ",", "\"\<JAIL\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"debitAbsPlayers", " ", "=", " ", "50"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"debitAbsBank", " ", "=", " ", "50"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"debitRelRepairs", " ", "=", " ", "25"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"creditRelPlayers", " ", "=", " ", "10"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"creditAbsPlayers", "=", "50"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"cardTypeMethods", "=", 
+    RowBox[{"<|", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"\"\<Change Location\>\"", "\[Rule]", 
+       RowBox[{"<|", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\"\<To Location\>\"", "\[Rule]", 
+          RowBox[{"InputField", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "transitionAbsLocation"}], ",", " ", 
+            "Number", ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\"\<Move Spaces\>\"", "\[Rule]", 
+          RowBox[{"InputField", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "transitionRelSpaces"}], ",", " ", 
+            "Number", ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\"\<To Nearest\>\"", "\[Rule]", 
+          RowBox[{"PopupMenu", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "transitionRelType"}], ",", "cellTypes", 
+            ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"7", ",", "1"}], "}"}]}]}], "]"}]}]}], 
+        "\[IndentingNewLine]", "|>"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"\"\<Pay Money\>\"", "\[Rule]", 
+       RowBox[{"<|", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\"\<To Players\>\"", "\[Rule]", 
+          RowBox[{"InputField", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "debitAbsPlayers"}], ",", " ", "Number", 
+            ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}], ",", 
+         "\[IndentingNewLine]", " ", 
+         RowBox[{"\"\<To Bank\>\"", "\[Rule]", " ", 
+          RowBox[{"InputField", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "debitAbsBank"}], ",", " ", "Number", ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\"\<Make Repairs\>\"", "\[Rule]", " ", 
+          RowBox[{"InputField", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "debitRelRepairs"}], ",", " ", "Number", 
+            ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}]}], 
+        "\[IndentingNewLine]", "|>"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"\"\<Recieve Money\>\"", "\[Rule]", 
+       RowBox[{"<|", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\"\<From Players\>\"", "\[Rule]", " ", 
+          RowBox[{"InputField", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "@", "creditRelPlayers"}], ",", " ", "Number", 
+            ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}], ",", 
+         RowBox[{"\"\<From Bank\>\"", "\[Rule]", " ", 
+          RowBox[{"InputField", "[", 
+           RowBox[{"creditAbsPlayers", ",", " ", "Number", ",", 
+            RowBox[{"FieldSize", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"3", ",", "1"}], "}"}]}]}], "]"}]}]}], 
+        "\[IndentingNewLine]", "|>"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"\"\<Jail\>\"", "\[Rule]", 
+       RowBox[{"<|", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\"\<Go to\>\"", "\[Rule]", "\"\<\>\""}], ",", 
+         RowBox[{"\"\<Get out\>\"", "\[Rule]", "\"\<\>\""}]}], 
+        "\[IndentingNewLine]", "|>"}]}]}], "\[IndentingNewLine]", "|>"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"methodSelection", " ", ":=", " ", 
+   RowBox[{
+    RowBox[{"Keys", "[", "cardTypeMethods", "]"}], "\[LeftDoubleBracket]", 
+    "1", "\[RightDoubleBracket]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"methodAction", ":=", 
+    RowBox[{
+     RowBox[{"Keys", "[", 
+      RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], "]"}], 
+     "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"chanceCardDeck", " ", "=", " ", "chanceCardDeckImport"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"choice", " ", "=", " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Normal", "@", 
+       RowBox[{"AssociationThread", "[", 
+        RowBox[{
+         RowBox[{"Range", "[", 
+          RowBox[{"Length", "[", "#", "]"}], "]"}], ",", "#"}], "]"}]}], 
+      "&"}], "[", 
+     RowBox[{"chanceCardDeck", "\[LeftDoubleBracket]", 
+      RowBox[{"All", ",", "2"}], "\[RightDoubleBracket]"}], "]"}], ")"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"selection", "=", 
+   RowBox[{"{", 
+    RowBox[{"choice", "\[LeftDoubleBracket]", 
+     RowBox[{"1", ",", "1"}], "\[RightDoubleBracket]"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getText", ":=", 
+   RowBox[{
+    RowBox[{"chanceCardDeck", "\[LeftDoubleBracket]", 
+     RowBox[{
+     "selection", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+     "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "2", 
+    "\[RightDoubleBracket]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getType", ":=", 
+   RowBox[{
+    RowBox[{"chanceCardDeck", "\[LeftDoubleBracket]", 
+     RowBox[{
+     "selection", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+     "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "3", 
+    "\[RightDoubleBracket]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getMethod", ":=", 
+   RowBox[{
+    RowBox[{"chanceCardDeck", "\[LeftDoubleBracket]", 
+     RowBox[{
+     "selection", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+     "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "4", 
+    "\[RightDoubleBracket]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getParamater", ":=", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"StringSplit", "[", 
+         RowBox[{"getType", ",", "\"\<_\>\""}], "]"}], "\[LeftDoubleBracket]",
+         "2", "\[RightDoubleBracket]"}], "\[Equal]", "\"\<REL\>\""}], ",", 
+      RowBox[{
+       RowBox[{"chanceCardDeck", "\[LeftDoubleBracket]", 
+        RowBox[{
+        "selection", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+        "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "5", 
+       "\[RightDoubleBracket]"}], ",", 
+      RowBox[{
+       RowBox[{"chanceCardDeck", "\[LeftDoubleBracket]", 
+        RowBox[{
+        "selection", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+        "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "4", 
+       "\[RightDoubleBracket]"}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Row", "[", 
+   RowBox[{
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ListPicker", "[", 
+       RowBox[{
+        RowBox[{"Dynamic", "@", "selection"}], ",", "choice"}], "]"}], ",", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Column", "[", 
+       RowBox[{
+       "{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Panel", "@", "\[IndentingNewLine]", 
+          RowBox[{"Dynamic", "@", 
+           RowBox[{"Row", "[", 
+            RowBox[{
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"InputField", "[", 
+                RowBox[{"textContent", ",", "String"}], "]"}], ",", 
+               "\[IndentingNewLine]", "\[IndentingNewLine]", 
+               RowBox[{"Dynamic", "@", 
+                RowBox[{"PopupMenu", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "@", "methodSelection"}], ",", 
+                  RowBox[{"Keys", "[", "cardTypeMethods", "]"}]}], "]"}]}], 
+               ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+               RowBox[{"Dynamic", "@", 
+                RowBox[{"PopupMenu", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "@", "methodAction"}], ",", 
+                  RowBox[{"Keys", "[", 
+                   RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], 
+                   "]"}], ",", 
+                  RowBox[{
+                   RowBox[{"Keys", "[", 
+                    RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], 
+                    "]"}], "\[LeftDoubleBracket]", "1", 
+                   "\[RightDoubleBracket]"}]}], "]"}]}], ",", 
+               "\[IndentingNewLine]", "\[IndentingNewLine]", 
+               RowBox[{"Dynamic", "[", 
+                RowBox[{"cardTypeMethods", "[", 
+                 RowBox[{"methodSelection", ",", "methodAction"}], "]"}], 
+                "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}], 
+             ",", 
+             RowBox[{"Spacer", "[", "5.", "]"}]}], "]"}]}]}], ",", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Row", "[", 
+          RowBox[{
+           RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Button", "[", 
+              RowBox[{"\"\<Edit...\>\"", ",", "\[IndentingNewLine]", 
+               RowBox[{"readCard", ";", "\[IndentingNewLine]", 
+                RowBox[{"CreateDialog", "[", 
+                 RowBox[{"{", "\[IndentingNewLine]", 
+                  RowBox[{"Panel", "@", "\[IndentingNewLine]", 
+                   RowBox[{"Dynamic", "@", 
+                    RowBox[{"Row", "[", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"InputField", "[", 
+                    RowBox[{"getText", ",", "String"}], "]"}], ",", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"Dynamic", "@", 
+                    RowBox[{"PopupMenu", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "@", "methodSelection"}], ",", 
+                    RowBox[{"Keys", "[", "cardTypeMethods", "]"}]}], "]"}]}], 
+                    ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"Dynamic", "@", 
+                    RowBox[{"PopupMenu", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "@", "methodAction"}], ",", 
+                    RowBox[{"Keys", "[", 
+                    RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], 
+                    "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"Keys", "[", 
+                    RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], 
+                    "]"}], "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}]}], "]"}]}], ",", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"cardTypeMethods", "[", 
+                    RowBox[{"methodSelection", ",", "methodAction"}], "]"}], 
+                    "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    "}"}], ",", 
+                    RowBox[{"Spacer", "[", "5.", "]"}]}], "]"}]}]}], 
+                  "\[IndentingNewLine]", "}"}], "]"}]}], ",", 
+               RowBox[{"ImageSize", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"90", ",", "30"}], "}"}]}]}], "\[IndentingNewLine]", 
+              "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"Button", "[", 
+              RowBox[{"\"\<Add\>\"", ",", 
+               RowBox[{"ImageSize", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"90", ",", "30"}], "}"}]}]}], "]"}], ",", 
+             RowBox[{"Button", "[", 
+              RowBox[{"\"\<Delete\>\"", ",", 
+               RowBox[{"ImageSize", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"90", ",", "30"}], "}"}]}]}], "]"}]}], 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}], ",", 
+           RowBox[{"Spacer", "[", "5", "]"}]}], "]"}]}], 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}], "]"}]}], 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}], ",", 
+    RowBox[{"Spacer", "[", "5", "]"}]}], "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.6965319309881687`*^9, 3.696531943113815*^9}, {
+   3.6965320030372186`*^9, 3.696532151242033*^9}, {3.6965323451516438`*^9, 
+   3.6965325193212175`*^9}, {3.6965325961017904`*^9, 
+   3.6965326765428457`*^9}, {3.6965328615329294`*^9, 
+   3.6965328938317127`*^9}, {3.696533134844587*^9, 3.696533157114369*^9}, {
+   3.6966005559404693`*^9, 3.6966006660402837`*^9}, {3.696601179892743*^9, 
+   3.696601226550349*^9}, {3.6966013213192024`*^9, 3.696601394784944*^9}, {
+   3.696601482188833*^9, 3.6966015475841417`*^9}, {3.696602165783701*^9, 
+   3.6966021696560106`*^9}, {3.6966030547552023`*^9, 
+   3.6966030560052433`*^9}, {3.69660316220498*^9, 3.6966031663202267`*^9}, {
+   3.696603687149267*^9, 3.696603722973647*^9}, {3.6966037612082543`*^9, 
+   3.6966037715306463`*^9}, {3.696603801587155*^9, 3.696603867455284*^9}, {
+   3.6966043564664555`*^9, 3.6966043626571054`*^9}, {3.6966044532279797`*^9, 
+   3.696604486237971*^9}, {3.6966046249071817`*^9, 3.6966047530170126`*^9}, 
+   3.6966048394845147`*^9, {3.696605001121061*^9, 3.696605026451067*^9}, {
+   3.6966050772885675`*^9, 3.6966051640045323`*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{InterpretationBox[
+    StyleBox[
+     GraphicsBox[{}, ImageSize -> {5, 0}, BaselinePosition -> Baseline], 
+     "CacheGraphics" -> False], 
+    Spacer[5]],ListPickerBox[
+    Dynamic[$CellContext`selection], {
+    1 -> "\"Advance to GO\"", 2 -> "\"Advance to Trafalgar Square\"", 3 -> 
+     "\"Advance to Pall Mall\"", 4 -> "\"Advance to Nearest Utility\"", 5 -> 
+     "\"Advance to Nearset Railroad\"", 6 -> 
+     "\"Advance to Nearset Railroad\"", 7 -> 
+     "\"Collect \[CapitalAHat]\[Sterling]50\"", 8 -> 
+     "\"Get out of Jail Free\"", 9 -> "\"Go Back 3 Spaces\"", 10 -> 
+     "\"Go to Jail\"", 11 -> "\"Make Repairs\"", 12 -> 
+     "\"Pay \[CapitalAHat]\[Sterling]15\"", 13 -> 
+     "\"Go to King's Cross Station\"", 14 -> "\"Advance to Mayfair\"", 15 -> 
+     "\"Pay Each Player \[CapitalAHat]\[Sterling]50\"", 16 -> 
+     "\"Collect \[CapitalAHat]\[Sterling]150\"", 17 -> 
+     "\"Collect \[CapitalAHat]\[Sterling]100\""}],TagBox[
+    GridBox[{{
+       PanelBox[
+        DynamicBox[
+         ToBoxes[
+          Row[{
+            InputField[$CellContext`textContent, String], 
+            Dynamic[
+             PopupMenu[
+              Dynamic[$CellContext`methodSelection], 
+              Keys[$CellContext`cardTypeMethods]]], 
+            Dynamic[
+             PopupMenu[
+              Dynamic[$CellContext`methodAction], 
+              Keys[
+               $CellContext`cardTypeMethods[$CellContext`methodSelection]], 
+              Part[
+               Keys[
+                $CellContext`cardTypeMethods[$CellContext`methodSelection]], 
+               1]]], 
+            Dynamic[
+             $CellContext`cardTypeMethods[$CellContext`methodSelection, \
+$CellContext`methodAction]]}, 
+           Spacer[5.]], StandardForm], 
+         ImageSizeCache -> {530., {8., 18.}}]]}, {
+       TemplateBox[{
+         InterpretationBox[
+          StyleBox[
+           GraphicsBox[{}, ImageSize -> {5, 0}, BaselinePosition -> Baseline],
+            "CacheGraphics" -> False], 
+          Spacer[5]], 
+         ButtonBox[
+         "\"Edit...\"", 
+          ButtonFunction :> ($CellContext`readCard; CreateDialog[{
+              Panel[
+               Dynamic[
+                Row[{
+                  InputField[$CellContext`getText, String], 
+                  Dynamic[
+                   PopupMenu[
+                    Dynamic[$CellContext`methodSelection], 
+                    Keys[$CellContext`cardTypeMethods]]], 
+                  Dynamic[
+                   PopupMenu[
+                    Dynamic[$CellContext`methodAction], 
+                    Keys[
+                    $CellContext`cardTypeMethods[$CellContext`methodSelection]\
+], 
+                    Part[
+                    Keys[
+                    $CellContext`cardTypeMethods[$CellContext`methodSelection]\
+], 1]]], 
+                  Dynamic[
+                   $CellContext`cardTypeMethods[$CellContext`methodSelection, \
+$CellContext`methodAction]]}, 
+                 Spacer[5.]]]]}]), ImageSize -> {90, 30}, Appearance -> 
+          Automatic, Evaluator -> Automatic, Method -> "Preemptive"], 
+         ButtonBox[
+         "\"Add\"", ButtonFunction :> {}, Evaluator -> None, 
+          ImageSize -> {90, 30}, Appearance -> Automatic, Method -> 
+          "Preemptive"], 
+         ButtonBox[
+         "\"Delete\"", ButtonFunction :> {}, Evaluator -> None, 
+          ImageSize -> {90, 30}, Appearance -> Automatic, Method -> 
+          "Preemptive"]}, "RowWithSeparator"]}}, DefaultBaseStyle -> "Column",
+      GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+     GridBoxItemSize -> {
+      "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], "Column"]},
+  "RowWithSeparator"]], "Output",
+ CellChangeTimes->{{3.6966038512972555`*^9, 3.6966038678652935`*^9}, 
+   3.696604489035407*^9, 3.6966047535870266`*^9, 3.6966048044323754`*^9, 
+   3.6966048398745174`*^9, {3.6966050114144974`*^9, 3.696605029279937*^9}, {
+   3.6966050997587852`*^9, 3.696605164704548*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["readCard"], "Input",
+ CellChangeTimes->{{3.69660484185021*^9, 3.6966048426002283`*^9}}],
+
+Cell[BoxData["40"], "Output",
+ CellChangeTimes->{{3.696604843149167*^9, 3.6966048638834743`*^9}, 
+   3.6966050449790473`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Button", "[", 
+  RowBox[{"\"\<Edit...\>\"", ",", "\[IndentingNewLine]", 
+   RowBox[{"readCard", ";", "\[IndentingNewLine]", 
+    RowBox[{"CreateDialog", "[", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"Panel", "@", "\[IndentingNewLine]", 
+       RowBox[{"Dynamic", "@", 
+        RowBox[{"Row", "[", 
+         RowBox[{
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"InputField", "[", 
+             RowBox[{"getText", ",", "String"}], "]"}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"Dynamic", "@", 
+             RowBox[{"PopupMenu", "[", 
+              RowBox[{
+               RowBox[{"Dynamic", "@", "methodSelection"}], ",", 
+               RowBox[{"Keys", "[", "cardTypeMethods", "]"}]}], "]"}]}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"Dynamic", "@", 
+             RowBox[{"PopupMenu", "[", 
+              RowBox[{
+               RowBox[{"Dynamic", "@", "methodAction"}], ",", 
+               RowBox[{"Keys", "[", 
+                RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], 
+                "]"}], ",", 
+               RowBox[{
+                RowBox[{"Keys", "[", 
+                 RowBox[{"cardTypeMethods", "[", "methodSelection", "]"}], 
+                 "]"}], "\[LeftDoubleBracket]", "1", 
+                "\[RightDoubleBracket]"}]}], "]"}]}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"Dynamic", "[", 
+             RowBox[{"cardTypeMethods", "[", 
+              RowBox[{"methodSelection", ",", "methodAction"}], "]"}], 
+             "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}], 
+          ",", 
+          RowBox[{"Spacer", "[", "5.", "]"}]}], "]"}]}]}], 
+      "\[IndentingNewLine]", "}"}], "]"}]}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"90", ",", "30"}], "}"}]}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.696603986605261*^9, 3.696603996252654*^9}, {
+   3.6966041272073927`*^9, 3.696604128737419*^9}, {3.6966041851586113`*^9, 
+   3.696604186788644*^9}, 3.696604601291389*^9, {3.696605058832489*^9, 
+   3.696605063408342*^9}}],
+
+Cell[BoxData[
+ ButtonBox["\<\"Edit...\"\>",
+  Appearance->Automatic,
+  ButtonFunction:>($CellContext`readCard; CreateDialog[{
+      Panel[
+       Dynamic[
+        Row[{
+          InputField[$CellContext`getText, String], 
+          Dynamic[
+           PopupMenu[
+            Dynamic[$CellContext`methodSelection], 
+            Keys[$CellContext`cardTypeMethods]]], 
+          Dynamic[
+           PopupMenu[
+            Dynamic[$CellContext`methodAction], 
+            Keys[
+             $CellContext`cardTypeMethods[$CellContext`methodSelection]], 
+            Part[
+             Keys[
+              $CellContext`cardTypeMethods[$CellContext`methodSelection]], 
+             1]]], 
+          Dynamic[
+           $CellContext`cardTypeMethods[$CellContext`methodSelection, \
+$CellContext`methodAction]]}, 
+         Spacer[5.]]]]}]),
+  Evaluator->Automatic,
+  ImageSize->{90, 30},
+  Method->"Preemptive"]], "Output",
+ CellChangeTimes->{3.6966041326275196`*^9, 3.6966041873486595`*^9, 
+  3.6966047641949797`*^9, 3.696605063928344*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"StringSplit", "[", 
+    RowBox[{"getType", ",", "\"\<_\>\""}], "]"}], "\[LeftDoubleBracket]", "2",
+    "\[RightDoubleBracket]"}], "\[Equal]", "\"\<REL\>\""}]], "Input",
+ CellChangeTimes->{{3.6966044141451445`*^9, 3.6966044404588614`*^9}}],
+
+Cell[BoxData["False"], "Output",
+ CellChangeTimes->{{3.696604415360879*^9, 3.696604440858864*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["getParamater"], "Input",
+ CellChangeTimes->{{3.696604491906623*^9, 3.69660449368736*^9}}],
+
+Cell[BoxData["\<\"RAILROAD\"\>"], "Output",
+ CellChangeTimes->{
+  3.696604444938409*^9, {3.6966044942173758`*^9, 3.6966045242706485`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"textContent", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"transitionAbsLocation", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"transitionRelSpaces", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"transitionRelType", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"debitAbsPlayers", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"debitAbsBank", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"debitRelRepairs", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"creditRelPlayers", " ", "=", " ", "getParamater"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"creditAbsPlayers", "=", "getParamater"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6966045741705256`*^9, 3.696604591092678*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["readCard"], "Input",
+ CellChangeTimes->{{3.6966048069920177`*^9, 3.6966048079911547`*^9}}],
+
+Cell[BoxData["40"], "Output",
+ CellChangeTimes->{{3.6966048085111694`*^9, 3.696604828949175*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["getParamater"], "Input",
+ CellChangeTimes->{{3.6966048213052845`*^9, 3.6966048226818037`*^9}}],
+
+Cell[BoxData["40"], "Output",
+ CellChangeTimes->{{3.6966048231260266`*^9, 3.6966048279738455`*^9}}]
+}, Open  ]]
+},
+WindowSize->{1680, 1007},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 413, 9, 30, "Input"],
+Cell[CellGroupData[{
+Cell[996, 33, 112, 1, 30, "Input"],
+Cell[1111, 36, 2986, 79, 99, "Output"]
+}, Open  ]],
+Cell[4112, 118, 121, 2, 30, "Input"],
+Cell[CellGroupData[{
+Cell[4258, 124, 19658, 436, 2657, "Input"],
+Cell[23919, 562, 3957, 90, 244, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27913, 657, 101, 1, 30, "Input"],
+Cell[28017, 660, 125, 2, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28179, 667, 2242, 48, 316, "Input"],
+Cell[30424, 717, 1030, 29, 47, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31491, 751, 285, 6, 30, "Input"],
+Cell[31779, 759, 98, 1, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31914, 765, 103, 1, 30, "Input"],
+Cell[32020, 768, 138, 2, 30, "Output"]
+}, Open  ]],
+Cell[32173, 773, 1000, 26, 183, "Input"],
+Cell[CellGroupData[{
+Cell[33198, 803, 104, 1, 30, "Input"],
+Cell[33305, 806, 97, 1, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[33439, 812, 108, 1, 30, "Input"],
+Cell[33550, 815, 99, 1, 30, "Output"]
+}, Open  ]]
+}
+]
+*)
+

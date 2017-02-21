@@ -21,12 +21,12 @@ import java.util.List;
  */
 public final class ChanceCards {
 
-    private static final List<Card> CHANCE_CARD_LIB = new ArrayList<>();
+    public static final List<Card> CHANCE_CARD_LIB = new ArrayList<>();
     private static final ArrayDeque<Card> CHANCE_CARD_DECK = new ArrayDeque<>();
     private static final ArrayDeque<Card> JAIL_BONDS = new ArrayDeque<>();
 //Individual card defined as class
 
-    class Card {
+    public class Card {
         //Unique identifier for card
 
         public String cardID;
@@ -87,7 +87,7 @@ public final class ChanceCards {
             add(index, text, type, typeParamater1, typeParamater2);
         }
         //Initilize new deck by shuffling copy of library
-        shuffleDeck();
+        //shuffleDeck();
     }
 
     /**
