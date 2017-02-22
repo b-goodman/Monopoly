@@ -14,5 +14,7 @@ public enum ActionPrimary {
     OUT,
     NEXT,
     FROM_EACH,
+    PAY_EACH,
+    REPAIR,
     GO
 }

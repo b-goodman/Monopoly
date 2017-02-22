@@ -78,18 +78,16 @@ public class Monopoly {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         //Add players
-        Players.add("Test1", 1, Token.TOPHAT);
-        Players.add("Test2", 2, Token.RACECAR);
-        Players.add("Test3", 3, Token.BATTLESHIP);
-
-        Rules.init();
+        //System.out.println(Players.getAvaliableTokens());
+//        Players.add("Test1", 1, Token.TOPHAT);
+//        Players.add("Test2", 2, Token.RACECAR);
+//        Players.add("Test3", 3, Token.BATTLESHIP);
+        //Rules.init();
         //System.out.println(String.valueOf(Rules.getPassGoCredit()));
-
         //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
         //ChanceCards.init();
         //shuffle decks in GUI
         //dont delete all the cards
-        ChestCards.init();
         Cells.init();
         Dice.init();
 

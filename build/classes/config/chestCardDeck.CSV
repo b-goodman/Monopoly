@@ -12,6 +12,6 @@
 11,Pay £100,DEBIT_ABS,100,null
 12,Pay £150,DEBIT_ABS,150,null
 13,Collect £25,CREDIT_ABS,25,null
-14,Make Repairs,DEBIT_REL,repair,null
+14,Make Repairs,DEBIT_REL,REPAIR,null
 15,Collect £10,CREDIT_ABS,10,null
 16,Collect £100,CREDIT_ABS,100,null
