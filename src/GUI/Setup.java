@@ -17,6 +17,8 @@ import javax.swing.MutableComboBoxModel;
 //import monopoly.Card;
 import monopoly.ChanceCards;
 import monopoly.Card;
+import monopoly.Cell;
+import monopoly.Cells;
 import monopoly.ChestCards;
 import monopoly.Enums.ActionPrimary;
 import monopoly.Enums.ActionType;
@@ -31,6 +33,7 @@ import monopoly.Token;
  */
 public class Setup extends javax.swing.JFrame {
 
+    private DefaultListModel<String> cellListModel;
     private DefaultListModel<String> chanceDeckListModel;
     private DefaultListModel<String> chestDeckListModel;
     private MutableComboBoxModel<String> tokenBoxModel;
@@ -43,9 +46,10 @@ public class Setup extends javax.swing.JFrame {
      */
     public Setup() throws IOException {
 
-        ChestCards.init();
-
+        //ChestCards.init();
         initComponents();
+
+        setupDefaultCells();
 
         setupPlayers();
 
@@ -115,6 +119,19 @@ public class Setup extends javax.swing.JFrame {
         playerList.setSelectedIndex(0);
         //update edit fields
         refreshListPlayerFields(0);
+    }
+
+    private void setupDefaultCells() throws IOException {
+        cellListModel = new DefaultListModel();
+        Cells.LOCATIONS.clear();
+        Cells.init();
+        cellList.setModel(cellListModel);
+        for (Cell cell : Cells.LOCATIONS.values()) {
+            cellListModel.addElement((String) cell.getName());
+        }
+        cellListModel.remove(0);
+        cellList.setSelectedIndex(0);
+
     }
 
     private void setupDefaultChanceDeck() throws IOException {
@@ -246,6 +263,23 @@ public class Setup extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         setupTabPane = new javax.swing.JTabbedPane();
         gameBoardTabPanel = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        cellList = new javax.swing.JList<>();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        saveCellEditButton = new javax.swing.JButton();
+        resetCellEditButton = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        cellTypeEditBox = new javax.swing.JComboBox<>();
+        jLabel18 = new javax.swing.JLabel();
+        cellValueEditField = new javax.swing.JFormattedTextField();
+        cellNameEditField = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        cellMortgageEditField = new javax.swing.JFormattedTextField();
+        jLabel20 = new javax.swing.JLabel();
+        groupCharacterEditBox = new javax.swing.JComboBox<>();
+        groupColorEditBox = new javax.swing.JComboBox<>();
+        jSeparator1 = new javax.swing.JSeparator();
         cardDecksTabPanel = new javax.swing.JPanel();
         cardDeckSelection = new javax.swing.JTabbedPane();
         chanceDeckViewPane = new javax.swing.JPanel();
@@ -332,15 +366,123 @@ public class Setup extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jScrollPane7.setViewportView(cellList);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel16.setText("Name");
+
+        saveCellEditButton.setText("Save Changes");
+
+        resetCellEditButton.setText("Reset Changes");
+
+        jLabel17.setText("Type");
+
+        cellTypeEditBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel18.setText("Value");
+
+        cellValueEditField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        jLabel19.setText("Mortgage");
+
+        cellMortgageEditField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        jLabel20.setText("Group");
+
+        groupCharacterEditBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        groupColorEditBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cellNameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cellValueEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel19)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cellMortgageEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(81, 81, 81)
+                                .addComponent(saveCellEditButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(resetCellEditButton))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cellTypeEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(groupCharacterEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(groupColorEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 19, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jSeparator1)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(cellNameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18)
+                    .addComponent(cellValueEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19)
+                    .addComponent(cellMortgageEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(cellTypeEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20)
+                    .addComponent(groupCharacterEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(groupColorEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(resetCellEditButton)
+                    .addComponent(saveCellEditButton))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout gameBoardTabPanelLayout = new javax.swing.GroupLayout(gameBoardTabPanel);
         gameBoardTabPanel.setLayout(gameBoardTabPanelLayout);
         gameBoardTabPanelLayout.setHorizontalGroup(
             gameBoardTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
+            .addGroup(gameBoardTabPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         gameBoardTabPanelLayout.setVerticalGroup(
             gameBoardTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 342, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gameBoardTabPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(gameBoardTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane7))
+                .addContainerGap())
         );
 
         setupTabPane.addTab("Game Board", gameBoardTabPanel);
@@ -377,13 +519,14 @@ public class Setup extends javax.swing.JFrame {
             chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(chanceRemoveButton))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                    .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                        .addComponent(chanceRemoveButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         chanceDeckViewPaneLayout.setVerticalGroup(
@@ -392,10 +535,12 @@ public class Setup extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(chanceDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addComponent(chanceRemoveButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+                    .addGroup(chanceDeckViewPaneLayout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -432,13 +577,14 @@ public class Setup extends javax.swing.JFrame {
             chestDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(chestDeckViewPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(chestDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chestDeckViewPaneLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(chestCardRemove)))
+                    .addGroup(chestDeckViewPaneLayout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                    .addGroup(chestDeckViewPaneLayout.createSequentialGroup()
+                        .addComponent(chestCardRemove)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         chestDeckViewPaneLayout.setVerticalGroup(
@@ -446,12 +592,11 @@ public class Setup extends javax.swing.JFrame {
             .addGroup(chestDeckViewPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chestDeckViewPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                    .addGroup(chestDeckViewPaneLayout.createSequentialGroup()
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(chestCardRemove)))
-                .addContainerGap())
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chestCardRemove)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         cardDeckSelection.addTab("Communnity Chest", chestDeckViewPane);
@@ -469,7 +614,7 @@ public class Setup extends javax.swing.JFrame {
             cardDecksTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardDecksTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cardDeckSelection)
+                .addComponent(cardDeckSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 323, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -605,8 +750,8 @@ public class Setup extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(deletePlayerButton)
                 .addContainerGap())
         );
@@ -626,10 +771,10 @@ public class Setup extends javax.swing.JFrame {
             playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(playersTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(playerStartingConditionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         setupTabPane.addTab("Players", playersTabPanel);
@@ -957,6 +1102,11 @@ public class Setup extends javax.swing.JFrame {
         configItems.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("Next >");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1010,6 +1160,11 @@ public class Setup extends javax.swing.JFrame {
                             break;
                     }
                     break;
+
+                case 2:
+                    playerListModel.clear();
+                    Players.getPlayers().clear();
+                    setupPlayers();
 
                 //default rules
                 case 3:
@@ -1179,6 +1334,15 @@ public class Setup extends javax.swing.JFrame {
         playerList.setSelectedIndex(index);
     }//GEN-LAST:event_playerConditionsSaveButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ChanceCards.shuffleDeck();
+        ChestCards.shuffleDeck();
+//        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new Log().setVisible(true);
+        });
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 //    /**
     //     * @param args the command line arguments
     //     */
@@ -1224,6 +1388,11 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JTabbedPane cardDeckSelection;
     private javax.swing.JPanel cardDecksTabPanel;
     private javax.swing.JPanel cashRulesPanel;
+    private javax.swing.JList<String> cellList;
+    private javax.swing.JFormattedTextField cellMortgageEditField;
+    private javax.swing.JTextField cellNameEditField;
+    private javax.swing.JComboBox<String> cellTypeEditBox;
+    private javax.swing.JFormattedTextField cellValueEditField;
     private javax.swing.JList<String> chanceDeckList;
     private javax.swing.JPanel chanceDeckViewPane;
     private javax.swing.JTextArea chanceDescriptionText;
@@ -1243,6 +1412,8 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JCheckBox enableSpeeding;
     private javax.swing.JPanel gameBoardTabPanel;
     private javax.swing.JFormattedTextField goLandingBonusValue;
+    private javax.swing.JComboBox<String> groupCharacterEditBox;
+    private javax.swing.JComboBox<String> groupColorEditBox;
     private javax.swing.JFormattedTextField hotelAmount;
     private javax.swing.JFormattedTextField hotelPrerequisiteField;
     private javax.swing.JFormattedTextField houseAmount;
@@ -1258,7 +1429,12 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1267,6 +1443,7 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1274,6 +1451,8 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel jailRulesPanel;
@@ -1289,7 +1468,9 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JPanel playersTabPanel;
     private javax.swing.JPanel propertyRulesPanel;
     private javax.swing.JButton resetButton;
+    private javax.swing.JButton resetCellEditButton;
     private javax.swing.JPanel rulesTabPanel;
+    private javax.swing.JButton saveCellEditButton;
     private javax.swing.JFormattedTextField setCompletionBonusField;
     private javax.swing.JTabbedPane setupTabPane;
     private javax.swing.JFormattedTextField speedLimitField;

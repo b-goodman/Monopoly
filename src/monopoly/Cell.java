@@ -376,7 +376,7 @@ public class Cell {
         if (isMortgageActionValid("mortgage")) {
             setMortgageState(true);
             System.out.println("\t" + Players.get(currentOwner).getName() + " mortgages " + name + " for " + mortgageValue);
-            Players.get(currentOwner).playerCashRecieve(0, mortgageValue);
+            Players.get(currentOwner).playerCashRecieve(-1, mortgageValue);
 
         }
     }
@@ -389,7 +389,7 @@ public class Cell {
             int unmortgageValue = (Rules.isMortgageInterestEnabled()) ? mortgageValue + (mortgageValue / Rules.getMortgageInterestRate()) : mortgageValue;
             setMortgageState(false);
             System.out.println("\t" + Players.get(currentOwner).getName() + " unmortgages " + name + " for " + unmortgageValue);
-            Players.get(currentOwner).playerCashPay(0, unmortgageValue);
+            Players.get(currentOwner).playerCashPay(-1, unmortgageValue);
         }
     }
 
@@ -731,7 +731,7 @@ public class Cell {
             if (Rules.isImprovementResourcesFinite()) {
                 Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - 1);
             }
-            Players.get(currentOwner).playerCashPay(0, houseValue);
+            Players.get(currentOwner).playerCashPay(-1, houseValue);
             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent() + " - Houses left: " + Rules.getImprovementAmountHouse());
             //improvemntState++;
         } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {
@@ -739,7 +739,7 @@ public class Cell {
             Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() + Rules.getPropertyHotelReq());
             hotelCount = 1;
             Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() - 1);
-            Players.get(currentOwner).playerCashPay(0, hotelValue);
+            Players.get(currentOwner).playerCashPay(-1, hotelValue);
             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a hotel on " + name + " - New Rent: " + getRent());
 
             //improvemntState++;
@@ -789,7 +789,7 @@ public class Cell {
                 //add house to bank
                 Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() + 1);
                 //credit owning players acount with resale value (initial sale value divided by penalty amount (default: 2) )
-                Players.get(getOwnership()).playerCashRecieve(0, (int) (houseValue / Rules.getPropertyResalePenaltyValue()));
+                Players.get(getOwnership()).playerCashRecieve(-1, (int) (houseValue / Rules.getPropertyResalePenaltyValue()));
                 //Otherwise, remove a hotel.
             } else {
                 //deduct from cells hotel count
@@ -801,7 +801,7 @@ public class Cell {
                 //add 1 hotel back into game
                 Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() + 1);
                 //credit players account with resale value
-                Players.get(getOwnership()).playerCashRecieve(0, (int) (hotelValue / Rules.getPropertyResalePenaltyValue()));
+                Players.get(getOwnership()).playerCashRecieve(-1, (int) (hotelValue / Rules.getPropertyResalePenaltyValue()));
             }
         }
     }

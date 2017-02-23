@@ -38,7 +38,7 @@ public class Monopoly {
     //batch rounds
     public static void batchRound(int limit) {
         for (int playerRounds = 1; playerRounds <= limit; playerRounds++) {
-            for (int i = 0; i <= Players.amount(); i++) {
+            for (int i = 0; i < Players.amount(); i++) {
                 Players.get(i).initializeTurn();
                 do {
                     Players.get(i).beginTurn();
@@ -49,19 +49,9 @@ public class Monopoly {
         }
     }
 
-    //step turn
-    public static void stepTurn(Integer playerID) {
-        Players.get(playerID).initializeTurn();
-        do {
-            Players.get(playerID).beginTurn();
-            Players.get(playerID).midTurn();
-        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(0).isInJail() && !Players.get(0).isPlayerExitingJail());
-        Players.get(playerID).endTurn();
-    }
-
     //step round
     public static void stepRound() {
-        for (int i = 0; i <= Players.amount(); i++) {
+        for (int i = 0; i < Players.amount(); i++) {
             Players.get(i).initializeTurn();
             do {
                 Players.get(i).beginTurn();
@@ -71,31 +61,47 @@ public class Monopoly {
         }
     }
 
+    //step turn
+    public static void stepTurn(Integer playerID) {
+        Players.get(playerID).initializeTurn();
+        do {
+            Players.get(playerID).beginTurn();
+            Players.get(playerID).midTurn();
+        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(playerID).isInJail() && !Players.get(playerID).isPlayerExitingJail());
+        Players.get(playerID).endTurn();
+    }
+
     /**
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
-
-        //Add players
-        //System.out.println(Players.getAvaliableTokens());
-//        Players.add("Test1", 1, Token.TOPHAT);
-//        Players.add("Test2", 2, Token.RACECAR);
-//        Players.add("Test3", 3, Token.BATTLESHIP);
-        //Rules.init();
-        //System.out.println(String.valueOf(Rules.getPassGoCredit()));
-        //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
-        //ChanceCards.init();
-        //shuffle decks in GUI
-        //dont delete all the cards
-        Cells.init();
+//
+//        //Add players
+//        Players.add("Test1", 0, Token.TOPHAT);
+//        Players.add("Test2", 1, Token.RACECAR);
+//        Players.add("Test3", 2, Token.BATTLESHIP);
+//        Rules.init();
+//
+//        //Add defualt chest & chance card decks, gameboard cells and 2X 6-side dice.
+//        ChanceCards.init();
+//        ChestCards.init();
+//        ChanceCards.shuffleDeck();
+//        ChestCards.shuffleDeck();
+//        Cells.init();
         Dice.init();
 
+//        Players.get(0).initializeTurn();
+//        do {
+//            Players.get(0).beginTurn();
+//            Players.get(0).midTurn();
+//        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(0).isInJail() && !Players.get(0).isPlayerExitingJail());
+//        Players.get(0).endTurn();
 //        Monopoly.batchRound(100);
 //        Monopoly.stepRound();
 //        Monopoly.stepTurn(1);
 ////
-//        System.out.println(Dice.getExpectedRoll());
+        //     System.out.println(Dice.getExpectedRoll());
 //
 //        do {
 //            Players.get(1).beginTurn();
@@ -121,7 +127,7 @@ public class Monopoly {
 //        System.out.println(Cells.get(16).memberGroupMortgageCount());
 //
 //game GUI
-//        /* Create and display the form */
+        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(() -> {
 //            new Log().setVisible(true);
 //        });

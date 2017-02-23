@@ -280,8 +280,13 @@ public class Player {
         name = newName;
     }
 
+    /**
+     *
+     * @param payingPlayerID [0,1,2...] for players use -1 for bank
+     * @param cashAmount
+     */
     public void playerCashRecieve(Integer payingPlayerID, int cashAmount) {
-        if (payingPlayerID > 0) {
+        if (payingPlayerID >= 0) {
             Player payingPlayer = Players.get(payingPlayerID);
             addCash(cashAmount);
             payingPlayer.addCash(-cashAmount);
@@ -293,7 +298,7 @@ public class Player {
     }
 
     public void playerCashPay(Integer recievingPlayerID, int cashAmount) {
-        if (recievingPlayerID > 0) {
+        if (recievingPlayerID >= 0) {
             Player recievingPlayer = Players.get(recievingPlayerID);
             addCash(-cashAmount);
             recievingPlayer.addCash(cashAmount);
@@ -511,7 +516,7 @@ public class Player {
                 //check if player can afford fine -
                 //if(cash>=Rules.getJailLeaveFee()) -- do below
                 logEntry.logEvent(NOTIFICATION, name + " pays the fine");
-                playerCashPay(0, Rules.getJailLeaveFee());
+                playerCashPay(-1, Rules.getJailLeaveFee());
                 leaveJail();
                 advanceToken(steps);
                 //else - raise funds >= Rules.getJailLeaveFee()
@@ -567,7 +572,7 @@ public class Player {
                     break;
                 //Recieve money
                 case "creditAbs":
-                    playerCashRecieve(0, Integer.parseInt(para));
+                    playerCashRecieve(-1, Integer.parseInt(para));
                     break;
                 //Pay money
                 case "debitAbs":
@@ -577,7 +582,7 @@ public class Player {
                         Rules.incFreeParkingBonusValue(Integer.parseInt(para));
                     } else {
                         //else, pay the bank
-                        playerCashPay(0, Integer.parseInt(para));
+                        playerCashPay(-1, Integer.parseInt(para));
                     }
                     break;
                 //Potentially do nothing.  Check rules.
@@ -644,7 +649,7 @@ public class Player {
             if (position != 1) {
                 //The player has passed GO
                 logEntry.logEvent(NOTIFICATION, " passes GO");
-                playerCashRecieve(0, Rules.getPassGoCredit());
+                playerCashRecieve(-1, Rules.getPassGoCredit());
             }
         } else if (position < 1) {
             position += Cells.locationsAmount();
@@ -733,7 +738,7 @@ public class Player {
                 return;
             // cases of player recieving fixed sum of cash
             case "CREDIT_ABS":
-                playerCashRecieve(0, Integer.parseInt(cardAction1));
+                playerCashRecieve(-1, Integer.parseInt(cardAction1));
                 return;
             // cases of player recieving variable ammount of cash dependent on current game params.
             case "CREDIT_REL":
@@ -747,7 +752,7 @@ public class Player {
                     playerCashPay(-1, Integer.parseInt(cardAction1));
                 } else {
                     //else, pay the bank
-                    playerCashPay(0, Integer.parseInt(cardAction1));
+                    playerCashPay(-1, Integer.parseInt(cardAction1));
                 }
                 return;
             // player paying variable ammount of cash
@@ -755,7 +760,7 @@ public class Player {
                 switch (cardAction1) {
                     case "PAY_EACH":
                         //pay each player cardAction2
-                        for (Integer i = 1; i <= Players.amount(); i++) {
+                        for (Integer i = 0; i < Players.amount(); i++) {
                             if (Objects.equals(i, playerID)) {
                                 //do nothing
                             } else {
