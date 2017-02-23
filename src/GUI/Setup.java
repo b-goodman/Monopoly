@@ -6,6 +6,8 @@
 package GUI;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -55,7 +57,7 @@ public class Setup extends javax.swing.JFrame {
     }
 
     private void setupPlayers() {
-        Players.add("Player 1", 1, Token.TOPHAT);
+        Players.add("Player 1", 0, Token.TOPHAT);
         setupTokenBox();
         setupPlayerList();
     }
@@ -63,6 +65,22 @@ public class Setup extends javax.swing.JFrame {
     private void resetPlayers() {
         Players.getPlayers().clear();
         setupPlayers();
+    }
+
+    public void refreshListPlayerFields(int selectionIndex) {
+        Player selectedPlayer = Players.get((Integer) selectionIndex);
+        playerNameEditField.setText(selectedPlayer.getName());
+        playerStartingCashEditField.setText(String.valueOf(selectedPlayer.getCash()));
+    }
+
+    public void refreshListPlayerFields(Player selectedPlayer) {
+        playerNameEditField.setText(selectedPlayer.getName());
+        playerStartingCashEditField.setText(String.valueOf(selectedPlayer.getCash()));
+    }
+
+    public void updateListPlayerFields(Player selectedPlayer) {
+        selectedPlayer.setName(playerNameEditField.getText());
+        selectedPlayer.setCash(Integer.valueOf(playerStartingCashEditField.getText()));
     }
 
     private void setupTokenBox() {
@@ -82,6 +100,9 @@ public class Setup extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Done once to initalize player list picker
+     */
     private void setupPlayerList() {
         //instantiate and set default list model
         playerListModel = new DefaultListModel();
@@ -92,6 +113,8 @@ public class Setup extends javax.swing.JFrame {
         }
         //set initial selection
         playerList.setSelectedIndex(0);
+        //update edit fields
+        refreshListPlayerFields(0);
     }
 
     private void setupDefaultChanceDeck() throws IOException {
@@ -220,6 +243,7 @@ public class Setup extends javax.swing.JFrame {
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jLabel15 = new javax.swing.JLabel();
         setupTabPane = new javax.swing.JTabbedPane();
         gameBoardTabPanel = new javax.swing.JPanel();
         cardDecksTabPanel = new javax.swing.JPanel();
@@ -237,12 +261,21 @@ public class Setup extends javax.swing.JFrame {
         chestDescriptionText = new javax.swing.JTextArea();
         chestCardRemove = new javax.swing.JButton();
         playersTabPanel = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        tokenBox = new javax.swing.JComboBox<>();
-        addPlayerButton = new javax.swing.JButton();
-        playerNameField = new javax.swing.JTextField();
+        playerStartingConditionsPanel = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        playerStartingCashEditField = new javax.swing.JFormattedTextField();
+        playerConditionsSaveButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        Name = new javax.swing.JLabel();
+        playerNameEditField = new javax.swing.JFormattedTextField();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         playerList = new javax.swing.JList<>();
+        jPanel8 = new javax.swing.JPanel();
+        tokenBox = new javax.swing.JComboBox<>();
+        playerNameField = new javax.swing.JTextField();
+        addPlayerButton = new javax.swing.JButton();
+        deletePlayerButton = new javax.swing.JButton();
         rulesTabPanel = new javax.swing.JPanel();
         jailRulesPanel = new javax.swing.JPanel();
         bailFeeField = new javax.swing.JFormattedTextField();
@@ -294,6 +327,8 @@ public class Setup extends javax.swing.JFrame {
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);
+
+        jLabel15.setText("jLabel15");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -442,19 +477,81 @@ public class Setup extends javax.swing.JFrame {
 
         setupTabPane.addTab("Card Decks", cardDecksTabPanel);
 
+        playerStartingConditionsPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel14.setText("Starting Cash");
+
+        playerStartingCashEditField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        playerConditionsSaveButton.setText("Save Changes");
+        playerConditionsSaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playerConditionsSaveButtonActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Reset Changes");
+
+        Name.setText("Name");
+
+        javax.swing.GroupLayout playerStartingConditionsPanelLayout = new javax.swing.GroupLayout(playerStartingConditionsPanel);
+        playerStartingConditionsPanel.setLayout(playerStartingConditionsPanelLayout);
+        playerStartingConditionsPanelLayout.setHorizontalGroup(
+            playerStartingConditionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playerStartingConditionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(playerStartingConditionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(playerStartingConditionsPanelLayout.createSequentialGroup()
+                        .addComponent(playerConditionsSaveButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2))
+                    .addGroup(playerStartingConditionsPanelLayout.createSequentialGroup()
+                        .addComponent(Name)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(playerNameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(playerStartingConditionsPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(playerStartingCashEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        playerStartingConditionsPanelLayout.setVerticalGroup(
+            playerStartingConditionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playerStartingConditionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(playerStartingConditionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Name)
+                    .addComponent(playerNameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(playerStartingConditionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(playerStartingCashEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(playerStartingConditionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(playerConditionsSaveButton)
+                    .addComponent(jButton2))
+                .addContainerGap())
+        );
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        playerList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                playerListMousePressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(playerList);
+
         tokenBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        playerNameField.setText("Player Name");
+
         addPlayerButton.setText("+");
-        addPlayerButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        addPlayerButton.setMaximumSize(new java.awt.Dimension(23, 23));
-        addPlayerButton.setMinimumSize(new java.awt.Dimension(23, 23));
         addPlayerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addPlayerButtonActionPerformed(evt);
             }
         });
-
-        playerNameField.setText("Player Name");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -466,8 +563,8 @@ public class Setup extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tokenBox, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(addPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -476,33 +573,63 @@ public class Setup extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(playerNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tokenBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addPlayerButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addPlayerButton))
                 .addContainerGap())
         );
 
-        jScrollPane1.setViewportView(playerList);
+        deletePlayerButton.setText("Delete Player");
+        deletePlayerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deletePlayerButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deletePlayerButton))
+                        .addGap(0, 12, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(deletePlayerButton)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout playersTabPanelLayout = new javax.swing.GroupLayout(playersTabPanel);
         playersTabPanel.setLayout(playersTabPanelLayout);
         playersTabPanelLayout.setHorizontalGroup(
             playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(playersTabPanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(playersTabPanelLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1))
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(375, Short.MAX_VALUE))
+                .addGap(31, 31, 31)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(playerStartingConditionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         playersTabPanelLayout.setVerticalGroup(
             playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(playersTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addGroup(playersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(playerStartingConditionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
 
         setupTabPane.addTab("Players", playersTabPanel);
@@ -906,20 +1033,6 @@ public class Setup extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_enableFreeParkingBonusActionPerformed
 
-    private void addPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPlayerButtonActionPerformed
-        //get selected token, name and designate new player ID
-        Token playerToken = Token.valueOf((String) tokenBox.getSelectedItem());
-        String playerName = playerNameField.getText();
-        Integer playerID = Players.getPlayers().size() + 1;
-        //call Player constructor with above variables and add name to list
-        Players.add(playerName, playerID, playerToken);
-        playerListModel.addElement(playerName);
-        //update token box
-        refreshTokenBox();
-        //select newly added player
-        playerList.setSelectedIndex((playerListModel.getSize()));
-    }//GEN-LAST:event_addPlayerButtonActionPerformed
-
     private void hotelPrerequisiteFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hotelPrerequisiteFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_hotelPrerequisiteFieldActionPerformed
@@ -984,44 +1097,127 @@ public class Setup extends javax.swing.JFrame {
         chestDescriptionText.setText(generateDesc(selectedCard));
     }//GEN-LAST:event_chestDeckListMousePressed
 
+    private void deletePlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePlayerButtonActionPerformed
+
+        if (playerListModel.getSize() == 1) {
+            System.out.println("There must be at least 1 player");
+        } else {
+            int index = playerList.getSelectedIndex();
+            playerListModel.remove(index);
+            Players.PLAYERS.remove(index);
+
+            refreshTokenBox();
+            //now go through all the players and reset their ID's
+            int playerAmount = Players.getPlayers().size();
+
+            //Integer playerKey = 0;
+            Integer newKey = 0;
+
+            for (Integer playerKey = 0; playerKey <= playerAmount; playerKey++) {
+                Object tempRemove = Players.getPlayers().remove(playerKey);
+                if (tempRemove != null) {
+                    Players.getPlayers().put(newKey, (Player) tempRemove);
+                    newKey++;
+                }
+            }
+
+            //System.out.println(Players.getPlayers().keySet());
+            int size = playerListModel.getSize();
+
+            if (size == 0) { //Nobody's left, disable firing.
+                setEnabled(false);
+
+            } else { //Select an index.
+                if (index == playerListModel.getSize()) {
+                    //removed item in last position
+                    index--;
+                }
+
+                playerList.setSelectedIndex(index);
+                playerList.ensureIndexIsVisible(index);
+
+                //TODO
+                //update text content of player inspector
+                refreshListPlayerFields(index);
+
+            }
+        }
+
+    }//GEN-LAST:event_deletePlayerButtonActionPerformed
+
+    private void addPlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPlayerButtonActionPerformed
+        //get selected token, name and designate new player ID
+        Token playerToken = Token.valueOf((String) tokenBox.getSelectedItem());
+        String playerName = playerNameField.getText();
+        //new ID is largest existing ID + 1
+        Integer playerID = Collections.max(Players.getPlayers().keySet()) + 1;
+        //call Player constructor with above variables and add name to list
+        Players.add(playerName, playerID, playerToken);
+        playerListModel.addElement(playerName);
+        //update token box
+        refreshTokenBox();
+        //select newly added player
+        playerList.setSelectedIndex((playerListModel.getSize()));
+
+    }//GEN-LAST:event_addPlayerButtonActionPerformed
+
+    private void playerListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playerListMousePressed
+        Player selectedPlayer = Players.get(playerList.getSelectedIndex());
+//        System.out.println(selectedPlayer.getPlayerID());
+//        System.out.println(playerList.getSelectedIndex());
+        //int selectedPlayerCash = selectedPlayer.getCash();
+        refreshListPlayerFields(selectedPlayer);
+    }//GEN-LAST:event_playerListMousePressed
+
+    private void playerConditionsSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playerConditionsSaveButtonActionPerformed
+        int index = playerList.getSelectedIndex();
+        Player targetPlayer = Players.get(index);
+        updateListPlayerFields(targetPlayer);
+        //update name in model
+        playerListModel.removeElementAt(index);
+        playerListModel.add(index, playerNameEditField.getText());
+        playerList.setSelectedIndex(index);
+    }//GEN-LAST:event_playerConditionsSaveButtonActionPerformed
+
 //    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Setup().setVisible(true);
-//            }
-//        });
-//    }
+    //     * @param args the command line arguments
+    //     */
+    //    public static void main(String args[]) {
+    //        /* Set the Nimbus look and feel */
+    //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    //        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    //         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+    //         */
+    //        try {
+    //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+    //                if ("Nimbus".equals(info.getName())) {
+    //                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+    //                    break;
+    //                }
+    //            }
+    //        } catch (ClassNotFoundException ex) {
+    //            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        } catch (InstantiationException ex) {
+    //            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        } catch (IllegalAccessException ex) {
+    //            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+    //            java.util.logging.Logger.getLogger(Setup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    //        }
+    //        //</editor-fold>
+    //        //</editor-fold>
+    //        //</editor-fold>
+    //        //</editor-fold>
+    //
+    //        /* Create and display the form */
+    //        java.awt.EventQueue.invokeLater(new Runnable() {
+    //            public void run() {
+    //                new Setup().setVisible(true);
+    //            }
+    //        });
+    //    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Name;
     private javax.swing.JButton addPlayerButton;
     private javax.swing.JFormattedTextField bailFeeField;
     private javax.swing.JFormattedTextField bonusCapAmountField;
@@ -1037,6 +1233,7 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JPanel chestDeckViewPane;
     private javax.swing.JTextArea chestDescriptionText;
     private javax.swing.JComboBox<String> configItems;
+    private javax.swing.JButton deletePlayerButton;
     private javax.swing.JCheckBox enableBonusCap;
     private javax.swing.JCheckBox enableEvenBuild;
     private javax.swing.JCheckBox enableFiniteResources;
@@ -1051,6 +1248,7 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField houseAmount;
     private javax.swing.JFormattedTextField improvementDepreciationField;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
@@ -1058,6 +1256,8 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1066,6 +1266,7 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1079,8 +1280,12 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField maxJailTermField;
     private javax.swing.JFormattedTextField mortgageInterestRateField;
     private javax.swing.JFormattedTextField passGoBonus;
+    private javax.swing.JButton playerConditionsSaveButton;
     private javax.swing.JList<String> playerList;
+    private javax.swing.JFormattedTextField playerNameEditField;
     private javax.swing.JTextField playerNameField;
+    private javax.swing.JFormattedTextField playerStartingCashEditField;
+    private javax.swing.JPanel playerStartingConditionsPanel;
     private javax.swing.JPanel playersTabPanel;
     private javax.swing.JPanel propertyRulesPanel;
     private javax.swing.JButton resetButton;

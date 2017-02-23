@@ -16,7 +16,7 @@ public class Players {
     /**
      * Maps unique player ID (K, Integer) to player (V, Player)
      */
-    private final static Map<Integer, Player> PLAYERS = new HashMap<>();
+    public final static Map<Integer, Player> PLAYERS = new HashMap<>();
 
     /**
      * Creates a new instance of the default Player class and stores it within
@@ -72,7 +72,7 @@ public class Players {
         return PLAYERS.size();
     }
 
-    public final static Map<Integer, Player> getPlayers() {
+    public static Map<Integer, Player> getPlayers() {
         //problem - saves Player objects - continually update
         //Map<Integer, Player> returnMap = new HashMap<>(PLAYERS);
         //Map<Integer, Player> returnMap;
@@ -93,4 +93,5 @@ public class Players {
 
         return allTokens;
     }
+
 }

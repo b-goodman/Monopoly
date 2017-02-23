@@ -22,11 +22,11 @@ import static monopoly.Enums.EventType.*;
 public class Player {
 
     //Player ID
-    private final Integer playerID;
+    private Integer playerID;
     //Players name
-    private final String name;
+    private String name;
     //Design of player's token
-    private final Token token;
+    private Token token;
     //Player's position by gameboard location index
     private int position;
     //Player's avaliable cash
@@ -125,6 +125,22 @@ public class Player {
      */
     public int getPosition() {
         return position;
+    }
+
+    public void setPlayerID(Integer newID) {
+        playerID = newID;
+    }
+
+    public void setPlayerName(String newName) {
+        name = newName;
+    }
+
+    public void setPlayerToken(Token newToken) {
+        token = newToken;
+    }
+
+    public void setPlayerStartingCash(int newCash) {
+        cash = newCash;
     }
 
     /**
@@ -258,6 +274,10 @@ public class Player {
      */
     public void setCash(int newCashAmmount) {
         cash = newCashAmmount;
+    }
+
+    public void setName(String newName) {
+        name = newName;
     }
 
     public void playerCashRecieve(Integer payingPlayerID, int cashAmount) {

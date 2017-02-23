@@ -38,7 +38,7 @@ public class Monopoly {
     //batch rounds
     public static void batchRound(int limit) {
         for (int playerRounds = 1; playerRounds <= limit; playerRounds++) {
-            for (int i = 1; i <= Players.amount(); i++) {
+            for (int i = 0; i <= Players.amount(); i++) {
                 Players.get(i).initializeTurn();
                 do {
                     Players.get(i).beginTurn();
@@ -55,13 +55,13 @@ public class Monopoly {
         do {
             Players.get(playerID).beginTurn();
             Players.get(playerID).midTurn();
-        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(1).isInJail() && !Players.get(1).isPlayerExitingJail());
+        } while (Dice.isDouble(Dice.getFaceValues()) && !Players.get(0).isInJail() && !Players.get(0).isPlayerExitingJail());
         Players.get(playerID).endTurn();
     }
 
     //step round
     public static void stepRound() {
-        for (int i = 1; i <= Players.amount(); i++) {
+        for (int i = 0; i <= Players.amount(); i++) {
             Players.get(i).initializeTurn();
             do {
                 Players.get(i).beginTurn();
