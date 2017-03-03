@@ -90,6 +90,7 @@ public class Cell {
         this.mortgageState = false;
         this.improvemntState = 0;
         this.houseValue = houseValue;
+        this.hotelValue = hotelValue;
         this.rentBase = rentBase;
         this.rent1H = rent1H;
         this.rent2H = rent2H;
@@ -260,6 +261,38 @@ public class Cell {
         return baseValue;
     }
 
+    public int getRentBase() {
+        return rentBase;
+    }
+
+    public int getRent1h() {
+        return rent1H;
+    }
+
+    public int getRent2h() {
+        return rent2H;
+    }
+
+    public int getRent3h() {
+        return rent3H;
+    }
+
+    public int getRent4h() {
+        return rent4H;
+    }
+
+    public int getRentHotel() {
+        return rentHotel;
+    }
+
+    public int getHouseValue() {
+        return houseValue;
+    }
+
+    public int getHotelValue() {
+        return hotelValue;
+    }
+
     /**
      * Gets type of Cell. Type describes nature and enables different possible
      * method behaviours.
@@ -325,6 +358,10 @@ public class Cell {
      */
     public void setMortgageState(boolean set) {
         mortgageState = set;
+    }
+
+    public int getMortgageValue() {
+        return mortgageValue;
     }
 
     /**

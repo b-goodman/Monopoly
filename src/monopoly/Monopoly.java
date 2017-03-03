@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static monopoly.Enums.CellType.PROPERTY;
 //import static java.lang.Math.ceil;
 //import static java.lang.Math.floor;
 //import java.util.ArrayList;
@@ -142,6 +143,7 @@ public class Monopoly {
                 }
             }
         });
+
     }
 
 }

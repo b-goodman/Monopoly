@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import static monopoly.Enums.CellType.PROPERTY;
 
 /**
  *
@@ -26,6 +29,7 @@ public final class Cells {
      */
     public static Map<Integer, Cell> LOCATIONS = new HashMap<>();
     public static Map<Cell, Integer> PLAYER_OWNERSHIP = new HashMap<>();
+    public static Set<Character> PROPERTY_GROUP_SET = new HashSet<>();
 
     public Cells(String filePath) throws IOException {
         //"In Jail" is always at position 0
@@ -160,7 +164,8 @@ public final class Cells {
      * @throws IOException
      */
     public static void init() throws IOException {
-        Cells cells = new Cells("src/config/CellData.CSV");
+//        Cells cells = new Cells("src/config/CellData.CSV");
+        Cells cells = new Cells("C:\\Users\\bgood_000\\Documents\\NetBeansProjects\\Monopoly\\src\\config\\CellData.CSV");
     }
 
     public static void init(String configPath) throws IOException {
@@ -327,5 +332,16 @@ public final class Cells {
     public static Map<Integer, Cell> getCells() {
         Map<Integer, Cell> returnMap = new HashMap<>(LOCATIONS);
         return returnMap;
+    }
+
+    //TODO - test set build, post to proprty group edit box
+    public static Set<Character> getPropertyGroups() {
+        //for all cells, get type.  if type PROPERTY, get property group, add to set, return
+        for (Cell cell : LOCATIONS.values()) {
+            if (cell.getCellType() == PROPERTY) {
+                PROPERTY_GROUP_SET.add(cell.getPropertyGroupID());
+            }
+        }
+        return PROPERTY_GROUP_SET;
     }
 }

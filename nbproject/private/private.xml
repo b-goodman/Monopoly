@@ -5,12 +5,13 @@
         <group>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/GUI/Log.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Monopoly.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Cells.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/GUI/Setup.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/ChanceCards.java</file>
-            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/config/defaultRules.csv</file>
-            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Enums/RuleName.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Cell.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/ChestCards.java</file>
             <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Rules.java</file>
-            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/GUI/ImportRules.java</file>
+            <file>file:/C:/Users/bgood_000/Documents/NetBeansProjects/Monopoly/src/monopoly/Enums/CellType.java</file>
         </group>
     </open-files>
 </project-private>

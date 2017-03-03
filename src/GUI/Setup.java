@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import java.awt.CardLayout;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -22,6 +23,10 @@ import monopoly.Cells;
 import monopoly.ChestCards;
 import monopoly.Enums.ActionPrimary;
 import monopoly.Enums.ActionType;
+import monopoly.Enums.CellType;
+import static monopoly.Enums.CellType.PROPERTY;
+import static monopoly.Enums.CellType.RAILROAD;
+import static monopoly.Enums.CellType.UTILITY;
 import monopoly.Player;
 import monopoly.Players;
 import monopoly.Rules;
@@ -33,6 +38,8 @@ import monopoly.Token;
  */
 public class Setup extends javax.swing.JFrame {
 
+    private DefaultComboBoxModel<String> cellTypeBoxModel;
+    private DefaultComboBoxModel<String> cellGroupBoxModel;
     private DefaultListModel<String> cellListModel;
     private DefaultListModel<String> chanceDeckListModel;
     private DefaultListModel<String> chestDeckListModel;
@@ -46,7 +53,6 @@ public class Setup extends javax.swing.JFrame {
      */
     public Setup() throws IOException {
 
-        //ChestCards.init();
         initComponents();
 
         setupDefaultCells();
@@ -57,6 +63,104 @@ public class Setup extends javax.swing.JFrame {
         setupDefaultChestDeck();
 
         setupDefaultRules();
+
+    }
+
+    private void setupDefaultCells() throws IOException {
+        cellListModel = new DefaultListModel();
+        Cells.LOCATIONS.clear();
+        Cells.init();
+        cellList.setModel(cellListModel);
+        for (Cell cell : Cells.LOCATIONS.values()) {
+            cellListModel.addElement((String) cell.getName());
+        }
+        cellListModel.remove(0);
+        cellList.setSelectedIndex(0);
+
+        setupCellTypeBox();
+        setupCellGroupBox();
+        refreshCellData();
+
+    }
+
+    private void setupCellTypeBox() {
+        cellTypeBoxModel = new DefaultComboBoxModel();
+        cellTypeEditBox.setModel(cellTypeBoxModel);
+        for (CellType cellType : CellType.values()) {
+            cellTypeBoxModel.addElement(cellType.toString());
+        }
+    }
+
+    private void setupCellGroupBox() {
+
+        cellGroupBoxModel = new DefaultComboBoxModel();
+        groupCharacterEditBox.setModel(cellGroupBoxModel);
+        for (Character groupID : Cells.getPropertyGroups()) {
+            cellGroupBoxModel.addElement(Character.toString(groupID));
+        }
+    }
+
+    private void refreshCellData() {
+        Cell selectedCell = Cells.get(cellList.getSelectedIndex() + 1);
+        CellType cellType = selectedCell.getCellType();
+        CardLayout card = (CardLayout) cellContextPanel.getLayout();
+        cellNameEditField.setText(selectedCell.getName());
+        cellTypeBoxModel.setSelectedItem(cellType);
+
+//        if (cellType == PROPERTY || cellType == RAILROAD || cellType == UTILITY) {
+//            cellValueEditFieldProperty.setEditable(true);
+//            cellMortgageEditFieldProperty.setEditable(true);
+//            cellValueEditFieldProperty.setText(String.valueOf(selectedCell.getBaseValue()));
+//            cellMortgageEditFieldProperty.setText(String.valueOf(selectedCell.getMortgageValue()));
+//        } else {
+//            cellValueEditFieldProperty.setText("-");
+//            cellValueEditFieldProperty.setEditable(false);
+//            cellMortgageEditFieldProperty.setText("-");
+//            cellMortgageEditFieldProperty.setEditable(false);
+//        }
+        switch (cellType) {
+            case PROPERTY:
+                //update card
+                card.show(cellContextPanel, "propertyCellMenuCard");
+                //update property group box
+                cellGroupBoxModel.setSelectedItem(Character.toString(selectedCell.getPropertyGroupID()));
+                //update contents
+                cellValueEditFieldProperty.setEditable(true);
+                cellMortgageEditFieldProperty.setEditable(true);
+                cellValueEditFieldProperty.setText(String.valueOf(selectedCell.getBaseValue()));
+                cellMortgageEditFieldProperty.setText(String.valueOf(selectedCell.getMortgageValue()));
+                baseRentField.setText(String.valueOf(selectedCell.getRentBase()));
+                h1RentField.setText(String.valueOf(selectedCell.getRent1h()));
+                h2RentField.setText(String.valueOf(selectedCell.getRent2h()));
+                h3RentField.setText(String.valueOf(selectedCell.getRent3h()));
+                h4RentField.setText(String.valueOf(selectedCell.getRent4h()));
+                hotelRentField.setText(String.valueOf(selectedCell.getRentHotel()));
+                housePurchaceField.setText(String.valueOf(selectedCell.getHouseValue()));
+                hotelPurchaceField.setText(String.valueOf(selectedCell.getHotelValue()));
+                break;
+            case RAILROAD:
+                //CardLayout card = (CardLayout) cellContextPanel.getLayout();
+                card.show(cellContextPanel, "railroadCellMenuCard");
+                //update contents
+                cellValueEditFieldRailroad.setEditable(true);
+                cellMortgageEditFieldRailroad.setEditable(true);
+                cellValueEditFieldRailroad.setText(String.valueOf(selectedCell.getBaseValue()));
+                cellMortgageEditFieldRailroad.setText(String.valueOf(selectedCell.getMortgageValue()));
+                break;
+            case UTILITY:
+                //CardLayout card = (CardLayout) cellContextPanel.getLayout();
+                card.show(cellContextPanel, "utilityCellMenuCard");
+                //update contents
+                cellValueEditFieldUtility.setEditable(true);
+                cellMortgageEditFieldUtility.setEditable(true);
+                cellValueEditFieldUtility.setText(String.valueOf(selectedCell.getBaseValue()));
+                cellMortgageEditFieldUtility.setText(String.valueOf(selectedCell.getMortgageValue()));
+                break;
+            case SPECIAL:
+                //CardLayout card = (CardLayout) cellContextPanel.getLayout();
+                card.show(cellContextPanel, "specialCellMenuCard");
+                break;
+        }
 
     }
 
@@ -119,19 +223,6 @@ public class Setup extends javax.swing.JFrame {
         playerList.setSelectedIndex(0);
         //update edit fields
         refreshListPlayerFields(0);
-    }
-
-    private void setupDefaultCells() throws IOException {
-        cellListModel = new DefaultListModel();
-        Cells.LOCATIONS.clear();
-        Cells.init();
-        cellList.setModel(cellListModel);
-        for (Cell cell : Cells.LOCATIONS.values()) {
-            cellListModel.addElement((String) cell.getName());
-        }
-        cellListModel.remove(0);
-        cellList.setSelectedIndex(0);
-
     }
 
     private void setupDefaultChanceDeck() throws IOException {
@@ -271,15 +362,49 @@ public class Setup extends javax.swing.JFrame {
         resetCellEditButton = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
         cellTypeEditBox = new javax.swing.JComboBox<>();
-        jLabel18 = new javax.swing.JLabel();
-        cellValueEditField = new javax.swing.JFormattedTextField();
         cellNameEditField = new javax.swing.JTextField();
-        jLabel19 = new javax.swing.JLabel();
-        cellMortgageEditField = new javax.swing.JFormattedTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        cellContextPanel = new javax.swing.JPanel();
+        railroadCellMenu = new javax.swing.JPanel();
+        jLabel24 = new javax.swing.JLabel();
+        cellValueEditFieldRailroad = new javax.swing.JFormattedTextField();
+        jLabel25 = new javax.swing.JLabel();
+        cellMortgageEditFieldRailroad = new javax.swing.JFormattedTextField();
+        utilityCellMenu = new javax.swing.JPanel();
+        jLabel26 = new javax.swing.JLabel();
+        cellValueEditFieldUtility = new javax.swing.JFormattedTextField();
+        jLabel27 = new javax.swing.JLabel();
+        cellMortgageEditFieldUtility = new javax.swing.JFormattedTextField();
+        specialCellMenu = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        propertyCellMenu = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
         groupCharacterEditBox = new javax.swing.JComboBox<>();
         groupColorEditBox = new javax.swing.JComboBox<>();
-        jSeparator1 = new javax.swing.JSeparator();
+        jLabel30 = new javax.swing.JLabel();
+        cellValueEditFieldProperty = new javax.swing.JFormattedTextField();
+        jLabel31 = new javax.swing.JLabel();
+        cellMortgageEditFieldProperty = new javax.swing.JFormattedTextField();
+        propertyImprovementPanel = new javax.swing.JPanel();
+        jLabel33 = new javax.swing.JLabel();
+        hotelPurchaceField = new javax.swing.JFormattedTextField();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        housePurchaceField = new javax.swing.JFormattedTextField();
+        propertyRentPanel = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        h1RentField = new javax.swing.JFormattedTextField();
+        h4RentField = new javax.swing.JFormattedTextField();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        hotelRentField = new javax.swing.JFormattedTextField();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        h2RentField = new javax.swing.JFormattedTextField();
+        h3RentField = new javax.swing.JFormattedTextField();
+        jLabel28 = new javax.swing.JLabel();
+        baseRentField = new javax.swing.JFormattedTextField();
         cardDecksTabPanel = new javax.swing.JPanel();
         cardDeckSelection = new javax.swing.JTabbedPane();
         chanceDeckViewPane = new javax.swing.JPanel();
@@ -366,6 +491,11 @@ public class Setup extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        cellList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                cellListMousePressed(evt);
+            }
+        });
         jScrollPane7.setViewportView(cellList);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -380,13 +510,100 @@ public class Setup extends javax.swing.JFrame {
 
         cellTypeEditBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel18.setText("Value");
+        cellContextPanel.setLayout(new java.awt.CardLayout());
 
-        cellValueEditField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jLabel24.setText("Value");
 
-        jLabel19.setText("Mortgage");
+        cellValueEditFieldRailroad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
-        cellMortgageEditField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jLabel25.setText("Mortgage");
+
+        cellMortgageEditFieldRailroad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        javax.swing.GroupLayout railroadCellMenuLayout = new javax.swing.GroupLayout(railroadCellMenu);
+        railroadCellMenu.setLayout(railroadCellMenuLayout);
+        railroadCellMenuLayout.setHorizontalGroup(
+            railroadCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(railroadCellMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cellValueEditFieldRailroad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cellMortgageEditFieldRailroad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(191, Short.MAX_VALUE))
+        );
+        railroadCellMenuLayout.setVerticalGroup(
+            railroadCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(railroadCellMenuLayout.createSequentialGroup()
+                .addGroup(railroadCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cellValueEditFieldRailroad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel25)
+                    .addComponent(cellMortgageEditFieldRailroad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 204, Short.MAX_VALUE))
+        );
+
+        cellContextPanel.add(railroadCellMenu, "railroadCellMenuCard");
+
+        jLabel26.setText("Value");
+
+        cellValueEditFieldUtility.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        jLabel27.setText("Mortgage");
+
+        cellMortgageEditFieldUtility.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        javax.swing.GroupLayout utilityCellMenuLayout = new javax.swing.GroupLayout(utilityCellMenu);
+        utilityCellMenu.setLayout(utilityCellMenuLayout);
+        utilityCellMenuLayout.setHorizontalGroup(
+            utilityCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(utilityCellMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cellValueEditFieldUtility, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cellMortgageEditFieldUtility, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(191, Short.MAX_VALUE))
+        );
+        utilityCellMenuLayout.setVerticalGroup(
+            utilityCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(utilityCellMenuLayout.createSequentialGroup()
+                .addGroup(utilityCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cellValueEditFieldUtility, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel27)
+                    .addComponent(cellMortgageEditFieldUtility, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 204, Short.MAX_VALUE))
+        );
+
+        cellContextPanel.add(utilityCellMenu, "utilityCellMenuCard");
+
+        jLabel23.setText("special");
+
+        javax.swing.GroupLayout specialCellMenuLayout = new javax.swing.GroupLayout(specialCellMenu);
+        specialCellMenu.setLayout(specialCellMenuLayout);
+        specialCellMenuLayout.setHorizontalGroup(
+            specialCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(specialCellMenuLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jLabel23)
+                .addContainerGap(313, Short.MAX_VALUE))
+        );
+        specialCellMenuLayout.setVerticalGroup(
+            specialCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(specialCellMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(199, Short.MAX_VALUE))
+        );
+
+        cellContextPanel.add(specialCellMenu, "specialCellMenuCard");
 
         jLabel20.setText("Group");
 
@@ -394,47 +611,201 @@ public class Setup extends javax.swing.JFrame {
 
         groupColorEditBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel30.setText("Value");
+
+        cellValueEditFieldProperty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        jLabel31.setText("Mortgage");
+
+        cellMortgageEditFieldProperty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        jLabel33.setText("Improvements:");
+
+        jLabel35.setText("Hotel");
+
+        jLabel34.setText("House");
+
+        javax.swing.GroupLayout propertyImprovementPanelLayout = new javax.swing.GroupLayout(propertyImprovementPanel);
+        propertyImprovementPanel.setLayout(propertyImprovementPanelLayout);
+        propertyImprovementPanelLayout.setHorizontalGroup(
+            propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertyImprovementPanelLayout.createSequentialGroup()
+                .addGroup(propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(propertyImprovementPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel34)
+                            .addComponent(jLabel35))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(hotelPurchaceField)
+                            .addComponent(housePurchaceField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel33))
+                .addContainerGap())
+        );
+        propertyImprovementPanelLayout.setVerticalGroup(
+            propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertyImprovementPanelLayout.createSequentialGroup()
+                .addComponent(jLabel33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34)
+                    .addComponent(housePurchaceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyImprovementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hotelPurchaceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel35))
+                .addGap(0, 22, Short.MAX_VALUE))
+        );
+
+        jLabel19.setText("Unimproved");
+
+        jLabel22.setText("2 Houses");
+
+        h1RentField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                h1RentFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel32.setText("Hotel");
+
+        jLabel18.setText("Rent:");
+
+        jLabel29.setText("4 Houses");
+
+        jLabel21.setText("1 House");
+
+        jLabel28.setText("3 Houses");
+
+        javax.swing.GroupLayout propertyRentPanelLayout = new javax.swing.GroupLayout(propertyRentPanel);
+        propertyRentPanel.setLayout(propertyRentPanelLayout);
+        propertyRentPanelLayout.setHorizontalGroup(
+            propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertyRentPanelLayout.createSequentialGroup()
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(propertyRentPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel22)
+                            .addComponent(jLabel28)
+                            .addComponent(jLabel29)
+                            .addComponent(jLabel32))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(hotelRentField)
+                            .addComponent(h4RentField)
+                            .addComponent(h3RentField)
+                            .addComponent(h1RentField)
+                            .addComponent(baseRentField)
+                            .addComponent(h2RentField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel18))
+                .addContainerGap())
+        );
+        propertyRentPanelLayout.setVerticalGroup(
+            propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertyRentPanelLayout.createSequentialGroup()
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(baseRentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(h1RentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel21))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(h2RentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(h3RentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel28))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(h4RentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel29))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(propertyRentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hotelRentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel32)))
+        );
+
+        javax.swing.GroupLayout propertyCellMenuLayout = new javax.swing.GroupLayout(propertyCellMenu);
+        propertyCellMenu.setLayout(propertyCellMenuLayout);
+        propertyCellMenuLayout.setHorizontalGroup(
+            propertyCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertyCellMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(propertyCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(propertyCellMenuLayout.createSequentialGroup()
+                        .addComponent(jLabel30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cellValueEditFieldProperty, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel31)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cellMortgageEditFieldProperty, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel20)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(groupCharacterEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(propertyCellMenuLayout.createSequentialGroup()
+                        .addComponent(propertyRentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(propertyImprovementPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(groupColorEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+        propertyCellMenuLayout.setVerticalGroup(
+            propertyCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertyCellMenuLayout.createSequentialGroup()
+                .addGroup(propertyCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(groupCharacterEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(groupColorEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cellValueEditFieldProperty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel30)
+                    .addComponent(jLabel31)
+                    .addComponent(cellMortgageEditFieldProperty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(propertyCellMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(propertyRentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(propertyImprovementPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        cellContextPanel.add(propertyCellMenu, "propertyCellMenuCard");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(saveCellEditButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(resetCellEditButton))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
                                 .addComponent(jLabel16)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cellNameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel18)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cellValueEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel19)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cellMortgageEditField, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(81, 81, 81)
-                                .addComponent(saveCellEditButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(resetCellEditButton))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
                                 .addComponent(jLabel17)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cellTypeEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel20)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(groupCharacterEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(groupColorEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 19, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jSeparator1)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jSeparator1)
+                            .addComponent(cellContextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -444,24 +815,17 @@ public class Setup extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(cellNameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18)
-                    .addComponent(cellValueEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19)
-                    .addComponent(cellMortgageEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(cellTypeEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20)
-                    .addComponent(groupCharacterEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(groupColorEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
+                    .addComponent(cellTypeEditBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cellContextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(resetCellEditButton)
                     .addComponent(saveCellEditButton))
-                .addContainerGap())
+                .addGap(6, 6, 6))
         );
 
         javax.swing.GroupLayout gameBoardTabPanelLayout = new javax.swing.GroupLayout(gameBoardTabPanel);
@@ -1343,6 +1707,15 @@ public class Setup extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void cellListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cellListMousePressed
+        refreshCellData();
+
+    }//GEN-LAST:event_cellListMousePressed
+
+    private void h1RentFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h1RentFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_h1RentFieldActionPerformed
+
 //    /**
     //     * @param args the command line arguments
     //     */
@@ -1384,15 +1757,21 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JLabel Name;
     private javax.swing.JButton addPlayerButton;
     private javax.swing.JFormattedTextField bailFeeField;
+    private javax.swing.JFormattedTextField baseRentField;
     private javax.swing.JFormattedTextField bonusCapAmountField;
     private javax.swing.JTabbedPane cardDeckSelection;
     private javax.swing.JPanel cardDecksTabPanel;
     private javax.swing.JPanel cashRulesPanel;
+    private javax.swing.JPanel cellContextPanel;
     private javax.swing.JList<String> cellList;
-    private javax.swing.JFormattedTextField cellMortgageEditField;
+    private javax.swing.JFormattedTextField cellMortgageEditFieldProperty;
+    private javax.swing.JFormattedTextField cellMortgageEditFieldRailroad;
+    private javax.swing.JFormattedTextField cellMortgageEditFieldUtility;
     private javax.swing.JTextField cellNameEditField;
     private javax.swing.JComboBox<String> cellTypeEditBox;
-    private javax.swing.JFormattedTextField cellValueEditField;
+    private javax.swing.JFormattedTextField cellValueEditFieldProperty;
+    private javax.swing.JFormattedTextField cellValueEditFieldRailroad;
+    private javax.swing.JFormattedTextField cellValueEditFieldUtility;
     private javax.swing.JList<String> chanceDeckList;
     private javax.swing.JPanel chanceDeckViewPane;
     private javax.swing.JTextArea chanceDescriptionText;
@@ -1414,9 +1793,16 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField goLandingBonusValue;
     private javax.swing.JComboBox<String> groupCharacterEditBox;
     private javax.swing.JComboBox<String> groupColorEditBox;
+    private javax.swing.JFormattedTextField h1RentField;
+    private javax.swing.JFormattedTextField h2RentField;
+    private javax.swing.JFormattedTextField h3RentField;
+    private javax.swing.JFormattedTextField h4RentField;
     private javax.swing.JFormattedTextField hotelAmount;
     private javax.swing.JFormattedTextField hotelPrerequisiteField;
+    private javax.swing.JFormattedTextField hotelPurchaceField;
+    private javax.swing.JFormattedTextField hotelRentField;
     private javax.swing.JFormattedTextField houseAmount;
+    private javax.swing.JFormattedTextField housePurchaceField;
     private javax.swing.JFormattedTextField improvementDepreciationField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -1435,7 +1821,22 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1466,15 +1867,21 @@ public class Setup extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField playerStartingCashEditField;
     private javax.swing.JPanel playerStartingConditionsPanel;
     private javax.swing.JPanel playersTabPanel;
+    private javax.swing.JPanel propertyCellMenu;
+    private javax.swing.JPanel propertyImprovementPanel;
+    private javax.swing.JPanel propertyRentPanel;
     private javax.swing.JPanel propertyRulesPanel;
+    private javax.swing.JPanel railroadCellMenu;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton resetCellEditButton;
     private javax.swing.JPanel rulesTabPanel;
     private javax.swing.JButton saveCellEditButton;
     private javax.swing.JFormattedTextField setCompletionBonusField;
     private javax.swing.JTabbedPane setupTabPane;
+    private javax.swing.JPanel specialCellMenu;
     private javax.swing.JFormattedTextField speedLimitField;
     private javax.swing.JComboBox<String> tokenBox;
+    private javax.swing.JPanel utilityCellMenu;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

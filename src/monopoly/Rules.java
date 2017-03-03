@@ -184,7 +184,8 @@ public final class Rules {
     }
 
     public static void init() throws IOException {
-        Rules rules = new Rules("src/config/defaultRules.csv");
+//        Rules rules = new Rules("src/config/defaultRules.csv");
+        Rules rules = new Rules("C:\\Users\\bgood_000\\Documents\\NetBeansProjects\\Monopoly\\src\\config\\defaultRules.csv");
     }
 
     public static void init(String filePath) throws IOException {

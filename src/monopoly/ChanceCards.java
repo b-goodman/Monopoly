@@ -95,7 +95,8 @@ public final class ChanceCards {
      * @throws IOException
      */
     public static void init() throws IOException {
-        ChanceCards chanceCards = new ChanceCards("src/config/chanceCardDeck.CSV");
+//        ChanceCards chanceCards = new ChanceCards("src/config/chanceCardDeck.CSV");
+        ChanceCards chanceCards = new ChanceCards("C:\\Users\\bgood_000\\Documents\\NetBeansProjects\\Monopoly\\src\\config\\chanceCardDeck.CSV");
     }
 
     public static void init(String configPath) throws IOException {
