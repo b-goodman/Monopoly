@@ -93,6 +93,27 @@ public class Monopoly {
         Dice.init();
 
 //        Players.get(0).initializeTurn();
+//        Players.get(0).setOwnership(2);
+//        Players.get(0).setOwnership(4);
+//        Players.get(0).setOwnership(16);
+        //System.out.println(Players.get(0).getPropertyGroupMembers('A'));
+        //Cells.get(2).addImprovement();
+        //System.out.println(Cells.get(2).getHouseCount());
+        //System.out.println(Players.get(0).cellBenefit(Cells.get(39)));
+//        for (int n : Dice.getRollProbabilities().keySet()) {
+//            Cell testCell = Cells.get(11 + n);
+//            System.out.println(testCell.getName());
+//        }
+//        for (int n : Dice.getRollProbabilities().keySet()) {
+//
+//            System.out.println((11 + n));
+//        }
+//        for (int n : Dice.getRollProbabilities().keySet()) {
+//            Cell testCell = Cells.get(11 + n);
+//            System.out.println(Players.get(0).cellBenefit(testCell));
+//        }
+        //System.out.println(Players.get(0).leaveJailEarly());
+//        Players.get(0).initializeTurn();
 //        do {
 //            Players.get(0).beginTurn();
 //            Players.get(0).midTurn();
@@ -143,15 +164,14 @@ public class Monopoly {
                 }
             }
         });
-
     }
 
 }
 
 // TODO:
+// generalise jail location
+//GO setup post rules
 // Predict net outcome of next N turns, ML.
-//---track jail bonds
-//--COMPLETE draw with removal
 //--TODO player reinsertion
 //complete rule class
 //begin jail exit strategies
@@ -160,6 +180,5 @@ public class Monopoly {
 // - roll doubles
 // - wait
 //unify player/bank cash transfers
-// DONE genaralise board length in token roll-over
 //RAILROAD DONE - generalise conditions for RR and U rent - redesign import, include TYPE for refrencing - not param. signature.
 

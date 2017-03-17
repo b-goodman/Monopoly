@@ -5,10 +5,13 @@
  */
 package monopoly;
 
-import com.opencsv.CSVReader;
+//import com.opencsv.CSVReader;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+//import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,12 +62,18 @@ public final class ChestCards {
 //            return cardReturn;
 //        }
 //    }
-    public ChestCards(String filePath) throws FileNotFoundException, IOException {
+    public ChestCards() throws FileNotFoundException, IOException {
         //Chance Card Import Testing:
-        //Instantiate new CSV reader with specified filepath
-        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
-        //Read all entries found in CSV file
-        List<String[]> getCSV = reader.readAll();
+        List<String[]> getCSV = new ArrayList<>();
+        InputStream is = getClass().getResourceAsStream("/resources/chestCardDeck.csv");
+        InputStreamReader fis = new InputStreamReader(is);
+        BufferedReader reader = new BufferedReader(fis);
+        String line;
+        String[] csvComp;
+        while ((line = reader.readLine()) != null) {
+            csvComp = line.split(",", -1);
+            getCSV.add(csvComp);
+        }
         //get amount of entries
         int entries = getCSV.size();
         //Declare Paramaters
@@ -97,13 +106,12 @@ public final class ChestCards {
      */
     public static void init() throws IOException {
 //        ChestCards chestCards = new ChestCards("src/config/chestCardDeck.CSV");
-        ChestCards chestCards = new ChestCards("C:\\Users\\bgood_000\\Documents\\NetBeansProjects\\Monopoly\\src\\config\\chestCardDeck.CSV");
+        ChestCards chestCards = new ChestCards();
     }
 
-    public static void init(String configPath) throws IOException {
-        ChestCards chestCards = new ChestCards(configPath);
-    }
-
+//    public static void init(String configPath) throws IOException {
+//        ChestCards chestCards = new ChestCards(configPath);
+//}
     /**
      * Create new Card and add to library
      *

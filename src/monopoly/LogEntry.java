@@ -156,6 +156,15 @@ public class LogEntry {
                     //propertyID, amount
                     returnCase = "purchaces " + LOCATIONS.get(actionParameters[0]).getName() + " for " + actionParameters[1];
                     break;
+                case HOUSE_ADD:
+                    //improved location, new rent, houses remaining
+                    returnCase = "builds house on" + LOCATIONS.get(actionParameters[0]).getName() + " - New Rent: " + actionParameters[1] + " - Houses Left: " + actionParameters[2];
+                    break;
+                case HOTEL_ADD:
+                    //improved location, new rent, hotels remaining
+                    returnCase = "builds hotel on" + LOCATIONS.get(actionParameters[0]).getName() + " - New Rent: " + actionParameters[1] + " - Hotels Left: " + actionParameters[2];
+                    break;
+
                 case PAY:
                     //value, creditor
                     String creditor;
@@ -201,6 +210,7 @@ public class LogEntry {
                 case NOTIFICATION:
                     returnCase = description;
                     break;
+
             }
             return returnCase;
         }

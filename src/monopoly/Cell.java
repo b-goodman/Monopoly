@@ -7,6 +7,7 @@ package monopoly;
 
 import monopoly.Enums.CellType;
 import java.util.*;
+import static monopoly.Enums.EventType.*;
 
 /**
  *
@@ -15,6 +16,7 @@ import java.util.*;
 public class Cell {
 
     public String name;
+    public Integer location;
     public CellType cellType;
     public String color;
     public boolean isOwnable;
@@ -49,6 +51,7 @@ public class Cell {
      * Constructs a property type cell
      *
      * @param name Cell/Location name
+     * @param location
      * @param color Cell/Location color
      * @param groupID Defines a property group for improvements - Cells with
      * equal groupIDs are part of the same group
@@ -68,6 +71,7 @@ public class Cell {
      */
     public Cell(
             String name,
+            Integer location,
             String color,
             char groupID,
             int baseValue,
@@ -81,6 +85,7 @@ public class Cell {
             int rent4H,
             int rentHotel) {
         this.name = name;
+        this.location = location;
         this.cellType = CellType.PROPERTY;
         this.color = color;
         this.groupID = groupID;
@@ -106,6 +111,7 @@ public class Cell {
     /**
      * Constructor for railroad type cell
      *
+     * @param location
      * @param name Cell name
      * @param color Cell colour
      * @param baseValue The purchase price player must make when buying this
@@ -121,6 +127,7 @@ public class Cell {
      */
     public Cell(
             String name,
+            Integer location,
             String color,
             int baseValue,
             int mortgageValue,
@@ -131,6 +138,7 @@ public class Cell {
     //            int rent4R
     ) {
         this.name = name;
+        this.location = location;
         this.cellType = CellType.RAILROAD;
         this.color = color;
         this.isOwnable = true;
@@ -152,6 +160,7 @@ public class Cell {
      * Constructor for utility type cell
      *
      * @param name Cell name
+     * @param location
      * @param color Cell colour
      * @param baseValue The purchase price player must make when buying this
      * utility from bank
@@ -166,6 +175,7 @@ public class Cell {
      */
     public Cell(
             String name,
+            Integer location,
             String color,
             int baseValue,
             int mortgageValue,
@@ -173,6 +183,7 @@ public class Cell {
             int twoUtilityMult
     ) {
         this.name = name;
+        this.location = location;
         this.cellType = CellType.UTILITY;
         this.color = color;
         this.isOwnable = true;
@@ -190,6 +201,7 @@ public class Cell {
      * Constructor for special type cell
      *
      * @param name Cell name
+     * @param location
      * @param color Cell colour
      * @param actionType Classifies the action the player mist take when landing
      * on this location.
@@ -197,11 +209,13 @@ public class Cell {
      */
     public Cell(
             String name,
+            Integer location,
             String color,
             String actionType,
             String actionParamater
     ) {
         this.name = name;
+        this.location = location;
         this.cellType = CellType.SPECIAL;
         this.color = color;
         this.isOwnable = false;
@@ -237,6 +251,10 @@ public class Cell {
      */
     public String getName() {
         return name;
+    }
+
+    public int getLocation() {
+        return location;
     }
 
     /**
@@ -769,6 +787,7 @@ public class Cell {
                 Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - 1);
             }
             Players.get(currentOwner).playerCashPay(-1, houseValue);
+
             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent() + " - Houses left: " + Rules.getImprovementAmountHouse());
             //improvemntState++;
         } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {

@@ -267,7 +267,7 @@ public final class Dice {
         return chk;
     }
 
-    public static List getExpectedRoll() {
+    public static List<Integer> getExpectedRoll() {
         return EXPECTED_ROLL;
     }
 

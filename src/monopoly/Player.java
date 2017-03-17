@@ -10,8 +10,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import monopoly.Enums.CellType;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import monopoly.Enums.ActionType;
 import static monopoly.Enums.CellType.*;
 import static monopoly.Enums.EventType.*;
 
@@ -335,12 +337,14 @@ public class Player {
      * position on the game board/index in LOCATIONS
      */
     public void setOwnership(Integer propertyBoardLocation) {
-        (Cells.get(propertyBoardLocation)).setOwnership(getPlayerID());
+        (Cells.get(propertyBoardLocation)).setOwnership(playerID);
     }
 
+    //look through Cells.getPlayerOwnership()
+    //return all cells with value == this.playerID
     public List<Cell> getOwnership() {
         List<Cell> playerOwnershipList = new ArrayList<>();
-        Cells.getPlayerOwnership().keySet().stream().filter((propertyName) -> ((int) Cells.getPlayerOwnership().get(propertyName) == 1)).forEach((propertyName) -> {
+        Cells.getPlayerOwnership().keySet().stream().filter((propertyName) -> ((int) Cells.getPlayerOwnership().get(propertyName) == playerID)).forEach((propertyName) -> {
             playerOwnershipList.add((Cell) propertyName);
         });
         return playerOwnershipList;
@@ -358,7 +362,7 @@ public class Player {
         return completeProperties;
     }
 
-    public List getPropertyGroupMembers(char groupID) {
+    public List<Cell> getPropertyGroupMembers(char groupID) {
         List<Cell> groupMembers = new ArrayList<>();
         for (int i = 1; i <= Cells.locationsAmount(); i++) {
             if (Cells.get(i).getPropertyGroupID() == groupID) {
@@ -377,11 +381,54 @@ public class Player {
         return new HashSet<>(propertyIDs);
     }
 
+//    public void addPropertyImprovementByGroup(char groupID) {
+//        List q = getPropertyGroupMembers(groupID);
+//        for (int i = 0; i < q.size(); i++) {
+//            ((Cell) q.get(i)).addImprovement();
+//        }
+//    }
     public void addPropertyImprovementByGroup(char groupID) {
-        List q = getPropertyGroupMembers(groupID);
-        for (int i = 0; i < q.size(); i++) {
-            ((Cell) q.get(i)).addImprovement();
+        for (Cell groupMember : getPropertyGroupMembers(groupID)) {
+            groupMember.addImprovement();
+            logEntry.logEvent(HOUSE_ADD, groupMember.getLocation(), groupMember.getRent(), Rules.getImprovementAmountHouse());
         }
+    }
+
+    public double getOwnedPropertyImprovementValue() {
+        double returnImprovementValue;
+        double sum = 0.0;
+        for (Cell ownedCell : getOwnership()) {
+            if (ownedCell.getHotelCount() == 0) {
+                if (ownedCell.getHouseCount() == 0) {
+                    //property has no improvements
+                    returnImprovementValue = 0.0;
+                } else {
+                    //property has no hotels but >0 houses
+                    returnImprovementValue = (ownedCell.getHouseCount() * ownedCell.getHouseValue()) * ((double) 1 / Rules.getPropertyResalePenaltyValue());
+                }
+            } else {
+                //property has >0 hotel
+                returnImprovementValue = ((Rules.getPropertyHotelReq() * ownedCell.getHouseValue()) + ownedCell.getHotelValue()) * ((double) 1 / Rules.getPropertyResalePenaltyValue());
+            }
+            sum += returnImprovementValue;
+        }
+        return sum;
+    }
+
+    public double getOwnedPropertyBaseValue() {
+        double sum = 0;
+        for (Cell ownedCell : getOwnership()) {
+            sum += ownedCell.getMortgageValue();
+        }
+        return sum;
+    }
+
+    public double getOwnedPropertyNetValue() {
+        return getOwnedPropertyBaseValue() + getOwnedPropertyImprovementValue();
+    }
+
+    public double getPlayerNetWorth() {
+        return cash + getOwnedPropertyNetValue();
     }
 
     public void mortgageProperty(Integer propertyID) {
@@ -460,6 +507,121 @@ public class Player {
             search = getCellType(i);
         }
         return i;
+    }
+
+    public int cashSignificance(int debitValue) {
+        int returnValue = 0;
+        int sig = (debitValue / cash) * 100;
+        if (sig >= 10 && sig < 20) {
+            returnValue = 1;
+        } else if (sig >= 20 && sig < 40) {
+            returnValue = 2;
+        } else if (sig > 40) {
+            returnValue = 3;
+        }
+        return returnValue;
+    }
+
+    public int cellBenefit(Cell testLocation) {
+        int benefit = 0;
+        //check if cell is ownable
+        if (testLocation.getOwnable()) {
+            //check if owned
+            if (testLocation.getOwnership() == null) {
+                //is unowned
+                benefit += 2;
+                //does player already own part of set
+                int freq = 0;
+                char testID = testLocation.getPropertyGroupID();
+                for (Cell cell : getOwnership()) {
+                    if (cell.getPropertyGroupID() == testID) {
+                        freq++;
+                    }
+                }
+                //if so, inc. benefit
+                if (freq > 0) {
+                    benefit++;
+                    //and does the property complete a set
+                    if (freq == testLocation.getGroupFrequency() - 1) {
+                        benefit++;
+                    }
+                }
+            } else {
+                //property is onwed, get rent
+                //is type UTILITY
+                int testRent;
+                if (testLocation.getCellType() == UTILITY) {
+                    testRent = testLocation.getRent(Dice.getExpectedRoll().get(0));
+                } else {
+                    //type PROPERTY or RAILROAD
+                    testRent = testLocation.getRent();
+                }
+                //is the rent significant
+                benefit -= cashSignificance(testRent);
+            }
+        } else {
+            String type = testLocation.getActionType();
+            switch (type) {
+                case "drawCard":
+                    if ("chest".equals(testLocation.getActionParamater())) {
+                        //assume chest to have good outcome
+                        benefit++;
+                    } else {
+                        //assume chest to have nominal to negative outcome
+                        benefit--;
+                    }
+                    break;
+                case "debitAbs":
+                case "debitRel":
+                    benefit -= cashSignificance(Integer.parseInt(testLocation.getActionParamater()));
+                    break;
+                case "creditAbs":
+                case "creditRel":
+                    benefit += cashSignificance(Integer.parseInt(testLocation.getActionParamater()));
+                    break;
+                case "parking":
+                    //defualt action is null, thus a positive outcome
+                    benefit++;
+                    //is bonus enabled
+                    if (Rules.isFreeParkingBonusEnabled()) {
+                        benefit += cashSignificance(Rules.getFreeParkingBonusValue());
+                    }
+                    break;
+                case "transitionAbs":
+                    if ("0".equals(testLocation.getActionParamater())) {
+                        benefit--;
+                    } else {
+                        benefit = cellBenefit(Cells.get(Integer.valueOf(testLocation.getActionParamater())));
+                    }
+                    break;
+                case "transitionRel":
+                    int newLocation = testLocation.getLocation() + Integer.parseInt(testLocation.getActionParamater());
+                    Cell newCell = Cells.get(newLocation);
+                    benefit = cellBenefit(newCell);
+                    break;
+            }
+        }
+        return benefit;
+    }
+
+    public boolean leaveJailEarly() {
+        boolean leaveJail = false;
+        int leaveJailFrom = 11;
+        double resultsPositive = 0;
+        double resultsNegative = 0;
+        for (int roll : Dice.getRollProbabilities().keySet()) {
+            Cell testCell = Cells.get(leaveJailFrom + roll);
+            int result = cellBenefit(testCell);
+            if (result > 0) {
+                resultsPositive += (result * Dice.getRollProbabilities().get(roll));
+            } else {
+                resultsNegative += (result * Dice.getRollProbabilities().get(roll));
+            }
+        }
+        if (resultsPositive > resultsNegative) {
+            leaveJail = true;
+        }
+        return leaveJail;
     }
 
     public void initializeTurn() {

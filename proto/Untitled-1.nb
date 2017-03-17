@@ -1,0 +1,67 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      1618,         57]
+NotebookOptionsPosition[      1304,         42]
+NotebookOutlinePosition[      1651,         57]
+CellTagsIndexPosition[      1608,         54]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<JLink`\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ReinstallJava", "[", 
+   RowBox[{
+   "ClassPath", "\[Rule]", 
+    "\"\<C:\\\\Users\\\\bgood_000\\\\Documents\\\\NetBeansProjects\\\\\
+Monopoly\\\\dist\\\\Monopoly.jar\>\""}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6981678339345617`*^9, 3.698167890078826*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"mainClass", "=", 
+   RowBox[{"JavaNew", "[", 
+    RowBox[{"LoadJavaClass", "[", "\"\<monopoly.Monopoly\>\"", "]"}], "]"}]}],
+   ";"}]], "Input",
+ CellChangeTimes->{{3.6981678946071143`*^9, 3.6981679495892878`*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698167855180129*^9, 3.6981678638111506`*^9}}]
+},
+WindowSize->{759, 833},
+WindowMargins->{{72, Automatic}, {Automatic, 61}},
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 393, 9, 88, "Input"],
+Cell[954, 31, 249, 6, 87, "Input"],
+Cell[1206, 39, 94, 1, 30, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

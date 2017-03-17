@@ -5,10 +5,14 @@
  */
 package monopoly;
 
-import com.opencsv.CSVReader;
+//import com.opencsv.CSVReader;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+//import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,15 +87,21 @@ public final class Rules {
 
     private Map<RuleName, String> importedRules;
 
-    public Rules(String filePath) throws FileNotFoundException, IOException {
+    public Rules() throws FileNotFoundException, IOException {
 
         importedRules = new HashMap<>();
 
-        //Chance Card Import Testing:
-        //Instantiate new CSV reader with specified filepath
-        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
-        //Read all entries found in CSV file
-        List<String[]> getCSV = reader.readAll();
+        //Rules Import Testing:
+        List<String[]> getCSV = new ArrayList<>();
+        InputStream is = getClass().getResourceAsStream("/resources/defaultRules.csv");
+        InputStreamReader fis = new InputStreamReader(is);
+        BufferedReader reader = new BufferedReader(fis);
+        String line;
+        String[] csvComp;
+        while ((line = reader.readLine()) != null) {
+            csvComp = line.split(",", -1);
+            getCSV.add(csvComp);
+        }
         //get amount of entries
         int entries = getCSV.size();
         //Declare Paramaters
@@ -185,13 +195,12 @@ public final class Rules {
 
     public static void init() throws IOException {
 //        Rules rules = new Rules("src/config/defaultRules.csv");
-        Rules rules = new Rules("C:\\Users\\bgood_000\\Documents\\NetBeansProjects\\Monopoly\\src\\config\\defaultRules.csv");
+        Rules rules = new Rules();
     }
 
-    public static void init(String filePath) throws IOException {
-        Rules rules = new Rules(filePath);
-    }
-
+//    public static void init(String classPath) throws IOException {
+//        Rules rules = new Rules(classPath);
+//    }
     //Methods
     //Jail
     public static int getJailLeaveFee() {

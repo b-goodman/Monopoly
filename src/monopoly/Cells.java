@@ -5,9 +5,12 @@
  */
 package monopoly;
 
-import com.opencsv.CSVReader;
-import java.io.FileReader;
+//import com.opencsv.CSVReader;
+import java.io.BufferedReader;
+//import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,15 +34,28 @@ public final class Cells {
     public static Map<Cell, Integer> PLAYER_OWNERSHIP = new HashMap<>();
     public static Set<Character> PROPERTY_GROUP_SET = new HashSet<>();
 
-    public Cells(String filePath) throws IOException {
+    public Cells() throws IOException {
         //"In Jail" is always at position 0
         add(0, "In Jail", "Gray");
         //"GO" is always at position 1
         add(1, "GO", "grey", "creditAbs", Integer.toString((Rules.isGoLandBonusEnabled()) ? Rules.getGoLandingBonusValue() + Rules.getPassGoCredit() : Rules.getPassGoCredit()));
-        //Instantiate new CSV reader with specified filepath
-        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
-        //Read all entries found in CSV file
-        List<String[]> getCSV = reader.readAll();
+
+        //BEGIN REPLACEMENT
+//        //Instantiate new CSV reader with specified filepath
+//        CSVReader reader = new CSVReader(new FileReader(filePath));//TODO - change to relative FP.
+//        //Read all entries found in CSV file
+//        List<String[]> getCSV = reader.readAll();
+        List<String[]> getCSV = new ArrayList<>();
+        InputStream is = getClass().getResourceAsStream("/resources/cellData.csv");
+        InputStreamReader fis = new InputStreamReader(is);
+        BufferedReader reader = new BufferedReader(fis);
+        String line;
+        String[] csvComp;
+        while ((line = reader.readLine()) != null) {
+            csvComp = line.split(",", -1);
+            getCSV.add(csvComp);
+        }
+
         //get amount of entries
         int entries = getCSV.size();
 
@@ -165,13 +181,12 @@ public final class Cells {
      */
     public static void init() throws IOException {
 //        Cells cells = new Cells("src/config/CellData.CSV");
-        Cells cells = new Cells("C:\\Users\\bgood_000\\Documents\\NetBeansProjects\\Monopoly\\src\\config\\CellData.CSV");
+        Cells cells = new Cells();
     }
 
-    public static void init(String configPath) throws IOException {
-        Cells cells = new Cells(configPath);
-    }
-
+//    public static void init(String classPath) throws IOException {
+//        Cells cells = new Cells(classPath);
+//    }
     /**
      * Creates a new Property Cell and adds it to LOCATIONS.
      *
@@ -210,7 +225,7 @@ public final class Cells {
             int rent4H,
             int rentHotel
     ) {
-        LOCATIONS.put(boardLocation, new Cell(name, color, groupID, baseValue, mortgageValue, houseValue, hotelValue, rentBase, rent1H, rent2H, rent3H, rent4H, rentHotel));
+        LOCATIONS.put(boardLocation, new Cell(name, boardLocation, color, groupID, baseValue, mortgageValue, houseValue, hotelValue, rentBase, rent1H, rent2H, rent3H, rent4H, rentHotel));
     }
 
     /**
@@ -242,7 +257,7 @@ public final class Cells {
     //            int rent3R,
     //            int rent4R
     ) {
-        LOCATIONS.put(boardLocation, new Cell(name, color, baseValue, mortgageValue, railroadRentConditions));
+        LOCATIONS.put(boardLocation, new Cell(name, boardLocation, color, baseValue, mortgageValue, railroadRentConditions));
     }
 
     /**
@@ -271,7 +286,7 @@ public final class Cells {
             int oneUtilityMult,
             int twoUtilityMult
     ) {
-        LOCATIONS.put(boardLocation, new Cell(name, color, baseValue, mortgageValue, oneUtilityMult, twoUtilityMult));
+        LOCATIONS.put(boardLocation, new Cell(name, boardLocation, color, baseValue, mortgageValue, oneUtilityMult, twoUtilityMult));
     }
 
     /**
@@ -291,7 +306,7 @@ public final class Cells {
             String actionType,
             String actionParamater
     ) {
-        LOCATIONS.put(boardLocation, new Cell(name, color, actionType, actionParamater));
+        LOCATIONS.put(boardLocation, new Cell(name, boardLocation, color, actionType, actionParamater));
     }
 
     /**
@@ -325,7 +340,7 @@ public final class Cells {
         return LOCATIONS.size() - 1;
     }
 
-    public static Map getPlayerOwnership() {
+    public static Map<Cell, Integer> getPlayerOwnership() {
         return PLAYER_OWNERSHIP;
     }
 

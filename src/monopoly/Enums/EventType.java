@@ -25,5 +25,9 @@ public enum EventType {
     RECEIVE,
     DRAW_CHEST,
     DRAW_CHANCE,
-    NOTIFICATION
+    NOTIFICATION,
+    HOUSE_ADD,
+    HOUSE_REMOVE,
+    HOTEL_ADD,
+    HOTEL_REMOVE
 }
